@@ -45,3 +45,15 @@ pipeline:
 
 Skills live under `.github/skills/` so a repo-local agent can discover them
 using the standard project skill location.
+
+## KB Project Memory Files
+
+The KB workflow uses repo-root markdown files for local memory instead of
+keeping long-running chat sessions alive:
+
+- `kb.md` - live execution board for active KB work
+- `kb-done.md` - completion ledger/archive for finished KB features
+- `kb-handoff.md` - compact restart handoff for new sessions
+
+This naming replaces older `docs/kanban.md`, `docs/kanban-done.md`, and
+ad-hoc `*handoff.md` usage in the KB workflow.

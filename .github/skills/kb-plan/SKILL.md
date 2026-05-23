@@ -137,12 +137,12 @@ Iterate until approved unless the user asked for non-interactive planning.
 
 Create a manifest and individual slice plans.
 
-#### Manifest: `docs/plans/YYYY-MM-DD-000-kanban-<name>-manifest.md`
+#### Manifest: `docs/plans/YYYY-MM-DD-000-kb-<name>-manifest.md`
 
 ```yaml
 ---
-type: kanban-manifest
-kanban_id: kb-YYYY-MM-DD-<name>
+type: kb-manifest
+kb_id: kb-YYYY-MM-DD-<name>
 brainstorm_path: docs/brainstorms/<source-file>.md
 created: YYYY-MM-DD
 status: active
@@ -184,7 +184,7 @@ Each slice plan uses standard ATV plan format with additional frontmatter:
 
 ```yaml
 ---
-kanban_id: kb-YYYY-MM-DD-<name>
+kb_id: kb-YYYY-MM-DD-<name>
 slice_id: slice-NNN
 title: "<title>"
 blockers: []
@@ -210,21 +210,59 @@ The plan body should include:
 
 ### 5. Update the Board
 
-After generating plan files, update `docs/kanban.md` — the human-visible board and multi-agent handoff file.
+After generating plan files, update `kb.md` — the human-visible live execution board.
+Also create or update `kb-handoff.md` with the compact restart context for the feature.
 
-**If `docs/kanban.md` doesn't exist**, create it with this template:
+**If `kb.md` doesn't exist**, create it with this template:
 
 ```markdown
-# <Project> — Kanban Board
+# <Project> — KB Board
 
-> The board is the source of truth — not chat history.
+> The board is the source of truth for active KB work — not chat history.
 > Last updated: <ISO timestamp>
 
 ## Rules
-- Done features → `kanban-done.md` immediately. Keep this file lean.
+- Done features → `kb-done.md` immediately. Keep this file lean.
 - One agent per slice. Claim by setting 🔧. Do not work unclaimed slices.
-- Discovered work → Parked first. Human promotes to active.
+- Discovered work → Parked / Cold Storage first. Human promotes to active.
 - Human-required items stay visible until a person completes them.
+- Completed slices get a validation note before being archived.
+
+## Purpose
+
+Track the active execution queue for this repo.
+
+## Objective
+
+<current objective>
+
+## Current Focus
+
+<one paragraph>
+
+## Current Truth
+
+- <facts a new session must know>
+
+## Active Features
+
+<!-- KB feature sections go here. -->
+
+## Human Required
+
+<!-- approvals, credentials, logins, external account actions, user decisions -->
+
+## Parked / Cold Storage
+
+<!-- discovered work that must not execute until a human promotes it -->
+
+## Blocked
+
+<!-- blocked items with explicit reasons and dependencies -->
+
+## Work Log
+
+- <YYYY-MM-DD>: <short progress note>
 ```
 
 **Add a feature section** for the new KB workflow:
@@ -242,7 +280,39 @@ Manifest: `docs/plans/<manifest>.md`
 | 1 | <title> | - | tdd | ⬜ pending |
 | 2 | <title> | slice-001 | tdd | ⬜ pending |
 
-Done criteria: All N slices done or skipped with reason. Archive to `kanban-done.md`.
+Done criteria: All N slices done or skipped with reason. Archive to `kb-done.md`.
+```
+
+**If `kb-handoff.md` doesn't exist**, create it as the compact new-session entry point:
+
+```markdown
+# KB Handoff
+
+Last updated: <ISO timestamp>
+
+## App / Repo
+
+- What this repo is:
+- How to run it:
+- Current branch:
+
+## Current Focus
+
+- Active KB feature:
+- Manifest:
+- Board:
+
+## Resume From Here
+
+- Next action:
+- Open blockers:
+- Human decisions needed:
+
+## Context Pointers
+
+- Architecture map:
+- Relevant subsystem docs:
+- Important files:
 ```
 
 **Board status markers** (superset of manifest statuses):
@@ -279,7 +349,7 @@ Omit empty sections. These conventions come from `todo_rules.md` and apply here.
 Commit only when the user explicitly asked for it. Stage only the generated manifest and slice plan files, never the whole `docs/plans/` directory:
 
 ```bash
-git add docs/plans/YYYY-MM-DD-000-kanban-<name>-manifest.md docs/plans/YYYY-MM-DD-001-<type>-<name>-plan.md
+git add docs/plans/YYYY-MM-DD-000-kb-<name>-manifest.md docs/plans/YYYY-MM-DD-001-<type>-<name>-plan.md kb.md kb-handoff.md
 git commit -m "kb-plan: decompose <feature> into N vertical slices"
 ```
 

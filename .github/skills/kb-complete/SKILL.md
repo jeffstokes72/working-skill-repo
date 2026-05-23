@@ -12,7 +12,7 @@ After `kb-work` finishes executing all slices, this skill runs the quality revie
 
 <input> #$ARGUMENTS </input>
 
-**If input is empty:** Scan `docs/plans/` for the most recent `*-kanban-*-manifest.md` file with `status: completed`. If found, use it. Otherwise ask: "Which KB manifest should I complete?"
+**If input is empty:** Scan `docs/plans/` for the most recent `*-kb-*-manifest.md` file with `status: completed`. If found, use it. For older repos, also accept legacy `*-kanban-*-manifest.md` files. Otherwise ask: "Which KB manifest should I complete?"
 
 **If input is a path:** Read the manifest at that path.
 

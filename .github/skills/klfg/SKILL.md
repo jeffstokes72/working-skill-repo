@@ -26,7 +26,7 @@ Everything else — including kb-complete (review, compound, learn) — proceeds
 
 2. `/kb-plan <reqs-path>`
 
-   GATE: STOP. Verify `/kb-plan` produced a manifest file at `docs/plans/*-kanban-*-manifest.md` and one plan file per slice. If no manifest was created, re-run `/kb-plan <reqs-path>`. Do NOT proceed to step 3 until both the manifest and per-slice plans exist.
+   GATE: STOP. Verify `/kb-plan` produced a manifest file at `docs/plans/*-kb-*-manifest.md` and one plan file per slice. For older repos, legacy `docs/plans/*-kanban-*-manifest.md` files are acceptable. If no manifest was created, re-run `/kb-plan <reqs-path>`. Do NOT proceed to step 3 until both the manifest and per-slice plans exist.
 
    **Record the manifest path.** Refer to it as `<manifest-path>` for the rest of the pipeline.
 

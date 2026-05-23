@@ -20,7 +20,7 @@ Run all vertical slices from a `kb-plan` manifest in dependency order. Keep each
 
 <input> #$ARGUMENTS </input>
 
-**If input is empty:** Scan `docs/plans/` for the most recent `*-kanban-*-manifest.md` file. If found, use it. Otherwise ask: "Which KB manifest should I execute?"
+**If input is empty:** Scan `docs/plans/` for the most recent `*-kb-*-manifest.md` file. If found, use it. For older repos, also accept legacy `*-kanban-*-manifest.md` files. Otherwise ask: "Which KB manifest should I execute?"
 
 **If input is a path:** Read the manifest at that path.
 
@@ -30,7 +30,7 @@ Run all vertical slices from a `kb-plan` manifest in dependency order. Keep each
 2. **Validate DAG** - confirm no cycles in blockers, all referenced slice IDs exist, and all slice files exist.
 3. **Check status** - skip any slices already marked `done`. Resume from the first runnable `pending` slice.
 4. **Check worktree** - note dirty or untracked files before executing so unrelated user changes are not staged or reverted.
-5. **Sync with board** - read `docs/kanban.md` and confirm its status table matches the manifest. If they diverge, the board wins — another agent may have updated it. Reconcile the manifest from the board before proceeding.
+5. **Sync with board** - read `kb.md` and confirm its status table matches the manifest. If they diverge, the board wins — another agent may have updated it. Reconcile the manifest from the board before proceeding.
 6. **Confirm with user:** "Ready to execute N remaining slices in order. Proceed?"
 
 Treat statuses as:
@@ -44,7 +44,7 @@ Treat statuses as:
 
 ## Board Sync Protocol
 
-`docs/kanban.md` is the multi-agent handoff file. Update it at every status transition:
+`kb.md` is the live multi-agent execution board. Update it at every status transition:
 
 | Event | Board Update |
 |-------|-------------|
@@ -52,10 +52,12 @@ Treat statuses as:
 | Slice completes | Set status to ✅ done |
 | Slice blocked | Set status to 🔒 blocked + reason in notes |
 | Slice skipped | Set status to ⊘ skipped |
-| All slices done | Move entire feature section to `docs/kanban-done.md` |
+| All slices done | Move entire feature section to `kb-done.md` |
+
+`kb-handoff.md` is the compact new-session restart file. Update it whenever work stops, blocks, completes a feature, or changes the next recommended action. Keep it short: current focus, manifest path, next action, blockers, human decisions, and context pointers.
 
 **Multi-agent rules:**
-- Before claiming a slice, re-read `docs/kanban.md`. If another agent set it to 🔧, do not claim it.
+- Before claiming a slice, re-read `kb.md`. If another agent set it to 🔧, do not claim it.
 - The board is the source of truth — not chat history, not the manifest. If the board says done, it's done.
 - Update the board BEFORE starting work (claim) and AFTER completing work (release). This prevents two agents from working the same slice.
 - Also update the manifest to stay in sync, but if they conflict, the board wins.
@@ -129,7 +131,7 @@ The execution prompt or local checklist must include:
 ```text
 You are executing a single vertical slice. Complete it fully.
 
-Kanban: <kanban_id>
+KB: <kb_id>
 Slice: <slice_id> - <title>
 Verification mode: <tdd|integration|verification-only>
 
@@ -260,7 +262,7 @@ After the slice completes:
    - If yes: update manifest `status: done` for this slice and update the body table.
    - If no: update manifest `status: blocked`, add failure notes, and ask user how to proceed.
 
-2. **Sync board** — update `docs/kanban.md` status for this slice (✅ or 🔒). Append validation note.
+2. **Sync board** — update `kb.md` status for this slice (✅ or 🔒). Append validation note.
 
 3. **Run verification**
    - Run the relevant test command for the repo.
@@ -277,7 +279,7 @@ When all slices are `done` or intentionally `skipped`:
 
 1. Update manifest `status: completed`.
 2. Run final verification.
-3. **Archive to board** — move the feature section from `docs/kanban.md` to `docs/kanban-done.md`. Prepend at the top of the archive file with a completion date header.
+3. **Archive to board** — move the feature section from `kb.md` to `kb-done.md`. Prepend at the top of the archive file with a completion date header.
 4. Report summary:
 
 ```text
