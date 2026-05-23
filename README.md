@@ -39,6 +39,8 @@ project, then choose the right lane.
 `kb-map` is project-root anchored. It must resolve the active repo first and read
 memory from that repo only; it should not search `~`, `.copilot/handoffs`, the
 whole drive, or sibling repos unless you explicitly ask for cross-repo lookup.
+It checks standard memory files by exact path under the repo root, not by
+grep/glob.
 
 ## Quick Use
 
