@@ -32,6 +32,10 @@ language and let `kb-start` choose the ceremony.
 user's idea/request needs; map decides whether local memory needs lookup,
 refresh, or first-time bootstrap.
 
+`kb-start` replaces the older `kb-route` name. The behavior is the same front
+door pattern, but the new name matches how you use it: start a session, map the
+project, then choose the right lane.
+
 ## Quick Use
 
 Use these when you know the route:
