@@ -1,6 +1,7 @@
 # Working Skill Repo
 
-Minimal, voice-friendly KB workflow skills for GitHub Copilot and Codex.
+Voice-friendly KB workflow skills and required reviewer agents for GitHub
+Copilot and Codex.
 
 This repo is the portable skill bundle I use when I want an agent to walk into a
 project, recover local project memory, choose the right workflow, execute work in
@@ -15,7 +16,9 @@ vertical slices, and done archives, but user-facing commands use the shorter
 
 This is not the full ATV StarterKit. It is the smaller working set that should be
 safe to copy into active projects without dragging in every experiment or
-historical workflow.
+historical workflow. The reviewer agents are still part of the required runtime
+surface; `document-review`, `ce-review`, `kb-complete`, and related gates fail or
+degrade without them.
 
 It includes:
 
@@ -139,6 +142,10 @@ These are intentionally left out of the minimal working bundle:
 - browser tools such as `agent-browser`; skills can call them when installed, but
   this repo does not vendor them
 
+Do not remove `.github/agents/` from this bundle. The agent files are not
+optional docs; they are the personas that the review and planning skills dispatch
+at runtime.
+
 ## Project Memory
 
 The workflow keeps memory in files so sessions can stay short.
@@ -221,9 +228,11 @@ Copy-Item "$src\*" $dst -Recurse -Force
 Codex personal install:
 
 ```powershell
-$src = 'E:\working-skill-repo\.github\skills'
-$dst = "$env:USERPROFILE\.codex\skills"
-Copy-Item "$src\*" $dst -Recurse -Force
+$src = 'E:\working-skill-repo'
+$skills = "$env:USERPROFILE\.codex\skills"
+$agents = "$env:USERPROFILE\.codex\agents"
+Copy-Item "$src\.github\skills\*" $skills -Recurse -Force
+Copy-Item "$src\.github\agents\*" $agents -Force
 ```
 
 Use repo-local installs only when a project needs pinned/project-specific
