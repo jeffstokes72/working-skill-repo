@@ -327,14 +327,14 @@ After bootstrap, a fresh session should not care whether the app is new or old. 
 
 ### Root Instructions Versus Skills
 
-`AGENTS.md` is a root instruction block, not a skill. It is loaded broadly by compatible agents and should stay tiny: point agents to `kb-route`, name the memory files, and avoid duplicating workflow details.
+`AGENTS.md` is a root instruction block, not a skill. It is loaded broadly by compatible agents and should stay tiny: point agents to `kb-start`, name the memory files, and avoid duplicating workflow details.
 
 Skills live under `.github/skills/<name>/SKILL.md`. They are loaded when invoked or selected and can contain the procedural workflow.
 
 Use both:
 
-- `AGENTS.md` says: "For KB work, start with `kb-route`."
-- `kb-route` decides which workflow lane to use.
+- `AGENTS.md` says: "For KB work, start with `kb-start`."
+- `kb-start` decides which workflow lane to use.
 - Lane skills (`kb-fix`, `kb-plan`, `kb-work`, etc.) do the specialized work.
 
 ## Project Memory Files
@@ -421,7 +421,7 @@ Key research decisions:
 
 ### Routing and Memory
 
-`kb-route`
+`kb-start`
 
 - Default entrypoint when the user says "KB" or gives an ambiguous work request.
 - Classifies work as small, medium, large, research-only, review-only, or ship.
@@ -720,7 +720,7 @@ Examples:
 Path:
 
 ```text
-kb-route -> kb-fix -> tests -> update memory
+kb-start -> kb-fix -> tests -> update memory
 ```
 
 Escalate if the fix loops or expands.
@@ -736,13 +736,13 @@ Examples:
 Path when requirements are clear:
 
 ```text
-kb-route -> kb-plan -> kb-work -> kb-complete -> kb-ship
+kb-start -> kb-plan -> kb-work -> kb-complete -> kb-ship
 ```
 
 Path when requirements are fuzzy:
 
 ```text
-kb-route -> kb-brainstorm -> kb-plan -> kb-work -> kb-complete -> kb-ship
+kb-start -> kb-brainstorm -> kb-plan -> kb-work -> kb-complete -> kb-ship
 ```
 
 ### Large
@@ -756,7 +756,7 @@ Examples:
 Path:
 
 ```text
-kb-route -> kb-epic -> multiple kb-brainstorm/kb-plan/kb-work/kb-complete loops -> kb-ship
+kb-start -> kb-epic -> multiple kb-brainstorm/kb-plan/kb-work/kb-complete loops -> kb-ship
 ```
 
 ## Research Rules
@@ -1059,9 +1059,9 @@ Create a small eval suite of replayable scenarios:
 
 | Scenario | Purpose | Expected Route |
 |---|---|---|
-| Known one-file bug | Measures `kb-fix` speed and escalation discipline | `kb-route -> kb-fix` |
+| Known one-file bug | Measures `kb-fix` speed and escalation discipline | `kb-start -> kb-fix` |
 | UI bug with browser evidence | Measures agent-owned QA and repair | `kb-fix -> kb-qa -> kb-repair` |
-| Clear medium feature | Measures skipping unnecessary brainstorm | `kb-route -> kb-plan -> kb-work` |
+| Clear medium feature | Measures skipping unnecessary brainstorm | `kb-start -> kb-plan -> kb-work` |
 | Fuzzy product idea | Measures brainstorm question quality and intent capture | `kb-brainstorm -> kb-plan` |
 | Large architecture change | Measures epic decomposition and review gates | `kb-epic -> multiple KB loops` |
 | Existing repo with no memory | Measures bootstrap cost and map quality | `kb-map-bootstrap` |
@@ -1111,7 +1111,7 @@ Compare:
 Use this to decide whether a sub-skill should be:
 
 - always present in the stable prefix,
-- lazy-loaded by `kb-map` or `kb-route`,
+- lazy-loaded by `kb-map` or `kb-start`,
 - converted into a local doc contract,
 - removed or merged.
 
@@ -1218,7 +1218,7 @@ Rule: load the smallest document that can answer the current question. Follow ch
 
 ## Route Path Documentation Protocol
 
-`kb-route` must help a new session understand the project without requiring the user to re-explain it or point directly to files. It does this through a deterministic documentation loading path.
+`kb-start` must help a new session understand the project without requiring the user to re-explain it or point directly to files. It does this through a deterministic documentation loading path.
 
 ### Required Startup Read Order
 
@@ -1244,7 +1244,7 @@ When a session begins work in a repo, read these in order if they exist:
 5. Relevant research notes from `docs/context/research/`
    - Load only when the task depends on prior research or the note is specifically linked.
 
-If none of the first three files exist, `kb-route` should propose running `kb-map-bootstrap` to initialize project memory before doing major work. For a truly small fix, it may proceed after a quick repo scan, but it should still recommend bootstrapping memory afterward.
+If none of the first three files exist, `kb-start` should propose running `kb-map-bootstrap` to initialize project memory before doing major work. For a truly small fix, it may proceed after a quick repo scan, but it should still recommend bootstrapping memory afterward.
 
 ### Entry Skill Behavior
 
@@ -1640,7 +1640,7 @@ Budget mode: lean|standard|deep
 ## Impact On Current Project
 ```
 
-Before doing external research, `kb-route`, `kb-brainstorm`, `kb-plan`, or `kb-fix` should check whether a relevant research note exists and whether it is stale.
+Before doing external research, `kb-start`, `kb-brainstorm`, `kb-plan`, or `kb-fix` should check whether a relevant research note exists and whether it is stale.
 
 ### Memory Update Rules
 
@@ -1724,15 +1724,15 @@ Requirements:
 
 ## Open Decisions
 
-- Is `kb-route` the default entrypoint for all user asks that mention KB?
+- Is `kb-start` the default entrypoint for all user asks that mention KB?
 - Should `kb-fix` commit changes or leave commits to `kb-ship`?
-- Should `kb-research` be standalone or mostly called from `kb-route`, `kb-brainstorm`, and `kb-plan`?
+- Should `kb-research` be standalone or mostly called from `kb-start`, `kb-brainstorm`, and `kb-plan`?
 - How much of `ce-compound` should be folded into `kb-map` versus kept as a separate post-work learning step?
 - Should `kb-epic` create a separate `docs/context/epics/<name>.md` file, or should epic tracking live only in `todo.md`?
 
 ## Initial Build Order
 
-1. Create `kb-route`.
+1. Create `kb-start`.
 2. Create `kb-map`.
 3. Create `kb-fix`.
 4. Create `kb-research`.

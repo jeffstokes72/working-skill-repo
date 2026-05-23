@@ -25,10 +25,10 @@ It includes:
 - Copilot guidance in `.github/copilot-instructions.md`
 - a deterministic check helper at `.github/skills/kb-check/scripts/kb-check.ps1`
 
-The default entry point is `kb-route`. In normal use, ask for work in plain
-language and let `kb-route` choose the ceremony.
+The default entry point is `kb-start`. In normal use, ask for work in plain
+language and let `kb-start` choose the ceremony.
 
-`kb-route` delegates project-memory setup to `kb-map`. Route decides what the
+`kb-start` delegates project-memory setup to `kb-map`. Route decides what the
 user's idea/request needs; map decides whether local memory needs lookup,
 refresh, or first-time bootstrap.
 
@@ -38,7 +38,7 @@ Use these when you know the route:
 
 | Command | Use When |
 | --- | --- |
-| `kb-route` | Fresh session, ambiguous ask, or "figure out the right workflow" |
+| `kb-start` | Fresh session, ambiguous ask, or "figure out the right workflow" |
 | `kb-map` | Setup, lookup, or refresh project memory before other work |
 | `kb-fix` | Narrow bug, failing test, or small contained change |
 | `kb-brainstorm` | Product or technical framing is still unclear |
@@ -72,7 +72,7 @@ Handoff routing is deliberately conservative:
 
 Core workflow:
 
-- `kb-route`
+- `kb-start`
 - `kb-map`
 - `kb-map-bootstrap`
 - `kb-compact`
@@ -133,8 +133,8 @@ Required project memory files:
 
 Fresh-session preflight:
 
-- Start with `kb-route` for work requests.
-- `kb-route` calls `kb-map lookup <request>` before choosing the lane.
+- Start with `kb-start` for work requests.
+- `kb-start` calls `kb-map lookup <request>` before choosing the lane.
 - If `todo.md` or `docs/context/PROJECT.md` is missing, `kb-map` invokes
   `kb-map-bootstrap`.
 - If the context or handoff folders are partially missing, `kb-map` refreshes or

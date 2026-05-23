@@ -72,7 +72,7 @@ Stop reading once you can answer:
 - Which subsystem is relevant?
 - Which files or commands are likely involved?
 - What was already tried or researched?
-- Which KB route should handle the request?
+- Which KB lane should handle the request?
 
 Report route, docs loaded, and any stale-work refresh needed. Do not bulk-load all context docs.
 

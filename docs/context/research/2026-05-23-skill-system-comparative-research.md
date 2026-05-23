@@ -23,7 +23,7 @@ Matt Pocock's strongest pattern is small, composable skills with sharp engineeri
 
 The right KB design is:
 
-- A tiny `kb-route` entry skill.
+- A tiny `kb-start` entry skill.
 - A durable local memory contract.
 - A few workflow lanes: fix, research, brainstorm, plan, work, complete, ship.
 - Shared policy referenced by path, not pasted into every skill.
@@ -104,7 +104,7 @@ Design implication:
 
 - Borrow the system ideas, not the bulk.
 - Keep G-Stack-style context save/restore, QA ownership, question tuning, and benchmarks, but implement them as KB contracts and optional lanes.
-- Do not put every policy in every skill. Put route-critical policy in `kb-route`; put lane-specific policy in the lane skill; put detailed references behind lazy docs.
+- Do not put every policy in every skill. Put route-critical policy in `kb-start`; put lane-specific policy in the lane skill; put detailed references behind lazy docs.
 - Keep G-Stack's completeness instinct, but bound it with KB's task-sizing lanes so "do it right" does not become "rewrite everything."
 
 ### Kevin Copilot
@@ -179,8 +179,8 @@ The fix is not fewer rules. The fix is better placement:
 
 | Policy | Belongs In |
 |---|---|
-| Task routing and lane choice | `kb-route` |
-| Local memory read order | `kb-route` and `kb-map` |
+| Task routing and lane choice | `kb-start` |
+| Local memory read order | `kb-start` and `kb-map` |
 | Deep repo indexing | `kb-map-bootstrap` only |
 | Brainstorm question quality and pushback | `kb-brainstorm` plus shared first-principles reference |
 | Research reuse | `kb-research` and research docs |
@@ -189,7 +189,7 @@ The fix is not fewer rules. The fix is better placement:
 | Automated verification | `kb-qa` / `kb-repair` |
 | Review, compound, learn, cleanup | `kb-complete` |
 | Release readiness | `kb-ship` |
-| Context compaction/resume | `kb-handoff` / `kb-route` |
+| Context compaction/resume | `kb-handoff` / `kb-start` |
 | Token compaction | `kb-compact` |
 | Benchmarking the skill system | separate eval docs/scripts, not production workflow skills |
 
@@ -197,7 +197,7 @@ The fix is not fewer rules. The fix is better placement:
 
 Minimum viable durable system:
 
-- `kb-route` - start here, read minimal memory, choose lane.
+- `kb-start` - start here, read minimal memory, choose lane.
 - `kb-map` - cheap lookup/update of project memory.
 - `kb-map-bootstrap` - expensive first-time repo indexing.
 - `kb-compact` - compress memory, handoffs, skill drafts, and responses without dropping protected facts.
@@ -254,7 +254,7 @@ Optional later:
 
 ## Open Questions
 
-- Should `kb-route` be a real skill, a repo instruction block, or both?
-- Should `kb-question-tune` exist now, or should question tuning be part of `kb-route` first?
+- Should `kb-start` be a real skill, a repo instruction block, or both?
+- Should `kb-question-tune` exist now, or should question tuning be part of `kb-start` first?
 - Should project memory live only in each repo, or should there also be a global user memory under the skill repo?
 - How much of G-Stack-style browser persistence should KB assume versus defer to available host tools?
