@@ -69,6 +69,10 @@ Standalone phase skills stop at their artifact boundary:
 - `kb-plan` writes the manifest and slice plans and recommends `kb-work`.
 - `kb-work` executes all runnable slices and calls `kb-complete` only when every
   slice is done or intentionally skipped.
+- Once `kb-work` starts execution, runnable slices continue without per-slice
+  confirmation. It pauses only for HITL, blocked/manual work, destructive
+  approval, scope failures, QA/repair exhaustion, dependency deadlock, or an
+  explicit user stop.
 - `klfg` is the full auto-chain.
 
 Handoff routing is deliberately conservative:
