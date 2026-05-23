@@ -49,6 +49,41 @@ docs/context/
     <topic>.md
 ```
 
+Standard project memory layout:
+
+```text
+kb.md
+kb-done.md
+kb-handoff.md
+docs/context/
+  PROJECT.md
+  architecture/
+    README.md
+    <major-subsystem>.md
+    <major-subsystem>/
+      <child-area>.md
+  research/
+    README.md
+    <topic>.md
+  decisions/
+    README.md
+    <YYYY-MM-DD>-<decision>.md
+  operations/
+    README.md
+    runbooks.md
+    testing.md
+```
+
+Naming rules:
+
+- Use lowercase kebab-case for context docs: `playbooks.md`, `mcp-capabilities.md`, `tool-routing.md`.
+- Use `PROJECT.md` only for the top-level route map.
+- Use `README.md` only as a folder index inside `docs/context/*`.
+- Put major subsystem docs directly under `docs/context/architecture/`.
+- Put child docs in a folder named after the parent subsystem when the parent grows too large.
+- Do not invent project-specific top-level memory names unless the user explicitly asks.
+- Do not collide with app source docs; this system owns `docs/context/` and repo-root `kb*.md` files.
+
 `docs/context/PROJECT.md` is the new-session entry point. It explains what the app is, how it runs, which subsystems exist, and which context docs to read next. Subsystem docs should include:
 
 - What it is
@@ -79,6 +114,15 @@ docs/context/
 - Maintains `docs/context/PROJECT.md` and subsystem architecture docs.
 - Records durable facts, rejected approaches, known failure modes, and reusable research pointers.
 - Runs document review on major project-memory changes.
+- Has two modes:
+  - `lookup` - cheap mode for every new session; reads the pointer map and follows only relevant docs.
+
+`kb-map-bootstrap`
+
+- Expensive setup skill for projects without project memory.
+- Scans the repo deeply and creates the standard memory structure.
+- Should be lazy-loaded only when `kb-map` sees missing or badly stale project memory.
+- Keeps `kb-map` small so normal session startup stays cheap.
 
 ### Small Work
 
@@ -560,7 +604,82 @@ When a session begins work in a repo, read these in order if they exist:
 5. Relevant research notes from `docs/context/research/`
    - Load only when the task depends on prior research or the note is specifically linked.
 
-If none of the first three files exist, `kb-route` should propose running `kb-map` to initialize project memory before doing major work. For a truly small fix, it may proceed after a quick repo scan, but it should still recommend creating memory afterward.
+If none of the first three files exist, `kb-route` should propose running `kb-map-bootstrap` to initialize project memory before doing major work. For a truly small fix, it may proceed after a quick repo scan, but it should still recommend bootstrapping memory afterward.
+
+### Entry Skill Behavior
+
+The entry skill should behave like a map reader:
+
+1. Read `kb-handoff.md`, `kb.md`, and `docs/context/PROJECT.md`.
+2. Classify the user's idea or request.
+3. Identify likely subsystems from the route map.
+4. Follow subsystem pointers only as needed.
+5. Return the chosen route and the minimal context it loaded.
+
+Example:
+
+```text
+User idea mentions playbooks.
+Read PROJECT.md -> Subsystem Index says playbooks live at docs/context/architecture/playbooks.md.
+Read playbooks.md -> Child Docs points to actions.md and mcp-capabilities.md.
+If the task touches MCP capability selection, read mcp-capabilities.md.
+If not, stop at playbooks.md.
+```
+
+The agent should not require the user to name `playbooks.md`. The route map should make that discoverable.
+
+### Deep Bootstrap Mode
+
+When project memory does not exist or is clearly stale, run `kb-map-bootstrap`.
+
+This is intentionally token-expensive. It pays for itself by creating local memory that future sessions can read cheaply.
+
+Bootstrap workflow:
+
+1. Inventory the repo:
+   - top-level files and folders
+   - app entry points
+   - package/build/test config
+   - routes or screens
+   - services/actions/tools
+   - tests
+   - docs
+2. Identify major subsystems:
+   - user-facing workflows
+   - backend domains
+   - tool/action layers
+   - data/storage layers
+   - integrations
+   - runtime shells such as Electron or browser automation
+3. Create the standard memory layout.
+4. Write `docs/context/PROJECT.md` as the route map.
+5. Write one architecture doc per major subsystem.
+6. Add child docs only when a subsystem is too large for one concise file.
+7. Create `kb.md`, `kb-done.md`, and `kb-handoff.md` if missing.
+8. Run `document-review` on `PROJECT.md` and any large subsystem docs.
+9. Record bootstrap date and confidence in `PROJECT.md`.
+
+Bootstrap output should favor pointers over exhaustive prose. It should not paste large code excerpts unless a specific snippet is essential for future routing.
+
+Bootstrap should mark uncertain claims:
+
+- `verified` - confirmed by reading source.
+- `inferred` - likely from naming or structure, but not fully traced.
+- `unknown` - needs follow-up.
+
+### Refresh Mode
+
+Run `kb-map refresh` after meaningful architecture changes.
+
+Refresh should:
+
+- Read current `PROJECT.md`.
+- Inspect changed files and recent plans/manifests.
+- Update only affected subsystem docs.
+- Add or update child pointers when a doc is getting too large.
+- Run document review when changes are substantial.
+
+Refresh should not re-bootstrap the whole repo unless the map is missing or badly stale. If a deep pass is required, route to `kb-map-bootstrap`.
 
 ### Stop Reading Rule
 

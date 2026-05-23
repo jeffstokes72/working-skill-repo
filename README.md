@@ -9,6 +9,8 @@ its direct skill-to-skill dependencies.
 
 Core KB workflow:
 
+- `kb-map`
+- `kb-map-bootstrap`
 - `kb-brainstorm`
 - `kb-plan`
 - `kb-work`
