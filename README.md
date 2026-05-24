@@ -165,6 +165,11 @@ Phase boundaries:
 - `kb-plan` writes the manifest and slice plans and recommends `kb-work`.
 - `kb-work` executes all runnable slices and calls `kb-complete` only when every
   slice is done or intentionally skipped.
+- `kb-complete` records memory-maintenance signals in
+  `docs/context/memory-maintenance.md`: contradictions, overlaps, stale docs,
+  bloat, repeated rediscovery, durable refreshes, and closed handoffs. It stores
+  pointers and the actual issue so a future deep memory pass knows what to
+  inspect instead of starting from a blind full scan.
 - Once `kb-work` starts execution, runnable slices continue without per-slice
   confirmation. It pauses only for HITL, blocked/manual work, destructive
   approval, scope failures, QA/repair exhaustion, dependency deadlock, or an
