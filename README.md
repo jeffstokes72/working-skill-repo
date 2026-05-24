@@ -142,6 +142,7 @@ Use these when you know the route:
 | `kb-plan` | Requirements exist and need vertical slices |
 | `kb-work` | A manifest exists and should be executed |
 | `kb-complete` | Work is done and needs review, learning, cleanup |
+| `kb-memory-review` | High-cost maintenance pass for stale, contradictory, bloated, or overlapping project memory |
 | `kb-ship` | Release, PR, deploy, or final readiness check |
 | `kb-epic` | Large migration, rewrite, or multi-brainstorm initiative |
 | `klfg` | Fully hands-off route: brainstorm -> plan -> work -> complete |
@@ -170,6 +171,10 @@ Phase boundaries:
   bloat, repeated rediscovery, durable refreshes, and closed handoffs. It stores
   pointers and the actual issue so a future deep memory pass knows what to
   inspect instead of starting from a blind full scan.
+- `kb-memory-review` is the explicit high-cost pass that consumes those signals,
+  reconciles/compacts/consolidates targeted memory docs, invokes narrower helper
+  skills when useful, and updates the maintenance index. It is recommended by
+  thresholds but does not run automatically.
 - Once `kb-work` starts execution, runnable slices continue without per-slice
   confirmation. It pauses only for HITL, blocked/manual work, destructive
   approval, scope failures, QA/repair exhaustion, dependency deadlock, or an
@@ -207,6 +212,7 @@ Core workflow:
 - `kb-plan`
 - `kb-work`
 - `kb-complete`
+- `kb-memory-review`
 - `kb-qa`
 - `kb-repair`
 - `kb-first-principles`
