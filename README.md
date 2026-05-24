@@ -402,6 +402,14 @@ genuine ambiguity.
 possible. The model should call deterministic checks instead of spending tokens
 re-inspecting behavior by hand.
 
+`kb-functional-test` owns the test-level decision. Slice plans should record
+`test_level` (`none`, `unit`, `integration`, `functional-api`,
+`functional-cli`, `functional-browser`, or `full`) and `functional_risk`
+(`none`, `narrow`, `broad`, or `full`). Unit tests prove local logic; functional
+tests prove the user-visible/API/CLI/browser workflow did not lie. Small/mini
+models may classify test level or audit mocked-theater tests when the platform
+supports model-tiered agents, but executable checks remain the proof.
+
 ## Recommended Install
 
 Default to personal/global installs. They keep active project repos clean and
