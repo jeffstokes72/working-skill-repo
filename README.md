@@ -236,6 +236,18 @@ Heavy inherited ATV/CE skills keep their routing and safety rules in `SKILL.md`,
 but detailed phase mechanics live under `references/` and are loaded only when
 that phase is actually running.
 
+2026-05-24 token-diet pass:
+
+- `ce-review` was reduced to 235 lines by moving full review execution and
+  post-review behavior into lazy references.
+- `ce-compound-refresh` was reduced to 289 lines by moving detailed maintenance
+  mechanics into lazy references.
+- Project-generated brainstorm and research artifacts were removed from this
+  portable repo; they belong in the project that created them or in the broader
+  ATV starter-kit history.
+- The restored ATV agent surface stayed installed because runtime testing
+  showed missing agents break review dispatch.
+
 Current cuts:
 
 - `ce-review` keeps mode detection, reviewer selection, severity/routing, and
