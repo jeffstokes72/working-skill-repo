@@ -230,6 +230,74 @@ Required ATV agent dependencies:
   browser/QA, debugging, pattern, and documentation agents. The full restored
   runtime surface is `.github/agents/*.agent.md`.
 
+## Token Diet and Lazy References
+
+Heavy inherited ATV/CE skills keep their routing and safety rules in `SKILL.md`,
+but detailed phase mechanics live under `references/` and are loaded only when
+that phase is actually running.
+
+Current cuts:
+
+- `ce-review` keeps mode detection, reviewer selection, severity/routing, and
+  quality gates in the skill body. Full scope detection, dispatch, merge/dedup,
+  headless output, fixer, artifact, todo, push, and PR flows moved to lazy
+  references.
+- `ce-compound-refresh` keeps the maintenance model, core rules, scope
+  selection, investigation flow, and phase map in the skill body. Document-set
+  analysis, action boundaries, decision prompts, execution flows, reporting,
+  commits, and discoverability checks moved to lazy references.
+
+Do not move a rule out of `SKILL.md` if missing it would make the skill choose
+the wrong lane, mutate files unsafely, or skip a required gate. Move details out
+when they are only needed after the lane/phase is already chosen.
+
+## Agent Runtime Tiers
+
+The agent files are split conceptually, even though they are all shipped today:
+
+- **Required dispatch agents** are called by `document-review`, `ce-review`,
+  `kb-complete`, and related gates. Removing these causes failed agent dispatch
+  or degraded review.
+- **Conditional specialist agents** are loaded only when the diff/task warrants
+  the lens, such as security, performance, API contracts, migrations, design,
+  browser/QA, or repo research.
+- **Optional direct-use agents** can be removed later only after a benchmark run
+  proves no skill dispatches them and no documented workflow depends on them.
+
+Until that benchmark exists, keep `.github/agents/*.agent.md` intact. The prior
+test failure proved that deleting ATV agents blindly is worse than carrying the
+small file surface.
+
+## Benchmarking Skills
+
+Skill quality is measured by behavior, not by line count alone.
+
+Use repeatable prompts against a scratch repo and record:
+
+- correct route selected by `kb-start` (`kb-fix`, `kb-brainstorm`, `kb-plan`,
+  `kb-work`, `kb-epic`, or `kb-research`)
+- whether `kb-map` resolves the active repo root and exact memory files without
+  searching the drive
+- number of avoidable user questions
+- whether planned slices include `expected_files`, verification, blockers, and
+  HITL flags
+- whether runnable slices continue without per-slice confirmation
+- whether review agents dispatch successfully
+- deterministic checks run by command instead of model judgment
+- token/line load at skill start versus lazy phase load
+- final artifacts moved to the right lifecycle file or folder
+
+Optimize for fewer loaded tokens only when the same prompt still routes,
+executes, verifies, and records state correctly. A shorter skill that drops a
+gate is not an improvement.
+
+## Portable Repo Hygiene
+
+This repo should contain skills, agents, scripts, templates, and durable
+references needed by the workflow. It should not carry project-generated
+brainstorms, plans, handoffs, research notes, or context maps. Those artifacts
+belong in the consuming project or in the larger ATV starter kit history.
+
 ## Not Bundled
 
 These are intentionally left out of the minimal working bundle:
