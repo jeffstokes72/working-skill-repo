@@ -148,6 +148,12 @@ Use these when you know the route:
 
 Phase boundaries:
 
+- `kb-start` performs a startup-only session hygiene check. When exact context
+  telemetry is available, it uses that signal; otherwise it falls back to
+  evidence such as heavy tool output, likely compaction, task switching, or
+  reliance on chat history. It recommends handoff/restart only when durable local
+  memory can replace the live chat at lower total context cost or lower drift
+  risk. It does not interrupt active work just because a session is long.
 - `kb-brainstorm` writes/reviews requirements, resolves safe/actionable P0-P4
   findings, and invokes `kb-plan` when the brainstorm is gate-clean. It pauses
   only for unresolved blockers, required human decisions, required research, or
