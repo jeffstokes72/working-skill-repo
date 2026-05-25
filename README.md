@@ -460,11 +460,13 @@ slice group, handoff, or fix is complete, move the compact summary to
 `todo-done.md` and remove the completed entry plus routine completion logs from
 `todo.md`.
 
-Board icons are part of that inline contract: `⬜ pending`, `🔧 in_progress`,
-`✅ done`, `🔒 blocked`, `⊘ skipped`, `🛑 human-required`, and `🧊 parked`.
-Use `🔒 blocked` for dependency/tool/another-agent waits that can resume when
-the blocker clears. Use `🧊 Parked / Cold Storage` only for work intentionally
-out of bounds today; only a human promotes it back to active.
+Board row markers are part of that inline contract: `⬜ pending`,
+`🔧 in_progress`, `✅ done`, `🔒 blocked`, `⊘ skipped`, and
+`🛑 human-required`. Section icons are also standardized: `💡 Feature Ideas`,
+`📋 Queued Improvements`, `🧊 Parked / Cold Storage`, `🛑 Human Required`, and
+`📝 Work Log`. Use `🔒 blocked` for dependency/tool/another-agent waits that can
+resume when the blocker clears. Use `🧊 Parked / Cold Storage` only for work
+intentionally out of bounds today; only a human promotes it back to active.
 
 ## Execution Model
 
