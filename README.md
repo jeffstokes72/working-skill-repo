@@ -284,6 +284,21 @@ Do not move a rule out of `SKILL.md` if missing it would make the skill choose
 the wrong lane, mutate files unsafely, or skip a required gate. Move details out
 when they are only needed after the lane/phase is already chosen.
 
+## Token-Minimizing Interaction
+
+Blocking question pickers save tokens only when the answer is truly one short
+choice. They waste tokens when the user needs voice dictation, paste, images,
+screenshots, files, or a long correction, because the picker is a menu rather
+than a text editor.
+
+Use closed choices for simple decisions such as proceed/pause/continue. Do not
+use labels like `Suggest changes` as a closed-choice option when the expected
+answer is free-form feedback. Ask in normal chat instead, or include
+`Other / let me explain` and return to chat before collecting the details.
+
+This keeps the workflow voice-friendly and reduces rework: one good dictated
+answer in chat is cheaper than several picker turns trying to express nuance.
+
 ## Agent Runtime Tiers
 
 The agent files are split conceptually, even though they are all shipped today:
