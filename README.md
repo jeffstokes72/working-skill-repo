@@ -497,6 +497,13 @@ tests prove the user-visible/API/CLI/browser workflow did not lie. Small/mini
 models may classify test level or audit mocked-theater tests when the platform
 supports model-tiered agents, but executable checks remain the proof.
 
+For UI work, `functional-browser` is automatic when `.tsx`, `.jsx`, `.vue`, or
+`.svelte` files change, or when backend/state behavior is primarily reached
+through the app UI. The proof must open the running app, navigate to the actual
+screen, use real clicks/inputs/visible controls, assert rendered outcomes, save
+screenshots as evidence, and clean up artifacts. Backend/API/unit tests can
+support that result; they cannot replace it.
+
 ## Recommended Install
 
 Default to personal/global installs. They keep active project repos clean and
