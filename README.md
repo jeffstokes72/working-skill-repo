@@ -259,6 +259,7 @@ Core workflow:
 - `kb-compact`
 - `kb-check`
 - `kb-functional-test`
+- `kb-regression-snapshot`
 - `kb-gate`
 - `kb-fix`
 - `kb-research`
@@ -503,6 +504,20 @@ through the app UI. The proof must open the running app, navigate to the actual
 screen, use real clicks/inputs/visible controls, assert rendered outcomes, save
 screenshots as evidence, and clean up artifacts. Backend/API/unit tests can
 support that result; they cannot replace it.
+
+`kb-qa` must turn visible acceptance criteria into executable browser assertions
+or the project stack equivalent. A screenshot can support the result, but it is
+not the pass/fail oracle. If the behavior cannot be asserted programmatically,
+the slice is human-required rather than model-verified.
+
+`kb-regression-snapshot` records deterministic state after each passed slice in
+`.atv/snapshots/<slice-id>.json`, then verifies prior snapshots before the next
+slice starts. This gives fresh sessions and later slices machine memory of what
+already worked instead of relying on prose or the model's recollection.
+
+`kb-complete` fails the proof gate when a slice only has prose proof. Each slice
+needs command/test path, exit code, timestamp, trace/log/API artifact, or
+snapshot verification evidence recorded in the manifest.
 
 ## Recommended Install
 
