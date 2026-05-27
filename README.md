@@ -510,6 +510,12 @@ or the project stack equivalent. A screenshot can support the result, but it is
 not the pass/fail oracle. If the behavior cannot be asserted programmatically,
 the slice is human-required rather than model-verified.
 
+Generated commands and assertions must avoid nested-quote traps. If shell
+commands, file operations, JSON, SQL, HTML, config blocks, or Playwright
+selectors require quotes inside quotes or escaped escapes, write the content to
+a temp file, heredoc, template literal, or parameterized locator helper instead
+of constructing it inline.
+
 `kb-regression-snapshot` records deterministic state after each passed slice in
 `.atv/snapshots/<slice-id>.json`, then verifies prior snapshots before the next
 slice starts. The LLM writes the compact snapshot spec; the bundled runner
