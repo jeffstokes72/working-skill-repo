@@ -1,6 +1,6 @@
 # Agent Instructions
 
-For KB workflow requests, start with `kb-start`.
+For KB workflow requests, start with `kb-start`, unless the user explicitly invokes `kb-task` or asks for a first-principles task runner that should continue until done.
 
 On every fresh session or ambiguous work request, let `kb-map` perform the KB memory preflight:
 
@@ -9,6 +9,34 @@ On every fresh session or ambiguous work request, let `kb-map` perform the KB me
 - If `todo.md` or `docs/context/PROJECT.md` is missing, `kb-map` invokes `kb-map-bootstrap`.
 - If context or handoff folders are partial, `kb-map` refreshes or creates the missing structure.
 - Do not ask the user to confirm bootstrap or refresh unless the operation would overwrite non-empty user files.
+
+This repo is the portable skill bundle. Do not bootstrap consuming-project memory or create project-work handoffs here by accident. If the user is trying to hand off work from another project, switch to that project root or ask for its path. Only create `todo.md`, `docs/context/PROJECT.md`, or `docs/handoffs/*` in this repo when the work is explicitly about maintaining this skill bundle.
+
+## Skill Sync Workflow
+
+When changing skills in this repo, treat `E:\working-skill-repo` as the working bundle source, but check for newer drift before overwriting anything.
+
+1. Compare the target skill across:
+   - `E:\working-skill-repo\.github\skills\<skill>\`
+   - `E:\all-the-vibes\.github\skills\<skill>\`
+   - `E:\all-the-vibes\pkg\scaffold\templates\skills\<skill>\`
+   - `E:\all-the-vibes\plugins\atv-everything\skills\<skill>\`
+   - `C:\Users\marowe\.copilot\skills\<skill>\`
+   - `C:\Users\marowe\.agents\skills\<skill>\`
+   - `C:\Users\marowe\.codex\skills\<skill>\`
+2. If a global or ATV copy differs, review the diff before copying over it. Newer useful work found only in a global install must be merged back into this repo first, not discarded.
+3. After editing this repo, sync the final approved copy to:
+   - Codex global: `C:\Users\marowe\.codex\skills\<skill>\`
+   - Copilot global: `C:\Users\marowe\.copilot\skills\<skill>\`
+   - shared agents global: `C:\Users\marowe\.agents\skills\<skill>\`
+   - ATV fork: `E:\all-the-vibes\.github\skills\<skill>\`
+   - ATV scaffold/plugin copies when that skill is shipped there.
+4. Update `README.md` in this repo when the visible workflow, installed-skill list, install commands, or repo hygiene contract changes.
+5. Update `E:\all-the-vibes\README.md` when the ATV-facing workflow, bundled skills, or scaffold/plugin behavior changes.
+6. Verify with hashes for copied `SKILL.md` files and `git diff --check` in every touched repo.
+7. Commit and push both repos when requested or when the user asks for the full propagation flow.
+
+Do not remove `ce-review`, `ce-compound`, or `ce-compound-refresh` from this bundle unless the KB skills that invoke them are rewritten first.
 
 Every token must pay rent. Be concise by default:
 

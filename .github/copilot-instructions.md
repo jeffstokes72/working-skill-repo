@@ -2,7 +2,7 @@
 
 Use the KB workflow in this repo.
 
-For ambiguous KB/workflow requests, start with `kb-start`. Skills live under `.github/skills/`.
+For ambiguous KB/workflow requests, start with `kb-start`. Use `kb-task` when the user explicitly invokes it or asks for a first-principles task runner that should continue until done. Skills live under `.github/skills/`.
 
 Fresh-session preflight:
 
@@ -11,6 +11,8 @@ Fresh-session preflight:
 - If `todo.md` or `docs/context/PROJECT.md` is missing, `kb-map` invokes `kb-map-bootstrap`.
 - If context or handoff folders are partial, `kb-map` refreshes or creates the missing structure.
 - Do not ask for confirmation unless a non-empty user file would be overwritten.
+
+This repo is the portable skill bundle. Do not bootstrap consuming-project memory or create project-work handoffs here by accident. If the user is handing off work from another project, switch to that project root or ask for its path. Only create `todo.md`, `docs/context/PROJECT.md`, or `docs/handoffs/*` here when maintaining this skill bundle.
 
 Every token must pay rent:
 

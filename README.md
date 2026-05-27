@@ -190,6 +190,7 @@ Use these when you know the route:
 | Command | Use When |
 | --- | --- |
 | `kb-start` | Fresh session, ambiguous ask, or "figure out the right workflow" |
+| `kb-task` | First-principles task runner that chooses the KB route and continues until verified or blocked |
 | `kb-map` | Setup, lookup, or refresh project memory before other work |
 | `kb-fix` | Narrow bug, failing test, or small contained change |
 | `kb-brainstorm` | Product or technical framing is still unclear |
@@ -254,6 +255,7 @@ Handoff routing is deliberately conservative:
 Core workflow:
 
 - `kb-start`
+- `kb-task`
 - `kb-map`
 - `kb-map-bootstrap`
 - `kb-compact`
@@ -402,6 +404,19 @@ references needed by the workflow. It should not carry project-generated
 brainstorms, plans, handoffs, research notes, or context maps. Those artifacts
 belong in the consuming project or in the larger ATV starter kit history.
 
+`kb-handoff` follows that boundary. It writes repo-local handoffs under the
+validated active work repo so `kb-map` and `kb-start` can find them later. It
+must not create project-work handoffs in this portable skill repo unless the
+handoff is explicitly about maintaining the skill bundle itself.
+
+Skill changes are propagated from this working bundle to the personal/global
+installs and the ATV fork after diff review. Before overwriting a global copy,
+compare it against this repo and merge any newer useful drift back here first.
+Then sync the approved copy to Codex, Copilot, shared agents, and the
+`E:\all-the-vibes` source/scaffold/plugin copies that ship that skill. Keep the
+repo README and ATV README current when the visible workflow or shipped skill
+surface changes.
+
 ## Not Bundled
 
 These are intentionally left out of the minimal working bundle:
@@ -476,6 +491,9 @@ The pipeline is designed around three task sizes:
 
 - **Small:** use `kb-fix`. Write or identify a failing check, make the smallest
   fix, run deterministic verification, and stop if the fix loop stalls.
+- **Bounded autonomous task:** use `kb-task`. It maps the repo, reasons from
+  first principles, chooses the right KB lane, and continues through verification
+  or an explicit blocker.
 - **Medium:** use `kb-brainstorm` -> `kb-plan` -> `kb-work`. Produce vertical
   slices with expected files, verification, dependencies, and HITL flags.
 - **Large:** use `kb-epic`. Break the initiative into multiple brainstorms or
