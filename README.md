@@ -64,8 +64,8 @@ chat history just so the model remembers what the app is.
 This is not the full ATV StarterKit. It is the smaller working set that should be
 safe to copy into active projects without dragging in every experiment or
 historical workflow. The reviewer agents are still part of the required runtime
-surface; `document-review`, `ce-review`, `kb-complete`, and related gates fail or
-degrade without them.
+surface; `document-review`, `kb-review`, `ce-review`, `kb-complete`, and
+related gates fail or degrade without them.
 
 It includes:
 
@@ -196,6 +196,7 @@ Use these when you know the route:
 | `kb-brainstorm` | Product or technical framing is still unclear |
 | `kb-plan` | Requirements exist and need vertical slices |
 | `kb-work` | A manifest exists and should be executed |
+| `kb-review` | KB-specific code review with thermonuclear structural quality review |
 | `kb-complete` | Work is done and needs review, learning, cleanup |
 | `kb-memory-review` | High-cost maintenance pass for stale, contradictory, bloated, or overlapping project memory |
 | `kb-ship` | Release, PR, deploy, or final readiness check |
@@ -269,6 +270,7 @@ Core workflow:
 - `kb-brainstorm`
 - `kb-plan`
 - `kb-work`
+- `kb-review`
 - `kb-complete`
 - `kb-memory-review`
 - `kb-qa`
@@ -282,7 +284,7 @@ Direct skill dependencies carried forward from ATV/CE:
 
 - `document-review`
 - `tdd`
-- `ce-review`
+- `ce-review` (generalized CE review; KB completion uses `kb-review`)
 - `ce-compound`
 - `ce-compound-refresh`
 - `learn`
@@ -295,8 +297,9 @@ Required ATV agent dependencies:
 - Document review agents: `coherence-reviewer`, `feasibility-reviewer`,
   `product-lens-reviewer`, `design-lens-reviewer`, `security-lens-reviewer`,
   `scope-guardian-reviewer`, and `adversarial-document-reviewer`.
-- CE/code review agents: `correctness-reviewer`, `testing-reviewer`,
-  `maintainability-reviewer`, `project-standards-reviewer`,
+- KB/CE code review agents: `correctness-reviewer`, `testing-reviewer`,
+  `thermo-nuclear-code-quality-reviewer`, `maintainability-reviewer`,
+  `project-standards-reviewer`,
   `security-reviewer`, `performance-reviewer`, `api-contract-reviewer`,
   `data-migrations-reviewer`, `reliability-reviewer`,
   `adversarial-reviewer`, `cli-readiness-reviewer`,
@@ -319,6 +322,9 @@ that phase is actually running.
 
 - `ce-review` was reduced to 235 lines by moving full review execution and
   post-review behavior into lazy references.
+- `kb-review` is the KB-specific fork of the review orchestrator. It keeps the
+  review pipeline but replaces the standard maintainability persona with
+  `thermo-nuclear-code-quality-reviewer`.
 - `ce-compound-refresh` was reduced to 289 lines by moving detailed maintenance
   mechanics into lazy references.
 - Project-generated brainstorm and research artifacts were removed from this
@@ -361,9 +367,9 @@ answer in chat is cheaper than several picker turns trying to express nuance.
 
 The agent files are split conceptually, even though they are all shipped today:
 
-- **Required dispatch agents** are called by `document-review`, `ce-review`,
-  `kb-complete`, and related gates. Removing these causes failed agent dispatch
-  or degraded review.
+- **Required dispatch agents** are called by `document-review`, `kb-review`,
+  `ce-review`, `kb-complete`, and related gates. Removing these causes failed
+  agent dispatch or degraded review.
 - **Conditional specialist agents** are loaded only when the diff/task warrants
   the lens, such as security, performance, API contracts, migrations, design,
   browser/QA, or repo research.

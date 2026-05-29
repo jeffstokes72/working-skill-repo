@@ -36,7 +36,7 @@ When changing skills in this repo, treat `E:\working-skill-repo` as the working 
 6. Verify with hashes for copied `SKILL.md` files and `git diff --check` in every touched repo.
 7. Commit and push both repos when requested or when the user asks for the full propagation flow.
 
-Do not remove `ce-review`, `ce-compound`, or `ce-compound-refresh` from this bundle unless the KB skills that invoke them are rewritten first.
+Do not remove `kb-review`, `ce-review`, `ce-compound`, or `ce-compound-refresh` from this bundle unless the skills that invoke them are rewritten first. KB completion uses `kb-review`; `ce-review` remains the generalized CE review skill.
 
 Every token must pay rent. Be concise by default:
 
