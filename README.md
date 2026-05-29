@@ -215,13 +215,24 @@ Phase boundaries:
   findings, and invokes `kb-plan` when the brainstorm is gate-clean. It pauses
   only for unresolved blockers, required human decisions, required research, or
   an explicit user stop.
+- "Don't ask many questions", "go straight to work", and similar requests reduce
+  Q&A but do not skip planning. The route is requirements/assumptions ->
+  `kb-plan` -> `kb-work` -> `kb-complete`; execution intent carries forward
+  after the manifest is written.
 - `kb-brainstorm` multiple-choice questions must always include an escape hatch
   such as `Other / let me explain` or `None of these`. If the answer may need an
   image, screenshot, file, pasted output, diagram, or longer explanation, the
   skill should ask in normal chat instead of the blocking question UI.
-- `kb-plan` writes the manifest and slice plans and recommends `kb-work`.
+- `kb-plan` writes the manifest and slice plans. If the user or upstream
+  orchestrator asked to execute, it immediately invokes `kb-work <manifest>`.
 - `kb-work` executes all runnable slices and calls `kb-complete` only when every
   slice is done or intentionally skipped.
+- `kb-work` must not run from raw brainstorm notes, phase lists, or a free-form
+  feature request. If no valid manifest exists, it routes back to `kb-plan`
+  first so `kb-complete` has slice scope and verification evidence. The
+  manifest's `expected_files` are a forecast, not a hard allowlist; files
+  discovered during implementation are allowed when required by the slice and
+  recorded in the scope ledger.
 - `kb-complete` records memory-maintenance signals in
   `docs/context/memory-maintenance.md`: contradictions, overlaps, stale docs,
   bloat, repeated rediscovery, durable refreshes, and closed handoffs. It stores

@@ -122,6 +122,7 @@ Use plain task classes first, then map to skills:
 | Active handoff links a valid KB manifest | `kb-work` |
 | Recent work changed project memory | `kb-map refresh` |
 | User explicitly says `kb-task`, asks for first-principles execution, or wants one bounded task carried until verified/blocked | `kb-task` |
+| User says "go straight to work", "don't ask many questions", "just build it", or similar, but no valid KB manifest exists | `kb-plan` with execution intent, then `kb-work` |
 | Small known bug or narrow fix | `kb-fix` |
 | External/prior-art research needed | `kb-research` |
 | Fuzzy idea, product direction, high path dependency | `kb-brainstorm` |
@@ -140,6 +141,8 @@ Use plain task classes first, then map to skills:
 - **Release**: packaging, PR, deploy, or final readiness. Use `kb-ship`.
 
 When in doubt, prefer the lane that prevents rework. Do not pick a 20-minute shortcut when the decision creates path dependency.
+
+Execution intent is not permission to skip planning. If the user wants fewer questions or wants the agent to continue directly to implementation, reduce Q&A and carry an `execute_after_plan` intent forward, but still create or reuse a KB manifest before `kb-work`.
 
 ## Ceremony Rule
 
