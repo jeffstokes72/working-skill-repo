@@ -184,3 +184,21 @@ The corpus runner writes `summary.json` and `summary.md` under
 adapter-missing, adapter-failed, invalid-json, score-failed, and
 runtime-unavailable. Live corpus runs are never part of the default
 `kb-check -All` gate.
+
+## Cost And Regression Report
+
+Summarize local run artifacts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs
+```
+
+Compare against a selected baseline:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs -BaselinePath path\to\baseline.json
+```
+
+The report uses local cost proxies: runtime, fixture, mode, status, duration
+when available, exit code, result/log sizes, pass count, and non-pass count.
+Missing token or billing data is represented by absent fields, not zero.

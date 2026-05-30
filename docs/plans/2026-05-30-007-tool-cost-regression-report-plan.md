@@ -17,7 +17,7 @@ expected_files:
   - path: evals/skill-eval/README.md
     op: edit
     scope: "document cost proxies and regression comparison commands"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -47,3 +47,9 @@ sizes.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs`
 - Synthetic baseline comparison with a small checked-in fixture or generated temp fixture.
 - `git diff --check`
+
+## Result
+
+Done. The report summarizes local `.atv/eval-runs` artifacts and supports
+baseline comparison. Verification used the current ignored eval-run artifacts
+and a self-comparison baseline check.

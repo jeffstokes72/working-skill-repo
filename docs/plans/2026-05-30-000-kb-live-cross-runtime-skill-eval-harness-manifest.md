@@ -120,14 +120,14 @@ slices:
     test_level: functional-cli
     functional_risk: narrow
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: ""
+    notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must remove cost/regression as missing; scope-discovery: docs/context/operations/testing.md - testing docs must document regression report command; scope-discovery: docs/context/eval-map.md - eval map must remove cost/regression gap; scope-check: forecast=3 changed=7 discovered=3 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs exit=0 rows=18 pass=18; proof: baseline self-compare exit=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-008
     title: "Add eval-map scaffold negative validation"
     path: docs/plans/2026-05-30-008-skill-eval-map-negative-validation-plan.md

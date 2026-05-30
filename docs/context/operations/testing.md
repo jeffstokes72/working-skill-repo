@@ -100,6 +100,9 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-eval-quality.ps1` self-tests output-quality rubric scoring for
   completeness, maintainability, relevance, proof quality, and right-sized
   ceremony.
+- `scripts/skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs`
+  summarizes local live-run artifacts and compares them to a selected baseline
+  when `-BaselinePath` is provided.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.
@@ -114,8 +117,7 @@ are planned gaps, not current capability:
 - lazy references exist and are linked only when needed;
 - broader live Codex/GHCP corpus covers more than the initial fixture;
 - trace scoring covers forbidden shortcuts and required workflow reads;
-- cost/regression reporting correlates live outcomes with runtime/model/time
-  proxies.
+- scaffold negative-validation proof for future consuming-repo smoke evals.
 
 ## Route Eval Seeds
 

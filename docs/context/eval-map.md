@@ -28,6 +28,7 @@ Codex/GHCP the same workflow contract.
 - `scripts/skill-eval-run-live-corpus.ps1`
 - `scripts/skill-eval-claims.ps1`
 - `scripts/skill-eval-quality.ps1`
+- `scripts/skill-eval-regression-report.ps1`
 - `scripts/skill-sync-report.ps1`
 - `git diff --check`
 
@@ -65,6 +66,8 @@ fixtures across Codex and GHCP adapters and summarizes pass/fail/skip categories
 deterministically and reports ambiguous claims without counting them as proof.
 `scripts/skill-eval-quality.ps1` scores output-quality fixtures separately from
 deterministic route/proof/claim pass/fail.
+`scripts/skill-eval-regression-report.ps1` summarizes local live-run artifacts
+and compares pass/non-pass plus size/time proxies against selected baselines.
 
 ## Deterministic vs LLM-Judged
 
@@ -98,7 +101,6 @@ are stable.
 
 - Grow the live Codex/GHCP corpus beyond the current route fixture set.
 - Expand trace scoring for forbidden shortcuts and required workflow reads.
-- Track cost: tokens/time/tool calls/retries per verified successful outcome.
 - Add scaffold negative-check validation to future consuming-repo eval maps: any
   generated smoke eval must fail when its expected selector/status/output/schema
   is intentionally broken.
