@@ -28,7 +28,7 @@ Make this the highest-reliability portable skill bundle for the user's workflow:
 
 ## Current Focus
 
-🔧 in_progress execute live cross-runtime skill eval harness slices. Slices 001-005 done; slice 006 next.
+🔧 in_progress execute live cross-runtime skill eval harness slices. Slices 001-006 done; slice 007 next.
 ⬜ pending decide ATV scaffold/plugin shipping contract for optional KB skills.
 
 Audit note: `docs/context/research/2026-05-29-skill-repo-gap-audit.md`

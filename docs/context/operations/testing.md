@@ -42,6 +42,7 @@ powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1
 - `skill-eval`
 - `skill-eval-codex-dry-run`
 - `skill-eval-ghcp-dry-run`
+- `skill-eval-quality`
 - `skill-sync-report`
 
 `kb-check.ps1 -All` runs all three and exits nonzero when a required check fails.
@@ -96,6 +97,9 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-eval-claims.ps1` self-tests transcript-derived claim artifacts:
   true deterministic claims pass, false deterministic claims fail, and ambiguous
   claims are reported without becoming proof.
+- `scripts/skill-eval-quality.ps1` self-tests output-quality rubric scoring for
+  completeness, maintainability, relevance, proof quality, and right-sized
+  ceremony.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.
@@ -110,8 +114,8 @@ are planned gaps, not current capability:
 - lazy references exist and are linked only when needed;
 - broader live Codex/GHCP corpus covers more than the initial fixture;
 - trace scoring covers forbidden shortcuts and required workflow reads;
-- output-quality scoring measures completeness, maintainability, relevance, and
-  proof quality.
+- cost/regression reporting correlates live outcomes with runtime/model/time
+  proxies.
 
 ## Route Eval Seeds
 

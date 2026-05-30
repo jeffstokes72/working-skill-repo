@@ -95,6 +95,27 @@ fail by themselves.
 `scripts/skill-eval.ps1` also checks any result-level `claim_artifacts` array by
 running each artifact through `scripts/skill-eval-claims.ps1`.
 
+## Output Quality Rubric
+
+Run the quality rubric self-test:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-quality.ps1
+```
+
+The rubric is separate from deterministic route/proof/claim pass/fail. It scores
+captured outputs on five 0-5 dimensions:
+
+- `completeness`
+- `maintainability`
+- `relevance`
+- `proof_quality`
+- `right_sized_ceremony`
+
+Each dimension records `score`, `judge`, and `reason`. `judge` must be one of
+`deterministic`, `llm-judged`, or `human-only` so reports do not confuse
+subjective quality judgment with machine proof.
+
 Live adapters produce this result shape from transcripts/traces, then let this
 deterministic scorer decide pass/fail. Codex and GHCP adapters exist; live model
 runs are explicit because they require runtime auth and spend.

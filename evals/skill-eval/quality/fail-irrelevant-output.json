@@ -1,0 +1,11 @@
+{
+  "id": "fail-irrelevant-output",
+  "expected_result": "fail",
+  "quality": {
+    "completeness": { "score": 3, "judge": "deterministic", "reason": "Required fields are present." },
+    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "No maintainability issue in the captured output." },
+    "relevance": { "score": 1, "judge": "deterministic", "reason": "Selected output does not answer the fixture request." },
+    "proof_quality": { "score": 4, "judge": "deterministic", "reason": "Proof field is present." },
+    "right_sized_ceremony": { "score": 4, "judge": "deterministic", "reason": "No extra ceremony detected." }
+  }
+}

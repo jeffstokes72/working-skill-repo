@@ -104,14 +104,14 @@ slices:
     test_level: functional-cli
     functional_risk: narrow
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "Rubric output is separate from deterministic route/proof/claim pass/fail."
+    notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: .github/skills/kb-check/scripts/kb-check.ps1 - cheap deterministic quality selftest belongs in canonical gate; scope-discovery: README.md - visible quality workflow must remove output-quality as missing; scope-discovery: docs/context/operations/testing.md - testing docs must list quality selftest; scope-discovery: docs/context/eval-map.md - eval map must remove output-quality gap; scope-check: forecast=3 changed=8 discovered=4 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-quality.ps1 exit=0 cases=5 issues=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-007
     title: "Add cost and regression reporting"
     path: docs/plans/2026-05-30-007-tool-cost-regression-report-plan.md

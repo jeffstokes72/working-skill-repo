@@ -17,7 +17,7 @@ expected_files:
   - path: evals/skill-eval/README.md
     op: edit
     scope: "document rubric dimensions, thresholds, and deterministic versus judged fields"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -48,3 +48,9 @@ proof, trace, or claim pass/fail.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval-quality.ps1`
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1`
 - `git diff --check`
+
+## Result
+
+Done. Output quality scoring now covers completeness, maintainability,
+relevance, proof quality, and right-sized ceremony with explicit judge labels.
+The self-test suite includes one pass and four intentional failures.

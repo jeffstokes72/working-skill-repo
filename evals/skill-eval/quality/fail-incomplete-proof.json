@@ -1,0 +1,11 @@
+{
+  "id": "fail-incomplete-proof",
+  "expected_result": "fail",
+  "quality": {
+    "completeness": { "score": 4, "judge": "deterministic", "reason": "Route and artifact fields are present." },
+    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "No maintainability issue in the captured output." },
+    "relevance": { "score": 4, "judge": "deterministic", "reason": "Output addresses the fixture." },
+    "proof_quality": { "score": 1, "judge": "deterministic", "reason": "No executable proof was recorded." },
+    "right_sized_ceremony": { "score": 4, "judge": "deterministic", "reason": "No extra ceremony detected." }
+  }
+}
