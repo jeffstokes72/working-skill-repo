@@ -52,6 +52,51 @@ function Test-ContainsAny {
   return $false
 }
 
+function Test-TraceRules {
+  param(
+    [System.Collections.Generic.List[object]]$Issues,
+    [string]$ResultId,
+    $Result
+  )
+
+  if (-not (Has-Property $Result "trace_rules")) {
+    return
+  }
+
+  $rules = $Result.trace_rules
+  $checks = @(
+    @{ field = "required_files_read"; trace = $Result.trace.files_read; label = "required file read" },
+    @{ field = "required_commands"; trace = $Result.trace.commands; label = "required command" },
+    @{ field = "required_tools"; trace = $Result.trace.tools; label = "required tool" }
+  )
+
+  foreach ($check in $checks) {
+    if (Has-Property $rules $check.field) {
+      foreach ($expected in @($rules.($check.field))) {
+        if (-not (Test-ContainsAny $check.trace "$expected")) {
+          Add-Issue $Issues $ResultId "Missing trace rule evidence for $($check.label) containing '$expected'."
+        }
+      }
+    }
+  }
+
+  $forbiddenChecks = @(
+    @{ field = "forbidden_files_read"; trace = $Result.trace.files_read; label = "forbidden file read" },
+    @{ field = "forbidden_commands"; trace = $Result.trace.commands; label = "forbidden command" },
+    @{ field = "forbidden_tools"; trace = $Result.trace.tools; label = "forbidden tool" }
+  )
+
+  foreach ($check in $forbiddenChecks) {
+    if (Has-Property $rules $check.field) {
+      foreach ($forbidden in @($rules.($check.field))) {
+        if (Test-ContainsAny $check.trace "$forbidden") {
+          Add-Issue $Issues $ResultId "Forbidden trace rule matched $($check.label) containing '$forbidden'."
+        }
+      }
+    }
+  }
+}
+
 function Get-FixtureMap {
   param([string]$FixtureRoot)
   $map = @{}
@@ -185,6 +230,8 @@ function Test-Result {
       Add-Issue $issues $resultId $_.Exception.Message
     }
   }
+
+  Test-TraceRules $issues $resultId $Result
 
   return $issues
 }

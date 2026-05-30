@@ -20,7 +20,7 @@ expected_files:
   - path: evals/skill-eval/result.schema.json
     op: edit
     scope: "extend result/schema fields only if needed for trace rules"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -51,3 +51,10 @@ skill requires.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1`
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`
 - `git diff --check`
+
+## Result
+
+Done. `skill-eval` now supports optional `trace_rules` for required and
+forbidden files, commands, and tools. The self-test suite now has 7 files,
+including passing trace-rule coverage and intentional required/forbidden trace
+failures.

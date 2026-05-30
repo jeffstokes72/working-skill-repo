@@ -55,6 +55,28 @@ Supported claim checks:
 - `command_ran`
 - `file_read`
 
+Optional `trace_rules` fields make trace discipline deterministic when a fixture
+or captured result needs stronger proof than route/proof strings alone:
+
+```json
+{
+  "trace_rules": {
+    "required_files_read": ["docs/context/eval-map.md"],
+    "required_commands": ["git diff --check"],
+    "required_tools": ["shell"],
+    "forbidden_files_read": ["secrets.env"],
+    "forbidden_commands": ["git reset --hard"],
+    "forbidden_tools": ["browser"]
+  }
+}
+```
+
+Required rules pass when any trace item contains the expected text after
+case-insensitive whitespace normalization. Forbidden rules fail when any trace
+item contains the forbidden text. These are scorer-only rules; live adapter JSON
+schemas do not need to include them unless a future adapter wants the model to
+emit them directly.
+
 Live adapters produce this result shape from transcripts/traces, then let this
 deterministic scorer decide pass/fail. Codex and GHCP adapters exist; live model
 runs are explicit because they require runtime auth and spend.

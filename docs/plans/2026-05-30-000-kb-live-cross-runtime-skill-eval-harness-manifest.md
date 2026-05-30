@@ -72,14 +72,14 @@ slices:
     test_level: functional-cli
     functional_risk: narrow
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: ""
+    notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-forecast-unused: evals/skill-eval/result.schema.json - trace_rules are scorer-only and not emitted by live adapters yet; scope-check: forecast=4 changed=5 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval.ps1 exit=0 selftests=7 issues=0; proof: kb-check -All exit=0; memory-impact: operational"
   - id: slice-005
     title: "Add transcript-derived claim verifier"
     path: docs/plans/2026-05-30-005-tool-transcript-claim-verifier-plan.md
