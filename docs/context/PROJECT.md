@@ -52,6 +52,7 @@ See `docs/context/architecture/README.md`.
 | Eval map | `docs/context/eval-map.md` | Understanding repo-native eval surfaces, canonical commands, and open eval gaps | verified |
 | Testing and verification | `docs/context/operations/testing.md` | Finding current checks, eval-map ownership, and harness gaps | verified |
 | 2026 quality audit | `docs/context/research/2026-05-29-skill-repo-gap-audit.md` | Understanding current gaps and recommended priorities | verified |
+| Agent Skills Git distribution | `docs/context/research/2026-05-30-agent-skills-git-distribution.md` | Deciding canonical source, global installs, ATV policy, and deterministic sync scripts | verified |
 | Drift and propagation | `AGENTS.md`; `README.md`; `docs/context/memory-maintenance.md` | Syncing skills across global installs and ATV copies | mixed |
 
 ## Current Work Pointers
@@ -71,6 +72,7 @@ See `docs/context/architecture/README.md`.
 ## Research Index
 
 - `docs/context/research/2026-05-29-skill-repo-gap-audit.md`
+- `docs/context/research/2026-05-30-agent-skills-git-distribution.md`
 - `docs/context/eval-map.md`
 
 ## Do Not Repeat
