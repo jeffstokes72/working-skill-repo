@@ -1,0 +1,12 @@
+{
+  "id": "fail-false-file-claim",
+  "expected_result": "fail",
+  "claims": [
+    {
+      "type": "file_exists",
+      "path": "docs/context/definitely-missing-claim-target.md",
+      "expected": true,
+      "claim": "Agent claimed a missing file exists."
+    }
+  ]
+}

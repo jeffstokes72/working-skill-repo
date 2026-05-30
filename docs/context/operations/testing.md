@@ -93,6 +93,9 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun`
   validates corpus orchestration across both adapters. Live mode is explicit and
   not part of `kb-check -All`.
+- `scripts/skill-eval-claims.ps1` self-tests transcript-derived claim artifacts:
+  true deterministic claims pass, false deterministic claims fail, and ambiguous
+  claims are reported without becoming proof.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.
@@ -107,8 +110,6 @@ are planned gaps, not current capability:
 - lazy references exist and are linked only when needed;
 - broader live Codex/GHCP corpus covers more than the initial fixture;
 - trace scoring covers forbidden shortcuts and required workflow reads;
-- transcript-derived claim extraction checks final answers against
-  git/files/logs/artifacts;
 - output-quality scoring measures completeness, maintainability, relevance, and
   proof quality.
 

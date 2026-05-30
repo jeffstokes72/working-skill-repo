@@ -456,14 +456,16 @@ For this repo, `kb-check` now discovers the cross-runtime skill quality suite:
 - `scripts/skill-eval-run-live-corpus.ps1` explicitly runs selected fixtures
   across Codex and GHCP adapters and writes local summary artifacts; it is not
   part of `kb-check -All` because it may call live models.
+- `scripts/skill-eval-claims.ps1` checks transcript-derived claim artifacts
+  against deterministic file/command/read evidence and reports ambiguous claims
+  without turning them into proof.
 - `scripts/skill-sync-report.ps1` compares working, global, and ATV skill
   targets without copying or overwriting anything.
 
 Remaining live-eval work is tracked in
 `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md`.
-The missing pieces are transcript-derived claim verification, output-quality
-scoring, cost regression reporting, and scaffold negative-validation proof for
-future `kb-eval-map` smoke evals.
+The missing pieces are output-quality scoring, cost regression reporting, and
+scaffold negative-validation proof for future `kb-eval-map` smoke evals.
 
 The shared contract lives in `config/skill-quality.json`. Required targets must
 match; optional ATV scaffold/plugin differences are reported as warnings until

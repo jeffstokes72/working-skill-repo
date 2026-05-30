@@ -20,7 +20,7 @@ expected_files:
   - path: evals/skill-eval/README.md
     op: edit
     scope: "document deterministic claim verification contract"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -50,3 +50,9 @@ start simple, but pass/fail must come from deterministic checks.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1`
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`
 - `git diff --check`
+
+## Result
+
+Done. Claim artifact verification now has true, false, and ambiguous self-tests.
+`skill-eval` checks result-level `claim_artifacts` and the self-test suite now
+proves both pass and fail integration paths.

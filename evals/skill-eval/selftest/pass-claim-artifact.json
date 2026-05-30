@@ -1,0 +1,18 @@
+{
+  "id": "pass-claim-artifact",
+  "fixture_id": "tiny-typo-fix",
+  "expected_result": "pass",
+  "actual": {
+    "route": "kb-fix",
+    "user_questions": 0,
+    "artifacts": ["changed file", "verification note"],
+    "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+  },
+  "trace": {
+    "files_read": ["todo.md", "docs/context/eval-map.md"],
+    "commands": ["git diff --check"],
+    "tools": ["shell"]
+  },
+  "claim_checks": [],
+  "claim_artifacts": ["evals/skill-eval/claims/pass-true-file-claim.json"]
+}

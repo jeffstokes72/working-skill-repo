@@ -1,0 +1,12 @@
+{
+  "id": "pass-true-file-claim",
+  "expected_result": "pass",
+  "claims": [
+    {
+      "type": "file_exists",
+      "path": "docs/context/eval-map.md",
+      "expected": true,
+      "claim": "Agent claimed the eval map exists."
+    }
+  ]
+}

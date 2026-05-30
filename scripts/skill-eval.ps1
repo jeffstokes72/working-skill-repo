@@ -233,6 +233,20 @@ function Test-Result {
 
   Test-TraceRules $issues $resultId $Result
 
+  if (Has-Property $Result "claim_artifacts") {
+    foreach ($artifact in @($Result.claim_artifacts)) {
+      $artifactPath = Resolve-RepoPath $RepoRoot "$artifact"
+      if (-not (Test-Path $artifactPath)) {
+        Add-Issue $issues $resultId "Missing claim artifact '$artifact'."
+        continue
+      }
+      $claimOutput = powershell -ExecutionPolicy Bypass -File (Join-Path $RepoRoot "scripts/skill-eval-claims.ps1") -Root $RepoRoot -ClaimPath $artifactPath -Json | ConvertFrom-Json
+      if (-not $claimOutput.ok) {
+        Add-Issue $issues $resultId "Claim artifact failed deterministic verification: $artifact"
+      }
+    }
+  }
+
   return $issues
 }
 

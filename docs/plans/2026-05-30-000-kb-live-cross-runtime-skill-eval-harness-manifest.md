@@ -88,14 +88,14 @@ slices:
     test_level: functional-cli
     functional_risk: broad
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "Extraction can be LLM-assisted later, but pass/fail checks must remain deterministic."
+    notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must mention claim verifier; scope-discovery: docs/context/operations/testing.md - testing operations must list claim verifier selftest; scope-discovery: docs/context/eval-map.md - eval map must remove transcript-claim gap; scope-check: forecast=4 changed=9 discovered=3 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-claims.ps1 exit=0 cases=3 issues=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval.ps1 exit=0 selftests=9 issues=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-006
     title: "Add output quality rubric scorer"
     path: docs/plans/2026-05-30-006-tool-output-quality-rubric-plan.md

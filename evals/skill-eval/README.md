@@ -77,6 +77,24 @@ item contains the forbidden text. These are scorer-only rules; live adapter JSON
 schemas do not need to include them unless a future adapter wants the model to
 emit them directly.
 
+## Claim Artifact Verifier
+
+Transcript-derived claim checks live outside the model transcript as JSON claim
+artifacts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-claims.ps1
+```
+
+Supported deterministic claim types match structured result claim checks:
+`file_exists`, `command_ran`, and `file_read`. A claim with
+`"type": "ambiguous"` is reported with an ambiguous count and does not become
+proof. False deterministic claims fail; ambiguous claims are visible but do not
+fail by themselves.
+
+`scripts/skill-eval.ps1` also checks any result-level `claim_artifacts` array by
+running each artifact through `scripts/skill-eval-claims.ps1`.
+
 Live adapters produce this result shape from transcripts/traces, then let this
 deterministic scorer decide pass/fail. Codex and GHCP adapters exist; live model
 runs are explicit because they require runtime auth and spend.

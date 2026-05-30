@@ -1,0 +1,11 @@
+{
+  "id": "pass-ambiguous-claim",
+  "expected_result": "pass",
+  "claims": [
+    {
+      "type": "ambiguous",
+      "claim": "Agent claimed the implementation is clean and maintainable.",
+      "reason": "Maintainability is a quality judgment, not a deterministic filesystem claim."
+    }
+  ]
+}
