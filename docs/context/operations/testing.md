@@ -24,7 +24,10 @@ It defines:
 `kb-check.ps1` discovers this repo as a skill repo when `.github/skills` and
 `config/skill-quality.json` exist.
 
-The sync drift report is read-only:
+The sync drift report is read-only: it never copies files. It still exits
+nonzero for required-target drift and is part of the blocking `kb-check -All`
+gate. Optional ATV scaffold/plugin differences remain warnings until their
+shipping contract is decided.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1
@@ -66,17 +69,31 @@ Eval frameworks such as Langfuse, Braintrust, LangSmith, DeepEval, or Promptfoo
 are optional adapters/exporters unless the target repo is an LLM/agent app where
 prompt/output datasets are the native proof surface.
 
-## Required Harness
+## Implemented Harness
 
-Add a repo-local `scripts/` or `.github/skills/kb-check` mode that can validate:
+- `scripts/skill-lint.ps1` validates required skill frontmatter, conflict
+  markers, configured line budgets, allowlisted long skills, and referenced
+  local files.
+- `scripts/route-complexity-eval.ps1` validates the route-complexity fixture
+  schema, computes deterministic complexity tiers, and checks over/under
+  planning guard coverage.
+- `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
+  the working repo, Codex global, Copilot global, shared agents global, and ATV
+  `.github` skills.
 
-- every `SKILL.md` has `name`, `description`, and a clear output contract;
+## Planned Harness Gaps
+
+The current harness does not yet validate every desirable skill property. These
+are planned gaps, not current capability:
+
 - route skills have decision tables and escalation rules;
 - execution skills name deterministic proof requirements;
 - lazy references exist and are linked only when needed;
-- skill bodies stay under agreed line/token budgets or justify exceptions;
-- copied skills match expected global and ATV targets;
-- route eval prompts classify to the expected lane.
+- live prompt runs classify to the expected lane;
+- trace scoring proves the agent read/ran/touched expected things;
+- claim verification checks final answers against git/files/logs/artifacts;
+- output-quality scoring measures completeness, maintainability, relevance, and
+  proof quality.
 
 ## Route Eval Seeds
 

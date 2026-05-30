@@ -52,7 +52,7 @@ slices:
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "scope-check: forecast=4 changed=4 discovered=0 unexplained=0; proof: copied kb-eval-map and kb-map-bootstrap to required Codex/Copilot/agents/ATV targets; hashes matched; kb-check -All exit=0; git diff --check exit=0 in working repo and ATV"
+    notes: "scope-check: forecast=4 changed=4 discovered=0 unexplained=0; proof: copied kb-eval-map and kb-map-bootstrap to required Codex/Copilot/agents/ATV targets; hashes matched; kb-check -All exit=0; git diff --check exit=0 in working repo and ATV; review-fix: added scaffold negative-check validation, bootstrap failure-mode clarity, and docs overclaim cleanup"
 ---
 
 # KB: Eval Map

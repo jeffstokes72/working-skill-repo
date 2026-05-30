@@ -78,3 +78,6 @@ are stable.
 - Add output-quality rubric for maintainability, completeness, relevance, and
   proof quality.
 - Track cost: tokens/time/tool calls/retries per verified successful outcome.
+- Add scaffold negative-check validation to future consuming-repo eval maps: any
+  generated smoke eval must fail when its expected selector/status/output/schema
+  is intentionally broken.

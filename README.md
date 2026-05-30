@@ -183,12 +183,13 @@ The point is not to load every architecture file or crawl the whole repo. The
 point is to guide the model directly to the slice of project truth that matters
 now, so each token pays for useful orientation instead of rediscovery.
 
-Bootstrap also runs `kb-eval-map` to decide how the repo should be evaluated.
-That setup is native to the app: browser workflows for websites, command/output
-goldens for CLIs, contract checks for APIs, prompt/trace/claim evals for skill
-or agent repos, and optional dashboard export only when it helps. If the primary
-workflow is unclear, `kb-eval-map` asks what the repo is supposed to prove
-instead of creating fake tests.
+Bootstrap also runs `kb-eval-map` to decide how the repo should be evaluated and
+to write the repo's eval map. That setup is native to the app: browser workflows
+for websites, command/output goldens for CLIs, contract checks for APIs,
+prompt/trace/claim eval plans for skill or agent repos, and optional dashboard
+export only when it helps. This maps and scaffolds safe proof; it is not the full
+live skill-eval suite. If the primary workflow is unclear, `kb-eval-map` asks
+what the repo is supposed to prove instead of creating fake tests.
 
 When memory is missing, `kb-map` invokes `kb-map-bootstrap` to build the project
 map once. After that, normal startup should be cheap: `kb-start` calls
