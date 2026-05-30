@@ -3,7 +3,7 @@ type: kb-manifest
 kb_id: kb-2026-05-30-live-cross-runtime-skill-eval-harness
 brainstorm_path: docs/brainstorms/2026-05-30-live-cross-runtime-skill-eval-harness-requirements.md
 created: 2026-05-30
-status: active
+status: reviewed
 scope-verified-files:
   - docs/brainstorms/2026-05-30-live-cross-runtime-skill-eval-harness-requirements.md
   - docs/context/eval-map.md
@@ -136,14 +136,14 @@ slices:
     test_level: none
     functional_risk: none
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: ""
+    notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-check: forecast=3 changed=3 discovered=0 unexplained=0; proof: manual review confirmed kb-eval-map requires pass-command/pass-result/negative-check/negative-command/negative-result/reverted evidence; memory-impact: durable; areas=testing,eval-map"
 ---
 
 # KB: Live Cross-Runtime Skill Eval Harness
@@ -156,14 +156,14 @@ Brainstorm: `docs/brainstorms/2026-05-30-live-cross-runtime-skill-eval-harness-r
 
 | # | Slice | Blocked By | Verification | Test Level | HITL | Status |
 |---|---|---|---|---|---|---|
-| 1 | Add GHCP live skill eval adapter | - | functional | functional-cli | no | pending |
-| 2 | Wire adapter dry-runs into canonical checks | slice-001 | functional | functional-cli | no | pending |
-| 3 | Add live cross-runtime corpus runner | slice-001 | functional | functional-cli | no | pending |
-| 4 | Expand deterministic trace rule scoring | - | tdd | functional-cli | no | pending |
-| 5 | Add transcript-derived claim verifier | slice-004 | tdd | functional-cli | no | pending |
-| 6 | Add output quality rubric scorer | - | tdd | functional-cli | no | pending |
-| 7 | Add cost and regression reporting | slice-003 | functional | functional-cli | no | pending |
-| 8 | Add eval-map scaffold negative validation | - | verification-only | none | no | pending |
+| 1 | Add GHCP live skill eval adapter | - | functional | functional-cli | no | done |
+| 2 | Wire adapter dry-runs into canonical checks | slice-001 | functional | functional-cli | no | done |
+| 3 | Add live cross-runtime corpus runner | slice-001 | functional | functional-cli | no | done |
+| 4 | Expand deterministic trace rule scoring | - | tdd | functional-cli | no | done |
+| 5 | Add transcript-derived claim verifier | slice-004 | tdd | functional-cli | no | done |
+| 6 | Add output quality rubric scorer | - | tdd | functional-cli | no | done |
+| 7 | Add cost and regression reporting | slice-003 | functional | functional-cli | no | done |
+| 8 | Add eval-map scaffold negative validation | - | verification-only | none | no | done |
 
 ## Assumptions
 
@@ -185,3 +185,16 @@ Brainstorm: `docs/brainstorms/2026-05-30-live-cross-runtime-skill-eval-harness-r
   deterministic pass/fail gates.
 - `docs/context/eval-map.md`, `docs/context/operations/testing.md`, and
   `todo.md` reflect the new truth.
+
+## Completion Review
+
+- review: P0=0 P1=0 P2=0 P3=0; local completion review fixed doc drift in this manifest, `todo.md`, and eval docs before commit.
+- follow-up-resolution: resolved 3, logged 1, blocked 0; remaining logged item is the ATV scaffold/plugin shipping contract in `todo.md`.
+- proof: `powershell -ExecutionPolicy Bypass -File .\.github\skills\kb-check\scripts\kb-check.ps1 -All` exit=0 on 2026-05-30; `git diff --check` exit=0 in working repo and ATV; `kb-eval-map` hashes match working, Codex, Copilot, agents, and ATV.
+- compound: skipped - standard harness implementation already documented in README, eval map, testing operations, and slice plans.
+- learn: skipped - no P0/P1 review findings or new cross-project instinct beyond documented harness behavior.
+- evolve: skipped - completion count did not reach cadence threshold.
+- kb-map-refresh: done - updated `README.md`, `docs/context/eval-map.md`, `docs/context/operations/testing.md`, `todo.md`, and this manifest.
+- memory-maintenance: no new signals; existing ATV scaffold/plugin distribution decision remains open.
+- compact: skipped - no startup bloat created.
+- cleanup: no QA screenshots; `.atv/eval-runs/` is gitignored run evidence; todo hygiene moved completed live eval work to `todo-done.md`.

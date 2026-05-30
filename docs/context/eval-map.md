@@ -78,7 +78,7 @@ and compares pass/non-pass plus size/time proxies against selected baselines.
 | captured skill result scoring | deterministic |
 | sync drift hashes | deterministic |
 | git whitespace/conflict checks | deterministic |
-| output quality scoring | LLM-judged, future |
+| output quality scoring | deterministic rubric selftest |
 | Codex skill prompt routing live run | mixed: model action plus deterministic route/trace scoring |
 | final claim verification | deterministic filesystem/git/log checks |
 
@@ -100,7 +100,5 @@ are stable.
 ## Open Eval Gaps
 
 - Grow the live Codex/GHCP corpus beyond the current route fixture set.
-- Expand trace scoring for forbidden shortcuts and required workflow reads.
-- Add scaffold negative-check validation to future consuming-repo eval maps: any
-  generated smoke eval must fail when its expected selector/status/output/schema
-  is intentionally broken.
+- Optional exporters can be added for Langfuse, Braintrust, LangSmith,
+  Promptfoo, or DeepEval after local JSON/Markdown reports remain stable.

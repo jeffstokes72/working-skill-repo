@@ -107,17 +107,19 @@ prompt/output datasets are the native proof surface.
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.
 
-## Planned Harness Gaps
+## Remaining Harness Growth
 
-The current harness does not yet validate every desirable skill property. These
-are planned gaps, not current capability:
+The current harness covers the core planned eval stack. Remaining growth areas:
 
 - route skills have decision tables and escalation rules;
 - execution skills name deterministic proof requirements;
 - lazy references exist and are linked only when needed;
 - broader live Codex/GHCP corpus covers more than the initial fixture;
-- trace scoring covers forbidden shortcuts and required workflow reads;
-- scaffold negative-validation proof for future consuming-repo smoke evals.
+- optional dashboard exporters can be added after local reports stay stable.
+
+`kb-eval-map` scaffolded smoke evals must record pass-command, pass-result,
+negative-check, negative-command, negative-result=failed-as-expected, and
+reverted=true evidence before reporting success.
 
 ## Route Eval Seeds
 

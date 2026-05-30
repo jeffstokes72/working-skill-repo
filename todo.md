@@ -28,7 +28,6 @@ Make this the highest-reliability portable skill bundle for the user's workflow:
 
 ## Current Focus
 
-🔧 in_progress execute live cross-runtime skill eval harness slices. Slices 001-007 done; slice 008 next.
 ⬜ pending decide ATV scaffold/plugin shipping contract for optional KB skills.
 
 Audit note: `docs/context/research/2026-05-29-skill-repo-gap-audit.md`
@@ -42,7 +41,7 @@ Live eval manifest: `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-
 - This repo is the working source for portable skills under `.github/skills/`.
 - Personal/global installs currently match this repo for KB skills.
 - ATV scaffold/plugin copies are not fully aligned with the KB skill surface.
-- Deterministic skill lint, route-complexity fixtures, sync drift checks, and captured-result scoring exist; Codex has a live route-fixture adapter, while GHCP and broader live corpora remain planned.
+- Deterministic skill lint, route-complexity fixtures, captured-result scoring, trace rule scoring, claim verification, output-quality rubric checks, regression reporting, sync drift checks, and Codex/GHCP live adapters exist. Live model calls remain explicit and outside `kb-check -All`.
 
 ## Active Work
 
@@ -54,10 +53,6 @@ Validation: `git diff --check`; hash/drift probe; web-source scan; repo inventor
 
 | Gap | Status | Priority | Link |
 |---|---|---:|---|
-| Add deterministic skill lint/eval harness | ✅ done | P0 | `docs/context/research/2026-05-29-skill-repo-gap-audit.md` |
-| Add route-complexity rubric/evals to prevent over/under-planning | ✅ done | P0 | `docs/context/research/2026-05-29-skill-repo-gap-audit.md` |
-| Resolve portable-bundle memory exception vs bootstrap requirement | ✅ done | P1 | `docs/context/memory-maintenance.md` |
-| Execute live cross-runtime skill eval harness | ⬜ pending | P0 | `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md` |
 | Decide ATV scaffold/plugin propagation contract for KB skills | ⬜ pending | P1 | `docs/context/memory-maintenance.md` |
 
 ## Handoff Queue
@@ -85,3 +80,4 @@ None.
 - 2026-05-30: Added deterministic `skill-eval` scorer for captured skill result JSON. `kb-check -All` now self-tests route/proof/claim failures before sync drift.
 - 2026-05-30: Added Codex live skill eval adapter. `scripts/skill-eval-run-codex.ps1` runs route fixtures through `codex exec`, captures schema JSON, and scores it with `skill-eval`; dry-run is included in `kb-check -All`.
 - 2026-05-30: Planned the remaining live cross-runtime eval harness: GHCP adapter, live corpus runner, trace/claim scoring, output quality, cost regression, and eval-map negative validation.
+- 2026-05-30: Completed the live cross-runtime eval harness. GHCP adapter, corpus runner, trace/claim scoring, output-quality selftests, regression reports, and eval-map scaffold negative-validation are implemented and documented.

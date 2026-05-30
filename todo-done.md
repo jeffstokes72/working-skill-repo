@@ -4,6 +4,7 @@
 
 ## 2026-05-30
 
+- Live Cross-Runtime Skill Eval Harness - added GHCP live adapter, Codex/GHCP corpus runner, deterministic trace scoring, transcript claim verification, output-quality rubric selftests, regression reporting, and `kb-eval-map` scaffold negative-validation evidence. Proof: `kb-check -All`, working/ATV `git diff --check`, and required skill hash sync passed.
 - Skill Eval Scorer - added `scripts/skill-eval.ps1`, result schema docs, pass/fail self-test fixtures, and `kb-check -All` wiring. Proof: `skill-eval` catches intentional route/proof/claim failures and full `kb-check -All` passed.
 - KB Eval Map - added `kb-eval-map`, wired bootstrap to create `docs/context/eval-map.md`, refreshed docs, synced required global/ATV skill copies, and verified with `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` plus `git diff --check` in both touched repos.
 

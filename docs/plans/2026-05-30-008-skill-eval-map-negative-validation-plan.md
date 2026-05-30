@@ -17,7 +17,7 @@ expected_files:
   - path: docs/context/operations/testing.md
     op: edit
     scope: "document how scaffolded smoke eval validation should be recorded"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -48,3 +48,9 @@ turns "smoke eval exists" into "smoke eval can actually fail."
 - Manual review of `kb-eval-map` scaffold policy against this slice.
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`
 - `git diff --check`
+
+## Result
+
+Done. `kb-eval-map` now treats scaffolded smoke eval validation as incomplete
+unless pass evidence, failed-as-expected negative evidence, and revert evidence
+are recorded.
