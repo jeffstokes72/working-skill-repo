@@ -449,15 +449,19 @@ For this repo, `kb-check` now discovers the cross-runtime skill quality suite:
   route/proof/claim failures.
 - `scripts/skill-eval-run-codex.ps1` can run route fixtures through `codex exec`
   and emits scorer-compatible result JSON; `kb-check -All` runs its dry-run.
+- `scripts/skill-eval-run-ghcp.ps1` can run route fixtures through GitHub
+  Copilot CLI and emits scorer-compatible result JSON; GHCP uses strict parsing
+  rather than schema enforcement because the observed CLI has no
+  `--output-schema` flag. `kb-check -All` runs its dry-run.
 - `scripts/skill-sync-report.ps1` compares working, global, and ATV skill
   targets without copying or overwriting anything.
 
 Remaining live-eval work is tracked in
 `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md`.
-The missing pieces are GHCP live adapter parity, a full live Codex/GHCP fixture
-corpus, transcript-derived claim verification, output-quality scoring, cost
-regression reporting, and scaffold negative-validation proof for future
-`kb-eval-map` smoke evals.
+The missing pieces are a full live Codex/GHCP fixture corpus,
+transcript-derived claim verification, output-quality scoring, cost regression
+reporting, and scaffold negative-validation proof for future `kb-eval-map`
+smoke evals.
 
 The shared contract lives in `config/skill-quality.json`. Required targets must
 match; optional ATV scaffold/plugin differences are reported as warnings until

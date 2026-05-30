@@ -24,14 +24,14 @@ slices:
     test_level: functional-cli
     functional_risk: narrow
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "If Copilot auth is unavailable, adapter must emit a clear unavailable/skip state rather than pass."
+    notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must stop listing GHCP adapter as missing; scope-discovery: docs/context/operations/testing.md - testing operations must list implemented GHCP adapter; scope-check: forecast=3 changed=5 discovered=2 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun exit=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix exit=0 result=.atv/eval-runs/20260530-014242-tiny-typo-fix-ghcp/result.json score=0 issues; memory-impact: durable; areas=testing,eval-map"
   - id: slice-002
     title: "Wire adapter dry-runs into canonical checks"
     path: docs/plans/2026-05-30-002-tool-adapter-dry-run-kb-check-plan.md
@@ -40,14 +40,14 @@ slices:
     test_level: functional-cli
     functional_risk: narrow
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: ""
+    notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; scope-discovery: E:/all-the-vibes/.github/skills/kb-check/scripts/kb-check.ps1 - required ATV skill sync target; proof: kb-check -List showed skill-eval-ghcp-dry-run; proof: kb-check -All exit=0 including Codex and GHCP dry-runs; proof: skill-sync-report required issues=0; memory-impact: durable; areas=testing,quality-contract,sync"
   - id: slice-003
     title: "Add live cross-runtime corpus runner"
     path: docs/plans/2026-05-30-003-tool-live-cross-runtime-corpus-runner-plan.md

@@ -55,9 +55,9 @@ Supported claim checks:
 - `command_ran`
 - `file_read`
 
-Live adapters should produce this result shape from transcripts/traces, then let
-this deterministic scorer decide pass/fail. The Codex adapter exists; GHCP is
-still a planned adapter.
+Live adapters produce this result shape from transcripts/traces, then let this
+deterministic scorer decide pass/fail. Codex and GHCP adapters exist; live model
+runs are explicit because they require runtime auth and spend.
 
 ## Codex Adapter
 
@@ -79,3 +79,27 @@ then calls `scripts/skill-eval.ps1 -ResultPath <result.json>`.
 
 Dry-run mode is part of `kb-check -All`; live mode is explicit because it calls a
 model.
+
+## GHCP Adapter
+
+Run the GHCP adapter in safe dry-run mode:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun
+```
+
+Run one live GHCP eval:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -KeepRun
+```
+
+The GHCP adapter creates a disposable git worktree under `.atv/eval-runs/`, runs
+GitHub Copilot CLI non-interactively, captures stdout/stderr plus a transcript
+artifact when available, parses strict JSON from the final response, writes
+`result.json`, then calls `scripts/skill-eval.ps1 -ResultPath <result.json>`.
+
+GHCP does not expose a Codex-style `--output-schema` flag in the currently
+observed local CLI help, so this adapter uses prompt-level JSON constraints and
+deterministic parsing. Invalid or missing JSON is a hard adapter failure, not a
+pass.

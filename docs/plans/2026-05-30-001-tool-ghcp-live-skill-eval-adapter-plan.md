@@ -17,7 +17,7 @@ expected_files:
   - path: docs/context/eval-map.md
     op: edit
     scope: "update GHCP adapter gap to implemented or runtime-auth-aware state"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -57,3 +57,8 @@ the live eval passed.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix`
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1`
 - `git diff --check`
+
+## Result
+
+Done. Live GHCP route eval for `tiny-typo-fix` passed deterministic scoring:
+`.atv/eval-runs/20260530-014242-tiny-typo-fix-ghcp/result.json`.

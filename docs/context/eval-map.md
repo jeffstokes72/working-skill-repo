@@ -15,7 +15,7 @@ Codex/GHCP the same workflow contract.
 | Skill structure remains valid | `.github/skills/**/SKILL.md` | `scripts/skill-lint.ps1` | Warnings remain for inherited older skills | P1 |
 | Route complexity stays calibrated | `evals/route-complexity/*.json` | `scripts/route-complexity-eval.ps1` | Fixtures are deterministic metadata, not live prompt runs | P0 |
 | Required skill copies stay synced | global installs and ATV `.github` skills | `scripts/skill-sync-report.ps1` | ATV scaffold/plugin shipping policy unresolved | P1 |
-| Skill edits do not regress behavior | prompt/trace/claim evals | `scripts/skill-eval.ps1`; `scripts/skill-eval-run-codex.ps1` | Need GHCP adapter and broader corpus | P0 |
+| Skill edits do not regress behavior | prompt/trace/claim evals | `scripts/skill-eval.ps1`; `scripts/skill-eval-run-codex.ps1`; `scripts/skill-eval-run-ghcp.ps1` | Need broader live corpus and richer trace/claim scoring | P0 |
 
 ## Existing Harnesses
 
@@ -24,6 +24,7 @@ Codex/GHCP the same workflow contract.
 - `scripts/route-complexity-eval.ps1`
 - `scripts/skill-eval.ps1`
 - `scripts/skill-eval-run-codex.ps1`
+- `scripts/skill-eval-run-ghcp.ps1`
 - `scripts/skill-sync-report.ps1`
 - `git diff --check`
 
@@ -52,7 +53,10 @@ captured agent result JSON against route fixtures and claim checks, and its
 self-test includes intentionally bad route/proof/claim outputs that must fail.
 The Codex adapter exists at `scripts/skill-eval-run-codex.ps1`; dry-run mode is
 included in `kb-check -All`, and live mode explicitly invokes `codex exec` in a
-disposable read-only worktree.
+disposable read-only worktree. The GHCP adapter exists at
+`scripts/skill-eval-run-ghcp.ps1`; it uses GitHub Copilot CLI prompt-level JSON
+constraints because the observed local CLI does not expose a Codex-style
+`--output-schema` flag.
 
 ## Deterministic vs LLM-Judged
 
@@ -72,9 +76,9 @@ disposable read-only worktree.
 None for current deterministic checks.
 
 The Codex adapter requires a working `codex` CLI and authenticated Codex session.
-Future GHCP adapters may require runtime-specific CLI access, trace capture, or
-authenticated platform sessions. The deterministic scorer can run without those
-sessions when given captured result JSON.
+The GHCP adapter requires a working `copilot` CLI and authenticated Copilot
+session. The deterministic scorer can run without those sessions when given
+captured result JSON.
 
 ## Dashboard / Export Options
 
@@ -84,8 +88,7 @@ are stable.
 
 ## Open Eval Gaps
 
-- Build GHCP adapter that produces `evals/skill-eval` result JSON.
-- Run and grow the live Codex corpus beyond one fixture.
+- Run and grow the live Codex/GHCP corpus beyond one fixture.
 - Expand trace scoring for forbidden shortcuts and required workflow reads.
 - Expand claim verification from structured claim checks to transcript-derived
   claims against git/files/logs/artifacts.

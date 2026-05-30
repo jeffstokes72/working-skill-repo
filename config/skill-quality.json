@@ -19,7 +19,7 @@
       "eval_modes": {
         "static": "supported",
         "fixture": "supported",
-        "live_model": "simulated"
+        "live_model": "supported-explicit"
       }
     },
     "ghcp": {
@@ -40,7 +40,7 @@
       "eval_modes": {
         "static": "supported",
         "fixture": "supported",
-        "live_model": "simulated"
+        "live_model": "supported-explicit"
       }
     }
   },

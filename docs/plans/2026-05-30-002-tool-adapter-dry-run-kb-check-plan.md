@@ -20,7 +20,7 @@ expected_files:
   - path: README.md
     op: edit
     scope: "summarize cross-runtime adapter dry-runs in visible quality workflow"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -52,3 +52,8 @@ runs remain explicit commands.
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1`
 - `git diff --check`
+
+## Result
+
+Done. `kb-check -All` now runs both Codex and GHCP adapter dry-runs, and required
+global/ATV skill copies were synced.
