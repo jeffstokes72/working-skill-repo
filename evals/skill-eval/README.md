@@ -103,3 +103,23 @@ GHCP does not expose a Codex-style `--output-schema` flag in the currently
 observed local CLI help, so this adapter uses prompt-level JSON constraints and
 deterministic parsing. Invalid or missing JSON is a hard adapter failure, not a
 pass.
+
+## Live Corpus Runner
+
+Run both adapters in dry-run mode:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun
+```
+
+Run one explicit live cross-runtime fixture:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-live-corpus.ps1 -FixtureId tiny-typo-fix -Runtime codex,ghcp
+```
+
+The corpus runner writes `summary.json` and `summary.md` under
+`.atv/eval-runs/<timestamp>-live-corpus*/`. Result statuses distinguish pass,
+adapter-missing, adapter-failed, invalid-json, score-failed, and
+runtime-unavailable. Live corpus runs are never part of the default
+`kb-check -All` gate.

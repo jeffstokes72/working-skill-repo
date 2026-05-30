@@ -17,7 +17,7 @@ expected_files:
   - path: docs/context/eval-map.md
     op: edit
     scope: "update live corpus coverage from one Codex fixture to cross-runtime command"
-status: pending
+status: done
 owner: agent
 blocked_reason: ""
 resume_when: ""
@@ -49,3 +49,8 @@ and skipped-by-platform states.
 - `powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun`
 - One explicit live Codex smoke run if auth is available.
 - `git diff --check`
+
+## Result
+
+Done. Dry-run corpus orchestration passed for all 8 current fixtures across both
+Codex and GHCP adapters: 16 pass results.

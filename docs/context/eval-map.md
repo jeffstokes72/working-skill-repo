@@ -25,6 +25,7 @@ Codex/GHCP the same workflow contract.
 - `scripts/skill-eval.ps1`
 - `scripts/skill-eval-run-codex.ps1`
 - `scripts/skill-eval-run-ghcp.ps1`
+- `scripts/skill-eval-run-live-corpus.ps1`
 - `scripts/skill-sync-report.ps1`
 - `git diff --check`
 
@@ -56,7 +57,8 @@ included in `kb-check -All`, and live mode explicitly invokes `codex exec` in a
 disposable read-only worktree. The GHCP adapter exists at
 `scripts/skill-eval-run-ghcp.ps1`; it uses GitHub Copilot CLI prompt-level JSON
 constraints because the observed local CLI does not expose a Codex-style
-`--output-schema` flag.
+`--output-schema` flag. `scripts/skill-eval-run-live-corpus.ps1` runs selected
+fixtures across Codex and GHCP adapters and summarizes pass/fail/skip categories.
 
 ## Deterministic vs LLM-Judged
 
@@ -88,7 +90,7 @@ are stable.
 
 ## Open Eval Gaps
 
-- Run and grow the live Codex/GHCP corpus beyond one fixture.
+- Grow the live Codex/GHCP corpus beyond the current route fixture set.
 - Expand trace scoring for forbidden shortcuts and required workflow reads.
 - Expand claim verification from structured claim checks to transcript-derived
   claims against git/files/logs/artifacts.

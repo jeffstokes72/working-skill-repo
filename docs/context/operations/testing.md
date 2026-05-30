@@ -90,6 +90,9 @@ prompt/output datasets are the native proof surface.
   the GHCP live-adapter plumbing without calling a model. Live mode is explicit
   because it invokes GitHub Copilot CLI and relies on prompt-level JSON
   constraints plus deterministic parsing.
+- `scripts/skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun`
+  validates corpus orchestration across both adapters. Live mode is explicit and
+  not part of `kb-check -All`.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.

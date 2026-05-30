@@ -56,14 +56,14 @@ slices:
     test_level: functional-cli
     functional_risk: broad
     hitl: false
-    status: pending
+    status: done
     owner: agent
     blocked_reason: ""
     resume_when: ""
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "Live model calls remain explicit and outside kb-check -All."
+    notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must mention explicit corpus runner; scope-discovery: docs/context/operations/testing.md - testing operations must document corpus dry-run/live boundary; scope-check: forecast=3 changed=5 discovered=2 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-live-corpus.ps1 -FixtureId tiny-typo-fix -Runtime codex,ghcp -DryRun exit=0 results=2; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun exit=0 results=16; memory-impact: durable; areas=testing,eval-map"
   - id: slice-004
     title: "Expand deterministic trace rule scoring"
     path: docs/plans/2026-05-30-004-tool-trace-rule-scoring-plan.md
