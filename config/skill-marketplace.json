@@ -56,6 +56,19 @@
     ],
     "promotion_target": "E:/agent-marketplace/skills/<skill>"
   },
+  "quarantine_firebreak": {
+    "never_load_from_quarantine": true,
+    "enforced_by": "scripts/skill-marketplace-firebreak.ps1",
+    "additional_active_skill_roots": [
+      "E:/all-the-vibes/.github/skills"
+    ],
+    "fail_closed_rules": [
+      "active skill roots must not be inside quarantine",
+      "loadable skill directories must not link into quarantine",
+      "approved catalog paths must not resolve into quarantine",
+      "quarantine catalog entries must not be marked approved"
+    ]
+  },
   "pipeline_policy": {
     "project_local_first": true,
     "project_pipeline_path": "config/pipelines/<pipeline>.json",

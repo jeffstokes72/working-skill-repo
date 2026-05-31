@@ -507,6 +507,13 @@ Reusable pipelines follow the same rule: prove them first as project-local
 `config/pipelines/*.json`, then promote approved copies to
 `E:\agent-marketplace\pipelines`.
 
+Quarantine is a firebreak, not a category label. `kb-check -All` runs
+`scripts/skill-marketplace-firebreak.ps1`, which fails if any active or
+approved skill root resolves into `E:\agent-marketplace\quarantine`, if an
+approved catalog entry points into quarantine, or if a quarantine entry is
+marked approved in place. Promotion means copying a reviewed, hash-pinned skill
+into `E:\agent-marketplace\skills`, never loading directly from quarantine.
+
 The runtime boundary is:
 
 - skills do work;

@@ -24,6 +24,10 @@ It defines:
 The private marketplace contract lives in `config/skill-marketplace.json`. It
 records `E:/agent-marketplace` as the approved catalog root and defines the
 project-local-first promotion policy for learned skills and reusable pipelines.
+`scripts/skill-marketplace-firebreak.ps1` enforces the quarantine boundary:
+active skill roots, approved catalog paths, and loadable skill links must never
+resolve into `E:/agent-marketplace/quarantine`. This is a blocking
+`kb-check -All` gate, not a naming convention.
 
 `kb-check.ps1` discovers this repo as a skill repo when `.github/skills` and
 `config/skill-quality.json` exist.
@@ -56,6 +60,8 @@ per-skill drift.
 - `skill-eval-quality`
 - `kb-pipeline-selftest`
 - `skill-surface-report`
+- `skill-marketplace-firebreak`
+- `skill-marketplace-firebreak-selftest`
 - `skill-sync-report`
 
 `kb-check.ps1 -All` runs every discovered check and exits nonzero when a
@@ -155,6 +161,13 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-surface-report.ps1` reports route-level loaded skill surface
   with line counts, rough token estimates, and content hashes. It can compare
   against a JSON baseline when `-BaselinePath` is provided.
+- `scripts/skill-marketplace-firebreak.ps1` enforces the marketplace quarantine
+  boundary by failing when any active/approved skill root or approved catalog
+  entry resolves into quarantine. Quarantine entries cannot become loadable by
+  being marked approved in place.
+- `scripts/skill-marketplace-firebreak-selftest.ps1` proves the firebreak trips
+  by generating a temporary config that points an active skill root at
+  quarantine and requiring a nonzero result.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.

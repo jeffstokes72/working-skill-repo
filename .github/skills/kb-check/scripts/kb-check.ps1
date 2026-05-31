@@ -71,6 +71,12 @@ if ((Test-Path ".github/skills") -and (Test-Path "config/skill-quality.json")) {
   if (Test-Path "scripts/skill-surface-report.ps1") {
     $checks.Add((Add-Check "skill-surface-report" "powershell -ExecutionPolicy Bypass -File scripts\skill-surface-report.ps1" "skill loaded-surface report detected"))
   }
+  if (Test-Path "scripts/skill-marketplace-firebreak.ps1") {
+    $checks.Add((Add-Check "skill-marketplace-firebreak" "powershell -ExecutionPolicy Bypass -File scripts\skill-marketplace-firebreak.ps1" "private marketplace quarantine firebreak detected"))
+  }
+  if (Test-Path "scripts/skill-marketplace-firebreak-selftest.ps1") {
+    $checks.Add((Add-Check "skill-marketplace-firebreak-selftest" "powershell -ExecutionPolicy Bypass -File scripts\skill-marketplace-firebreak-selftest.ps1" "private marketplace quarantine firebreak negative selftest detected"))
+  }
   if (Test-Path "scripts/skill-sync-report.ps1") {
     $checks.Add((Add-Check "skill-sync-report" "powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1" "skill sync target config detected"))
   }

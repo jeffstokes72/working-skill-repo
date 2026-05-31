@@ -72,6 +72,8 @@ or broad workflow skills still need manual review even when the numbers pass.
 
 - Public marketplaces are discovery sources only.
 - Public imports land in `E:/agent-marketplace/quarantine/`.
+- Runtime loaders must never read from quarantine. The blocking firebreak is
+  `scripts/skill-marketplace-firebreak.ps1`, wired into `kb-check -All`.
 - Approved marketplace skills are pinned by hash before pull/install.
 - Global directories stay small. They are runtime install targets, not the
   private catalog.
