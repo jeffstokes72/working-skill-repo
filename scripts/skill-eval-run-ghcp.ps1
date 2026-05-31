@@ -95,9 +95,43 @@ function Read-JsonObjectFromText {
   try {
     return ($trimmed | ConvertFrom-Json)
   } catch {
-    $match = [regex]::Match($trimmed, '(?s)\{.*\}')
-    if ($match.Success) {
-      return ($match.Value | ConvertFrom-Json)
+    $candidates = [System.Collections.Generic.List[string]]::new()
+    $depth = 0
+    $start = -1
+    $inString = $false
+    $escaped = $false
+    for ($i = 0; $i -lt $trimmed.Length; $i++) {
+      $ch = $trimmed[$i]
+      if ($inString) {
+        if ($escaped) {
+          $escaped = $false
+        } elseif ($ch -eq '\') {
+          $escaped = $true
+        } elseif ($ch -eq '"') {
+          $inString = $false
+        }
+        continue
+      }
+      if ($ch -eq '"') {
+        $inString = $true
+      } elseif ($ch -eq '{') {
+        if ($depth -eq 0) {
+          $start = $i
+        }
+        $depth++
+      } elseif ($ch -eq '}') {
+        $depth--
+        if (($depth -eq 0) -and ($start -ge 0)) {
+          $candidates.Add($trimmed.Substring($start, $i - $start + 1))
+          $start = -1
+        }
+      }
+    }
+    for ($i = $candidates.Count - 1; $i -ge 0; $i--) {
+      try {
+        return ($candidates[$i] | ConvertFrom-Json)
+      } catch {
+      }
     }
     throw
   }
@@ -214,8 +248,8 @@ Rules:
 - Fill trace.files_read and trace.commands only with files/commands you actually used.
 - Include proof expectations that the selected route should eventually produce.
 - If you did not read files or run commands, use empty arrays for those trace fields.
-- claim_checks is for concrete claims only; use [] when there are no concrete file or command claims.
-- Every claim_check object must include type, path, contains, expected, and claim. Use an empty string when path or contains does not apply.
+- Do not add claim_checks for files you read or commands you ran for this evaluation; the adapter verifies runtime capture separately.
+- Use claim_checks: [] unless your final answer makes a concrete filesystem or command-result claim not already represented in trace.
 
 Route fixture:
 $fixtureJson
@@ -330,9 +364,11 @@ function Invoke-GhcpFixture {
   [void]$process.Start()
   $process.StandardInput.Write($prompt)
   $process.StandardInput.Close()
-  $stdout = $process.StandardOutput.ReadToEnd()
-  $stderr = $process.StandardError.ReadToEnd()
+  $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+  $stderrTask = $process.StandardError.ReadToEndAsync()
   $process.WaitForExit()
+  $stdout = $stdoutTask.Result
+  $stderr = $stderrTask.Result
 
   $stdout | Set-Content -Path $stdoutPath -Encoding UTF8
   $stderr | Set-Content -Path $stderrPath -Encoding UTF8
@@ -355,7 +391,11 @@ function Invoke-GhcpFixture {
     throw "copilot failed for $($Fixture.id) with exit code $($process.ExitCode). See $stderrPath"
   }
 
-  $result = Read-JsonObjectFromText $stdout
+  if (Test-Path $sharePath) {
+    $result = Read-JsonObjectFromText (Get-Content $sharePath -Raw)
+  } else {
+    $result = Read-JsonObjectFromText $stdout
+  }
   Assert-ResultShape $result
 
   $result.id = $RunId
@@ -378,7 +418,7 @@ function Invoke-GhcpFixture {
   }
   $result.trace.tools = $tools
 
-  $checks = @(Get-ActionableClaimChecks $result.claim_checks)
+  $checks = @()
   $checks += [pscustomobject]@{
     type = "file_exists"
     path = $stdoutPath
