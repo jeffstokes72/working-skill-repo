@@ -1,0 +1,28 @@
+{
+  "id": "pass-observed-trace-precedence",
+  "fixture_id": "tiny-typo-fix",
+  "expected_result": "pass",
+  "actual": {
+    "route": "kb-fix",
+    "user_questions": 0,
+    "artifacts": ["changed file", "verification note"],
+    "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+  },
+  "trace": {
+    "files_read": ["todo.md", "docs/context/eval-map.md"],
+    "commands": ["git diff --check", "git reset --hard"],
+    "tools": ["shell"]
+  },
+  "observed_trace": {
+    "captured": true,
+    "method": "path-shim+git-diff",
+    "commands": ["git diff --check"],
+    "writes": [],
+    "deletes": []
+  },
+  "claim_checks": [],
+  "trace_rules": {
+    "required_commands": ["git diff --check"],
+    "forbidden_commands": ["git reset --hard"]
+  }
+}

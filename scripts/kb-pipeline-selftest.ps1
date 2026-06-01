@@ -3,6 +3,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -13,10 +14,11 @@ function Resolve-RepoPath {
 }
 
 $repoRoot = (Resolve-Path $Root).Path
+$psFile = Get-KbPowerShellFileCommand
 $runId = ""
 
 try {
-  $startOutput = powershell -ExecutionPolicy Bypass -File scripts\kb-pipeline.ps1 -Start skill-bundle-proof-spike | Out-String
+  $startOutput = Invoke-Expression "$psFile scripts\kb-pipeline.ps1 -Start skill-bundle-proof-spike" | Out-String
   if ($LASTEXITCODE -ne 0) {
     throw "Pipeline start failed."
   }
@@ -31,14 +33,14 @@ try {
     }
   }
 
-  $statusOutput = powershell -ExecutionPolicy Bypass -File scripts\kb-pipeline.ps1 -Status -RunId $runId | Out-String
+  $statusOutput = Invoke-Expression "$psFile scripts\kb-pipeline.ps1 -Status -RunId $runId" | Out-String
   if ($LASTEXITCODE -ne 0 -or $statusOutput -notmatch "Status: started") {
     throw "Pipeline status failed."
   }
 
   $oldErrorActionPreference = $ErrorActionPreference
   $ErrorActionPreference = "Continue"
-  powershell -ExecutionPolicy Bypass -File scripts\kb-pipeline.ps1 -Start does-not-exist 1>$null 2>$null
+  Invoke-Expression "$psFile scripts\kb-pipeline.ps1 -Start does-not-exist" 1>$null 2>$null
   $badPipelineExitCode = $LASTEXITCODE
   $ErrorActionPreference = $oldErrorActionPreference
   if ($badPipelineExitCode -eq 0) {

@@ -11,6 +11,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -26,6 +27,18 @@ function Has-Property {
 }
 
 function Add-Issue {
+  param(
+    [System.Collections.Generic.List[object]]$List,
+    [string]$ResultId,
+    [string]$Message
+  )
+  $List.Add([pscustomobject]@{
+    result = $ResultId
+    message = $Message
+  })
+}
+
+function Add-Warning {
   param(
     [System.Collections.Generic.List[object]]$List,
     [string]$ResultId,
@@ -190,22 +203,40 @@ function Test-ContainsAny {
 function Test-TraceRules {
   param(
     [System.Collections.Generic.List[object]]$Issues,
+    [System.Collections.Generic.List[object]]$Warnings,
     [string]$ResultId,
     $Result
   )
+
+  $observedCaptured = ((Has-Property $Result "observed_trace") -and (Has-Property $Result.observed_trace "captured") -and [bool]$Result.observed_trace.captured)
+  if ($observedCaptured) {
+    foreach ($write in @($Result.observed_trace.writes)) {
+      if ("$write") {
+        Add-Issue $Issues $ResultId "Observed write during routing eval: $write"
+      }
+    }
+    foreach ($delete in @($Result.observed_trace.deletes)) {
+      if ("$delete") {
+        Add-Issue $Issues $ResultId "Observed delete during routing eval: $delete"
+      }
+    }
+  } else {
+    Add-Warning $Warnings $ResultId "Observed writes/deletes were not captured; no-write routing invariant is unverified."
+  }
 
   if (-not (Has-Property $Result "trace_rules")) {
     return
   }
 
   $rules = $Result.trace_rules
-  $checks = @(
-    @{ field = "required_files_read"; trace = $Result.trace.files_read; label = "required file read" },
-    @{ field = "required_commands"; trace = $Result.trace.commands; label = "required command" },
-    @{ field = "required_tools"; trace = $Result.trace.tools; label = "required tool" }
+  $modelTrace = $Result.trace
+  $requiredChecks = @(
+    @{ field = "required_files_read"; trace = $modelTrace.files_read; label = "required file read" },
+    @{ field = "required_commands"; trace = $modelTrace.commands; label = "required command" },
+    @{ field = "required_tools"; trace = $modelTrace.tools; label = "required tool" }
   )
 
-  foreach ($check in $checks) {
+  foreach ($check in $requiredChecks) {
     if (Has-Property $rules $check.field) {
       foreach ($expected in @($rules.($check.field))) {
         if (-not (Test-ContainsAny $check.trace "$expected")) {
@@ -215,13 +246,31 @@ function Test-TraceRules {
     }
   }
 
-  $forbiddenChecks = @(
-    @{ field = "forbidden_files_read"; trace = $Result.trace.files_read; label = "forbidden file read" },
-    @{ field = "forbidden_commands"; trace = $Result.trace.commands; label = "forbidden command" },
-    @{ field = "forbidden_tools"; trace = $Result.trace.tools; label = "forbidden tool" }
-  )
+  if ((Has-Property $rules "forbidden_files_read") -and (@($rules.forbidden_files_read).Count -gt 0)) {
+    Add-Warning $Warnings $ResultId "forbidden_files_read is checked against model-reported trace only; file reads are not observed by the v1 wrapper."
+    foreach ($forbidden in @($rules.forbidden_files_read)) {
+      if (Test-ContainsAny $modelTrace.files_read "$forbidden") {
+        Add-Issue $Issues $ResultId "Forbidden self-reported file-read trace matched '$forbidden'."
+      }
+    }
+  }
 
-  foreach ($check in $forbiddenChecks) {
+  $forbiddenCommandTrace = $modelTrace.commands
+  $forbiddenToolTrace = $modelTrace.tools
+  if ($observedCaptured) {
+    $forbiddenCommandTrace = if (Has-Property $Result.observed_trace "commands") { $Result.observed_trace.commands } else { @() }
+    $forbiddenToolTrace = @()
+    if ((Has-Property $rules "forbidden_tools") -and (@($rules.forbidden_tools).Count -gt 0)) {
+      Add-Warning $Warnings $ResultId "observed_trace has no tools field in v1; forbidden_tools cannot be externally enforced."
+    }
+  } elseif ((Has-Property $rules "forbidden_commands") -or (Has-Property $rules "forbidden_tools")) {
+    Add-Warning $Warnings $ResultId "Forbidden command/tool rules are using self-reported trace because observed_trace was not captured."
+  }
+
+  foreach ($check in @(
+      @{ field = "forbidden_commands"; trace = $forbiddenCommandTrace; label = "forbidden command" },
+      @{ field = "forbidden_tools"; trace = $forbiddenToolTrace; label = "forbidden tool" }
+    )) {
     if (Has-Property $rules $check.field) {
       foreach ($forbidden in @($rules.($check.field))) {
         if (Test-ContainsAny $check.trace "$forbidden") {
@@ -300,6 +349,7 @@ function Test-Result {
   )
 
   $issues = [System.Collections.Generic.List[object]]::new()
+  $warnings = [System.Collections.Generic.List[object]]::new()
   $resultId = if (Has-Property $Result "id") { "$($Result.id)" } else { "<missing-id>" }
 
   foreach ($field in @("id", "fixture_id", "actual", "trace")) {
@@ -317,13 +367,13 @@ function Test-Result {
   }
 
   if (-not (Has-Property $Result "fixture_id")) {
-    return $issues
+    return [pscustomobject]@{ issues = $issues; warnings = $warnings; trace_confidence = "self-reported" }
   }
 
   $fixtureId = "$($Result.fixture_id)"
   if (-not $FixtureMap.ContainsKey($fixtureId)) {
     Add-Issue $issues $resultId "Unknown fixture_id '$fixtureId'."
-    return $issues
+    return [pscustomobject]@{ issues = $issues; warnings = $warnings; trace_confidence = "self-reported" }
   }
 
   $fixture = $FixtureMap[$fixtureId]
@@ -375,7 +425,7 @@ function Test-Result {
     }
   }
 
-  Test-TraceRules $issues $resultId $Result
+  Test-TraceRules $issues $warnings $resultId $Result
 
   if (Has-Property $Result "claim_artifacts") {
     foreach ($artifact in @($Result.claim_artifacts)) {
@@ -384,14 +434,19 @@ function Test-Result {
         Add-Issue $issues $resultId "Missing claim artifact '$artifact'."
         continue
       }
-      $claimOutput = powershell -ExecutionPolicy Bypass -File (Join-Path $RepoRoot "scripts/skill-eval-claims.ps1") -Root $RepoRoot -ClaimPath $artifactPath -Json | ConvertFrom-Json
+      $claimOutput = Invoke-KbPowerShellFile (Join-Path $RepoRoot "scripts/skill-eval-claims.ps1") @("-Root", $RepoRoot, "-ClaimPath", $artifactPath, "-Json") | ConvertFrom-Json
       if (-not $claimOutput.ok) {
         Add-Issue $issues $resultId "Claim artifact failed deterministic verification: $artifact"
       }
     }
   }
 
-  return $issues
+  $traceConfidence = if ((Has-Property $Result "observed_trace") -and (Has-Property $Result.observed_trace "captured") -and [bool]$Result.observed_trace.captured) { "observed" } else { "self-reported" }
+  return [pscustomobject]@{
+    issues = $issues
+    warnings = $warnings
+    trace_confidence = $traceConfidence
+  }
 }
 
 $repoRoot = (Resolve-Path $Root).Path
@@ -406,6 +461,7 @@ if (-not $ResultRoot) {
 $fixtureMap = Get-FixtureMap $fixtureRoot
 $resultFiles = Get-ResultFiles $repoRoot $ResultRoot $ResultPath
 $allIssues = [System.Collections.Generic.List[object]]::new()
+$allWarnings = [System.Collections.Generic.List[object]]::new()
 $rows = [System.Collections.Generic.List[object]]::new()
 $selfTestMode = -not $ResultPath
 
@@ -415,7 +471,12 @@ foreach ($issue in @(Test-RunManifest $repoRoot $ManifestPath $RequiredRunId)) {
 
 foreach ($file in $resultFiles) {
   $result = Get-Content $file.FullName -Raw | ConvertFrom-Json
-  $issues = @(Test-Result $repoRoot $result $fixtureMap $RequiredRunId)
+  $testResult = Test-Result $repoRoot $result $fixtureMap $RequiredRunId
+  $issues = @($testResult.issues)
+  $warnings = @($testResult.warnings)
+  foreach ($warning in $warnings) {
+    $allWarnings.Add($warning)
+  }
   $actualPass = ($issues.Count -eq 0)
   $expectedOutcome = if ((Has-Property $result "expected_result") -and $result.expected_result) { "$($result.expected_result)" } else { "pass" }
   $expectedPass = ($expectedOutcome -eq "pass")
@@ -440,6 +501,8 @@ foreach ($file in $resultFiles) {
     expected_result = $expectedOutcome
     actual_result = if ($actualPass) { "pass" } else { "fail" }
     issue_count = $issues.Count
+    warning_count = $warnings.Count
+    trace_confidence = $testResult.trace_confidence
   })
 }
 
@@ -483,6 +546,7 @@ $output = [pscustomobject]@{
     }
   } else { $null }
   issues = $allIssues
+  warnings = $allWarnings
 }
 
 if ($Json) {
@@ -495,6 +559,9 @@ if ($Json) {
   }
   foreach ($issue in $allIssues) {
     Write-Host "ERROR [$($issue.result)] $($issue.message)"
+  }
+  foreach ($warning in $allWarnings) {
+    Write-Host "WARN  [$($warning.result)] $($warning.message)"
   }
   if ($BaselinePath) {
     if ($UpdateBaseline) {

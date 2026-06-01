@@ -3,6 +3,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -28,10 +29,11 @@ function Invoke-JsonCommand {
 }
 
 $repoRoot = (Resolve-Path $Root).Path
+$psFile = Get-KbPowerShellFileCommand
 $runDir = $null
 
 try {
-  $adapterCommand = "powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix -DryRun -KeepRun -Json"
+  $adapterCommand = "$psFile scripts\skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix -DryRun -KeepRun -Json"
   $adapter = Invoke-JsonCommand $adapterCommand
   if ($adapter.exit_code -ne 0 -or -not $adapter.json.ok) {
     throw "Codex dry-run adapter failed before manifest selftest."
@@ -43,7 +45,7 @@ try {
   $manifestPath = "$($run.manifest_path)"
   $runId = "$($run.run_id)"
 
-  $goodCommand = "powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1 -ResultPath `"$resultPath`" -RequiredRunId `"$runId`" -ManifestPath `"$manifestPath`" -Json"
+  $goodCommand = "$psFile scripts\skill-eval.ps1 -ResultPath `"$resultPath`" -RequiredRunId `"$runId`" -ManifestPath `"$manifestPath`" -Json"
   $good = Invoke-JsonCommand $goodCommand
   if ($good.exit_code -ne 0 -or -not $good.json.ok) {
     throw "Skill eval rejected a valid manifest."
@@ -54,7 +56,7 @@ try {
   $manifest.protected_files[0].sha256 = ("0" * 64)
   $manifest | ConvertTo-Json -Depth 8 | Set-Content -Path $badManifestPath -Encoding UTF8
 
-  $badCommand = "powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1 -ResultPath `"$resultPath`" -RequiredRunId `"$runId`" -ManifestPath `"$badManifestPath`" -Json"
+  $badCommand = "$psFile scripts\skill-eval.ps1 -ResultPath `"$resultPath`" -RequiredRunId `"$runId`" -ManifestPath `"$badManifestPath`" -Json"
   $bad = Invoke-JsonCommand $badCommand
   if ($bad.exit_code -eq 0 -or $bad.json.ok) {
     throw "Skill eval accepted a manifest with a tampered protected-file SHA."

@@ -1,11 +1,26 @@
 {
   "id": "pass-good-output",
   "expected_result": "pass",
-  "quality": {
-    "completeness": { "score": 5, "judge": "deterministic", "reason": "All required result fields and expected evidence are present." },
-    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "Output is concise and easy to maintain." },
-    "relevance": { "score": 5, "judge": "deterministic", "reason": "Output directly addresses the fixture." },
-    "proof_quality": { "score": 5, "judge": "deterministic", "reason": "Executable proof is named." },
-    "right_sized_ceremony": { "score": 5, "judge": "deterministic", "reason": "No over-planning for a small task." }
+  "input_result": {
+    "id": "quality-pass-good-output",
+    "fixture_id": "tiny-typo-fix",
+    "actual": {
+      "route": "kb-fix",
+      "user_questions": 0,
+      "artifacts": ["changed file", "verification note"],
+      "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+    },
+    "trace": {
+      "files_read": ["todo.md", "docs/context/PROJECT.md"],
+      "commands": ["git diff --check"],
+      "tools": ["shell"]
+    }
+  },
+  "expected_quality": {
+    "completeness": { "score": 5 },
+    "maintainability": { "score": 5 },
+    "relevance": { "score": 5 },
+    "proof_quality": { "score": 5 },
+    "right_sized_ceremony": { "score": 5 }
   }
 }

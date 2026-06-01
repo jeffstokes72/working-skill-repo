@@ -3,6 +3,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -28,7 +29,8 @@ function Invoke-JsonCommand {
 }
 
 $repoRoot = (Resolve-Path $Root).Path
-$tempRoot = Resolve-RepoPath $repoRoot ".atv/eval-baseline-selftest"
+$psFile = Get-KbPowerShellFileCommand
+$tempRoot = Resolve-RepoPath $repoRoot ".atv/eval-baseline-selftest-$([guid]::NewGuid())"
 
 try {
   New-Item -ItemType Directory -Force -Path $tempRoot | Out-Null
@@ -40,13 +42,13 @@ try {
     Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $resultRoot $file.Name)
   }
 
-  $updateCommand = "powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1 -ResultRoot `"$resultRoot`" -BaselinePath `"$baselinePath`" -UpdateBaseline -Json"
+  $updateCommand = "$psFile scripts\skill-eval.ps1 -ResultRoot `"$resultRoot`" -BaselinePath `"$baselinePath`" -UpdateBaseline -Json"
   $update = Invoke-JsonCommand $updateCommand
   if ($update.exit_code -ne 0 -or -not $update.json.ok) {
     throw "Failed to create valid baseline."
   }
 
-  $compareCommand = "powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1 -ResultRoot `"$resultRoot`" -BaselinePath `"$baselinePath`" -Json"
+  $compareCommand = "$psFile scripts\skill-eval.ps1 -ResultRoot `"$resultRoot`" -BaselinePath `"$baselinePath`" -Json"
   $compare = Invoke-JsonCommand $compareCommand
   if ($compare.exit_code -ne 0 -or -not $compare.json.ok) {
     throw "Unchanged baseline comparison failed."

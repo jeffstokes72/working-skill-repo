@@ -1,11 +1,26 @@
 {
   "id": "fail-incomplete-proof",
   "expected_result": "fail",
-  "quality": {
-    "completeness": { "score": 4, "judge": "deterministic", "reason": "Route and artifact fields are present." },
-    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "No maintainability issue in the captured output." },
-    "relevance": { "score": 4, "judge": "deterministic", "reason": "Output addresses the fixture." },
-    "proof_quality": { "score": 1, "judge": "deterministic", "reason": "No executable proof was recorded." },
-    "right_sized_ceremony": { "score": 4, "judge": "deterministic", "reason": "No extra ceremony detected." }
+  "input_result": {
+    "id": "quality-fail-incomplete-proof",
+    "fixture_id": "tiny-typo-fix",
+    "actual": {
+      "route": "kb-fix",
+      "user_questions": 0,
+      "artifacts": ["changed file", "verification note"],
+      "proof": []
+    },
+    "trace": {
+      "files_read": ["todo.md"],
+      "commands": [],
+      "tools": ["shell"]
+    }
+  },
+  "expected_quality": {
+    "completeness": { "score": 3 },
+    "maintainability": { "score": 5 },
+    "relevance": { "score": 5 },
+    "proof_quality": { "score": 1 },
+    "right_sized_ceremony": { "score": 5 }
   }
 }

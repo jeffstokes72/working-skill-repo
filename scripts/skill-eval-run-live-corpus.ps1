@@ -12,6 +12,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -97,9 +98,10 @@ function Invoke-Adapter {
     [string]$StderrPath
   )
 
+  $psInvocation = Get-KbPowerShellInvocation
   $psi = [System.Diagnostics.ProcessStartInfo]::new()
-  $psi.FileName = "powershell"
-  $psi.Arguments = Join-ProcessArguments (@("-ExecutionPolicy", "Bypass", "-File", $ScriptPath) + $Arguments)
+  $psi.FileName = $psInvocation[0]
+  $psi.Arguments = Join-ProcessArguments (@($psInvocation | Select-Object -Skip 1) + @($ScriptPath) + $Arguments)
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
   $psi.UseShellExecute = $false

@@ -97,6 +97,28 @@ The paired `dependency-vulnerability-osv` harness records the OSV Scanner proof
 command for A06 dependency vulnerability checks. Missing `osv-scanner` is a
 tooling skip, not permission to invent vulnerability findings from package age.
 
+## Promotion Command
+
+The safe marketplace path is automated by:
+
+```powershell
+.\scripts\promote-marketplace-skill.ps1 `
+  -Source <reviewed-skill-dir> `
+  -SkillId <skill-id> `
+  -ApprovalReason "<why this is approved>" `
+  -InstallTargets codex,copilot,agents `
+  -Approved
+```
+
+The command validates frontmatter, copies the reviewed skill into approved
+marketplace storage, computes and pins the `SKILL.md` hash, syncs selected
+runtime globals, verifies hash equality, and runs the firebreak. If the approved
+destination resolves into quarantine, it fails closed.
+
+Use this command instead of direct global copy. Direct copy is only acceptable
+when restoring a previously approved, hash-matched skill and should still be
+followed by the hash/firebreak proof.
+
 ## Skill, Pipeline, Harness Boundary
 
 - Skills perform work.

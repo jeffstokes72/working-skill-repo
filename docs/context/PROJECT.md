@@ -5,7 +5,7 @@ Bootstrap confidence: mixed
 
 ## What This Is
 
-Portable skill bundle for KB workflow skills, reviewer agents, root `AGENTS.md`, Copilot instructions, and helper scripts. The repo is the working source that syncs into personal/global installs and selected ATV copies.
+Portable skill bundle for KB workflow skills, reviewer agents, root `AGENTS.md`, Copilot instructions, and helper scripts. The repo is the working source that syncs into personal/global installs and selected ATV copies. Original ATV `upstream/main` is a source to mine for useful ATV-native changes; this repo remains the source of truth for the KB overlay and its replacements.
 
 ## How To Run
 
@@ -18,14 +18,21 @@ git status --short
 Get-ChildItem .\.github\skills -Directory
 .\.github\skills\kb-check\scripts\kb-check.ps1 -List
 .\.github\skills\kb-check\scripts\kb-check.ps1 -All
+go run .\cmd\kbcheck core
 git diff --check
 ```
+
+On macOS/Linux, install PowerShell 7 and run the same gates with `pwsh
+-NoProfile -File <script>.ps1`. Child harness calls prefer `pwsh` and fall back
+to Windows PowerShell only when needed. `cmd/kbcheck` is a thin Go wrapper for
+the same gates; it provides a portable entrypoint but still requires PowerShell.
 
 ## How To Test
 
 Primary testing today is structural:
 
 - `git diff --check`
+- `go test ./...` when the Go wrapper is touched
 - skill inventory and frontmatter checks
 - hash drift comparison across install targets
 - targeted route/eval prompts run manually against scratch repos
@@ -57,6 +64,7 @@ See `docs/context/architecture/README.md`.
 | 2026 quality audit | `docs/context/research/2026-05-29-skill-repo-gap-audit.md` | Understanding current gaps and recommended priorities | verified |
 | Agent Skills Git distribution | `docs/context/research/2026-05-30-agent-skills-git-distribution.md` | Deciding canonical source, global installs, ATV policy, and deterministic sync scripts | verified |
 | Drift and propagation | `AGENTS.md`; `README.md`; `docs/context/memory-maintenance.md` | Syncing skills across global installs and ATV copies | mixed |
+| ATV upstream resync | `docs/context/epics/atv-upstream-resync.md`; `docs/context/research/2026-05-31-atv-upstream-skill-delta.md` | Understanding original ATV imports, rejected KB deletions, and workflow skill handling | verified |
 
 ## Current Work Pointers
 
@@ -68,10 +76,17 @@ See `docs/context/architecture/README.md`.
 ## Known Sharp Edges
 
 - Portable repo hygiene conflicts with the normal KB bootstrap requirement unless this repo's own memory is treated as skill-bundle maintenance.
-- `kb-check` now finds skill-repo checks through `config/skill-quality.json`; optional ATV scaffold/plugin differences are warning-only because those targets are intentionally thinner bundles by default.
+- `kb-check` now finds skill-repo checks through `config/skill-quality.json`; working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots are expected to stay hash-synced unless a deliberate packaging exception is recorded.
 - `kb-eval-map` is now the bootstrap-owned setup skill for repo-native eval surfaces; consuming repos still need their own `docs/context/eval-map.md`.
 - Some skills are long enough to make route-start context expensive; lazy references are used inconsistently.
-- ATV scaffold/plugin copies are partially missing KB skills or contain older inherited skill variants.
+- ATV scaffold/plugin copies are no longer intentionally thin for the tracked KB/CE skill set; `skill-sync-report` should show matches across all tracked roots.
+- Original ATV `upstream/main` is authoritative for ATV-native changes to
+  inspect, not a mirror target. Upstream KB deletions are rejected because KB is
+  this repo's overlay; superseded workflow skills such as `lfg`, `slfg`, and
+  `workflows-*` stay out unless the app uses them.
+- Focused review-skill merge check found the useful upstream `ce-review`
+  mechanics already present in local references. Keep KB caller names rather
+  than reviving old CE/LFG entry points.
 - `E:\agent-marketplace` is a private approved catalog, not a global install.
   Project-local learned skills and pipelines must prove reuse value before
   promotion; public imports land in quarantine first.
@@ -87,6 +102,7 @@ See `docs/context/architecture/README.md`.
 
 - `docs/context/research/2026-05-29-skill-repo-gap-audit.md`
 - `docs/context/research/2026-05-30-agent-skills-git-distribution.md`
+- `docs/context/research/2026-05-31-atv-upstream-skill-delta.md`
 - `docs/context/eval-map.md`
 
 ## Do Not Repeat

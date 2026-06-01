@@ -44,6 +44,27 @@
         }
       }
     },
+    "observed_trace": {
+      "type": "object",
+      "required": ["captured", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "captured": { "type": "boolean" },
+        "method": { "type": "string" },
+        "commands": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "writes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "deletes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
     "claim_checks": {
       "type": "array",
       "items": {

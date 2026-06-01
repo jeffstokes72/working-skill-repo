@@ -114,7 +114,9 @@ Run lightweight research to ground slice design in reality:
 
 - `repo-research-analyst`: similar features, routes, components, tests, commands, conventions.
 - `learnings-researcher`: relevant `docs/solutions/`, prior fixes, and known failures.
-- Local memory check: `docs/context/PROJECT.md`, relevant `docs/context/architecture/*`, and `docs/context/research/*`.
+- Local memory check: `docs/context/PROJECT.md`, `docs/context/landmines.md` when present, relevant `docs/context/architecture/*`, and `docs/context/research/*`.
+
+If `docs/context/landmines.md` exists, read only `Active Landmines`. Any relevant active landmine must become an explicit planning constraint, risk, guardrail, or verification requirement in the slice plan. Do not copy resolved/archive landmines into new plans unless the current work reopens the same failure mode.
 
 Run independent agents/reads/searches in parallel when the platform supports it. If named agents are unavailable, do the same work with native search/read tools.
 

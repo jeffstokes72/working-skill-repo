@@ -9,6 +9,9 @@ git status --short
 git diff --check
 .\.github\skills\kb-check\scripts\kb-check.ps1 -List
 .\.github\skills\kb-check\scripts\kb-check.ps1 -All
+.\scripts\kb-release-gate.ps1 -Profile local-release
+go run .\cmd\kbcheck core
+go test ./...
 ```
 
 ## Skill Quality Contract
@@ -45,44 +48,66 @@ official install command instead of using model judgment as proof.
 
 The sync drift report is read-only: it never copies files. It still exits
 nonzero for required-target drift and is part of the blocking `kb-check -All`
-gate. Optional ATV scaffold/plugin differences remain warnings until their
-shipping contract is decided.
+gate. Current policy expects ATV scaffold/plugin copies to match the working
+skill root for all tracked skills.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1
-powershell -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1 -VerboseOptional
+pwsh -NoProfile -File scripts\skill-sync-report.ps1
+pwsh -NoProfile -File scripts\skill-sync-report.ps1 -VerboseOptional
 ```
 
-Default output prints required issues in detail and summarizes optional ATV
-scaffold/plugin differences. Use `-VerboseOptional` when reviewing optional
-per-skill drift.
+Default output prints required issues in detail and summarizes any optional ATV
+scaffold/plugin differences. Current expected state is full match across
+working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots.
+Use `-VerboseOptional` when reviewing a deliberate packaging exception.
 
 ## Current Result
 
 `kb-check.ps1 -List` now reports skill-repo checks when run here:
 
 - `skill-lint`
+- `go-test`
 - `route-complexity-eval`
 - `skill-eval`
 - `skill-eval-manifest-selftest`
 - `skill-eval-baseline-selftest`
 - `skill-eval-codex-dry-run`
 - `skill-eval-ghcp-dry-run`
+- `skill-eval-observed-trace-dry-run`
 - `skill-eval-quality`
 - `kb-pipeline-selftest`
 - `skill-surface-report`
 - `skill-marketplace-firebreak`
 - `skill-marketplace-firebreak-selftest`
+- `marketplace-promotion-selftest`
+- `kb-release-gate-selftest`
+- `skill-surface-minimality-selftest`
+- `skill-surface-minimality`
+- `atv-upstream-delta-selftest`
+- `atv-upstream-delta`
 - `skill-sync-report`
 
 `kb-check.ps1 -All` runs every discovered check and exits nonzero when a
 required check fails.
 Expected current warnings:
 
-- hot-path skill size warnings;
-- summarized optional ATV scaffold/plugin drift or omissions.
+- hot-path skill size warnings.
 
-Required targets should report zero required sync issues.
+All tracked skill roots should report matches.
+
+The release gate is intentionally outside `kb-check -All` because it calls
+`kb-check -All` as one of its required checks:
+
+```powershell
+pwsh -NoProfile -File scripts\kb-release-gate.ps1 -Profile local-release
+pwsh -NoProfile -File scripts\kb-release-gate.ps1 -Profile live-release
+go run .\cmd\kbcheck local-release
+```
+
+`local-release` is the pre-sync proof command. `live-release` is explicit and
+may call authenticated Codex/GHCP CLIs; unavailable live surfaces must be labeled
+`skipped-explicit`, not silently treated as verified. The Go wrapper is only a
+portable entrypoint; it delegates to the same PowerShell release gate.
 
 Landmine lifecycle changes are verified with the same structural gate:
 
@@ -157,12 +182,19 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-eval-claims.ps1` self-tests transcript-derived claim artifacts:
   true deterministic claims pass, false deterministic claims fail, and ambiguous
   claims are reported without becoming proof.
-- `scripts/skill-eval-quality.ps1` self-tests output-quality rubric scoring for
-  completeness, maintainability, relevance, proof quality, and right-sized
-  ceremony.
+- `scripts/skill-eval-quality.ps1` computes deterministic output-quality scores
+  from raw captured result JSON for completeness, maintainability-shape,
+  relevance, proof quality, and right-sized ceremony.
 - `scripts/skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs`
   summarizes local live-run artifacts and compares them to a selected baseline
   when `-BaselinePath` is provided.
+- `scripts/kb-release-gate.ps1 -Profile local-release` composes the pre-sync
+  deterministic release gate. `scripts/kb-release-gate-selftest.ps1` proves
+  profile selection, explicit-live skip labeling, and required-check failure
+  propagation.
+- `cmd/kbcheck` wraps `core`, `local-release`, and `live-release` as a Go CLI.
+  `go test ./...` covers parsing and delegated command construction without
+  running the expensive gates.
 - `scripts/kb-pipeline.ps1 -Start skill-bundle-proof-spike` creates a
   non-agent pipeline spike run under `.atv/pipeline-runs/` with selected
   pipeline metadata, phase prompts, protected-file hashes, and proof command
@@ -172,6 +204,16 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-surface-report.ps1` reports route-level loaded skill surface
   with line counts, rough token estimates, and content hashes. It can compare
   against a JSON baseline when `-BaselinePath` is provided.
+- `scripts/skill-surface-minimality.ps1` statically classifies skills and
+  reviewer agents as required, conditional, unproven, unused candidates, or trim
+  candidates, with protected repo-policy skills excluded from cold-storage
+  deletion candidates. It produces candidates only; it does not approve
+  deletion.
+- `scripts/atv-upstream-delta.ps1` compares local ATV/fork state to original
+  ATV upstream with read-only git diff commands and classifies changed skills as
+  KB-owned rejects, shared-overlap reviews, ATV-native candidates, superseded
+  workflow rejects, or unknown reviews. Security-sensitive rows, including
+  `atv-security`, warn when OSV proof may have changed.
 - `scripts/skill-marketplace-firebreak.ps1` enforces the marketplace quarantine
   boundary by failing when any active/approved skill root or approved catalog
   entry resolves into quarantine. Quarantine entries cannot become loadable by
@@ -179,6 +221,9 @@ prompt/output datasets are the native proof surface.
 - `scripts/skill-marketplace-firebreak-selftest.ps1` proves the firebreak trips
   by generating a temporary config that points an active skill root at
   quarantine and requiring a nonzero result.
+- `scripts/promote-marketplace-skill-selftest.ps1` proves the one-command
+  marketplace promotion path with a temp marketplace: happy path promotion,
+  catalog hash pinning, temp global sync, and quarantine destination refusal.
 - `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
   the working repo, Codex global, Copilot global, shared agents global, and ATV
   `.github` skills.

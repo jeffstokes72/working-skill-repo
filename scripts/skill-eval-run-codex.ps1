@@ -12,6 +12,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -411,7 +412,7 @@ foreach ($fixture in $fixtures) {
 
     $resultPath = Join-Path $runDir "result.json"
     ConvertTo-JsonFile $result $resultPath
-    powershell -ExecutionPolicy Bypass -File (Join-Path $repoRoot "scripts/skill-eval.ps1") -Root $repoRoot -ResultPath $resultPath -RequiredRunId $runId -ManifestPath $manifestPath | Tee-Object -FilePath (Join-Path $runDir "score.log") | Out-Null
+    Invoke-KbPowerShellFile (Join-Path $repoRoot "scripts/skill-eval.ps1") @("-Root", $repoRoot, "-ResultPath", $resultPath, "-RequiredRunId", $runId, "-ManifestPath", $manifestPath) | Tee-Object -FilePath (Join-Path $runDir "score.log") | Out-Null
     if ($LASTEXITCODE -ne 0) {
       throw "skill-eval scoring failed for $($fixture.id)."
     }

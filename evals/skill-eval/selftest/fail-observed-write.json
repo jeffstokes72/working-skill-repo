@@ -1,0 +1,25 @@
+{
+  "id": "fail-observed-write",
+  "fixture_id": "tiny-typo-fix",
+  "expected_result": "fail",
+  "actual": {
+    "route": "kb-fix",
+    "user_questions": 0,
+    "artifacts": ["changed file", "verification note"],
+    "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+  },
+  "trace": {
+    "files_read": ["todo.md", "docs/context/eval-map.md"],
+    "commands": ["git diff --check"],
+    "tools": ["shell"]
+  },
+  "observed_trace": {
+    "captured": true,
+    "method": "path-shim+git-diff",
+    "commands": ["git diff --check"],
+    "writes": ["src/changed.txt"],
+    "deletes": []
+  },
+  "claim_checks": [],
+  "trace_rules": {}
+}

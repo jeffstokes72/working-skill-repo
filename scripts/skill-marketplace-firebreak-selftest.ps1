@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "powershell-helpers.ps1")
 
 function Resolve-RepoPath {
   param([string]$Base, [string]$Path)
@@ -15,7 +16,7 @@ function Resolve-RepoPath {
 
 function Invoke-Firebreak {
   param([string]$RepoRoot, [string]$Config)
-  & powershell -ExecutionPolicy Bypass -File (Join-Path $RepoRoot "scripts/skill-marketplace-firebreak.ps1") -Root $RepoRoot -ConfigPath $Config | Out-Null
+  Invoke-KbPowerShellFile (Join-Path $RepoRoot "scripts/skill-marketplace-firebreak.ps1") @("-Root", $RepoRoot, "-ConfigPath", $Config) | Out-Null
   return $LASTEXITCODE
 }
 

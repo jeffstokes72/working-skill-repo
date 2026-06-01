@@ -82,7 +82,7 @@ The principle is separation of concerns:
 | Core workflow trim | `docs/brainstorms/2026-05-31-core-workflow-trim-requirements.md` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Preserved gates; deferred larger extraction until measured separately. |
 | Narrow lane trim | `docs/brainstorms/2026-05-31-narrow-lane-trim-requirements.md` | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Kept narrow lanes lazy where distinct proof value remains. |
 | Questionable global skill trim | `docs/brainstorms/2026-05-31-questionable-global-skill-trim-requirements.md` | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | TDD and todo lanes trimmed into compatibility/lazy roles. |
-| Propagation policy | blank | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Required globals/ATV `.github` sync; ATV scaffold/plugin remain optional thin bundles. |
+| Propagation policy | blank | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots are expected to stay hash-synced for tracked skills. |
 
 ## Dependency Map
 

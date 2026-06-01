@@ -3,10 +3,17 @@
 Voice-friendly KB workflow skills and required reviewer agents for GitHub
 Copilot and Codex.
 
-Most of this repo is an augmentation layer on top of the ATV StarterKit and CE
-review/learning workflow. KB adds the voice-friendly routing, project-memory
-map, fresh-session handoff loop, proportional planning, and execution gates; it
-still depends on selected ATV skills and reviewer agents.
+Status: actively used, pre-1.0. The core PowerShell gates pass on Windows and
+prefer PowerShell 7 (`pwsh`) when available; expect churn while the marketplace,
+eval, and pipeline pieces settle.
+
+Most of this repo is an augmentation layer on top of the original
+All-The-Vibes ATV StarterKit and CE review/learning workflow. KB adds the
+voice-friendly routing, project-memory map, fresh-session handoff loop,
+proportional planning, and execution gates; it still depends on selected ATV
+skills and reviewer agents. Original ATV `upstream/main` is a source to mine
+for useful ATV-native changes, while this repo remains the source of truth for
+the KB overlay and any KB replacements.
 
 This repo is the portable skill bundle I use when I want an agent to walk into a
 project, recover local project memory, choose the right workflow, execute work in
@@ -62,11 +69,12 @@ chat history just so the model remembers what the app is.
 
 ## What This Repo Is
 
-This is not the full ATV StarterKit. It is the smaller working set that should be
+This is not the full ATV StarterKit. It is the smaller KB overlay that should be
 safe to copy into active projects without dragging in every experiment or
-historical workflow. The reviewer agents are still part of the required runtime
-surface; `document-review`, `kb-review`, `ce-review`, `kb-complete`, and
-related gates fail or degrade without them.
+historical workflow. Original ATV skills stay in the ATV repo; selected shared
+skills are mirrored here only when KB depends on them. The reviewer agents are
+still part of the required runtime surface; `document-review`, `kb-review`,
+`ce-review`, `kb-complete`, and related gates fail or degrade without them.
 
 It includes:
 
@@ -75,6 +83,33 @@ It includes:
 - root agent guidance in `AGENTS.md`
 - Copilot guidance in `.github/copilot-instructions.md`
 - a deterministic check helper at `.github/skills/kb-check/scripts/kb-check.ps1`
+
+The installed runtime surface is intentionally smaller than the repository:
+about 36 skills plus 52 reviewer/specialist agents. The repo-local `docs/`,
+`evals/`, `scripts/`, and `config/` folders are development scaffolding for this
+portable bundle. They are not normally copied into consuming projects when you
+install the skills. Consuming projects get their own `todo.md`,
+`docs/context/`, `docs/handoffs/`, eval map, and project-local memories.
+
+## Platform Reality
+
+This repo is PowerShell-first today, with a PowerShell 7 cross-platform path.
+
+- The canonical quality gate is `.ps1`.
+- `cmd/kbcheck` is a thin Go entrypoint for the same gates; it still delegates
+  to PowerShell and is not a full harness port.
+- Install examples use Windows paths because the active development machine is
+  Windows.
+- The live eval adapters shell to local Codex and GitHub Copilot CLIs and assume
+  those CLIs are installed and authenticated.
+
+Codex and Copilot are both supported runtimes for the skill instructions, but
+the repo tooling is not a stock macOS/Linux toolchain. macOS/Linux users should
+install PowerShell 7 and run the same `.ps1` gates with `pwsh`. Harness scripts
+now prefer `pwsh` for child processes and fall back to Windows PowerShell only
+when needed. The Go wrapper can provide a portable command name, but PowerShell
+7 remains the runtime dependency. A full non-PowerShell port remains future
+work.
 
 The default entry point is `kb-start`. In normal use, ask for work in plain
 language and let `kb-start` choose the ceremony.
@@ -341,6 +376,25 @@ Required ATV agent dependencies:
   browser/QA, debugging, pattern, and documentation agents. The full restored
   runtime surface is `.github/agents/*.agent.md`.
 
+There are 52 agent files in `.github/agents/`. They are grouped by load-bearing
+path:
+
+- `document-review` needs the document-review lens agents:
+  `coherence-reviewer`, `feasibility-reviewer`, `product-lens-reviewer`,
+  `design-lens-reviewer`, `security-lens-reviewer`, `scope-guardian-reviewer`,
+  and `adversarial-document-reviewer`.
+- `kb-review`, `ce-review`, and `kb-complete` need the correctness, testing,
+  structural quality, standards, security, performance, API, migration,
+  reliability, frontend, Rails, Python, TypeScript, schema, deployment,
+  agent-native, prior-comment, and learnings reviewers listed above.
+- Planning and troubleshooting lanes use the research, architecture, debugging,
+  design, and pattern agents opportunistically.
+
+Some agents are inherited ATV specialists rather than hot-path requirements.
+They stay for now because removing agents already caused review dispatch
+degradation; the intended deletion gate is an eval/dispatch benchmark, not a
+README claim.
+
 ## Token Diet and Lazy References
 
 Heavy inherited ATV/CE skills keep their routing and safety rules in `SKILL.md`,
@@ -440,6 +494,32 @@ Run this before propagating skill changes:
 .\.github\skills\kb-check\scripts\kb-check.ps1 -All
 ```
 
+Run this before releasing or syncing globals:
+
+```powershell
+.\scripts\kb-release-gate.ps1 -Profile local-release
+```
+
+Equivalent thin Go wrapper:
+
+```powershell
+go run .\cmd\kbcheck local-release
+```
+
+`local-release` composes deterministic local proof: `kb-check -All`, sync drift,
+line-ending checks, and available static reports. `live-release` is explicit:
+
+```powershell
+.\scripts\kb-release-gate.ps1 -Profile live-release
+```
+
+It attempts the live Codex/GHCP corpus only when selected and reports unavailable
+live surfaces as `skipped-explicit`; a local green gate is not a claim that live
+model evals ran.
+
+Current expected result: 0 errors and all tracked skill roots in sync. Known
+warnings are long hot-path skills.
+
 For this repo, `kb-check` now discovers the cross-runtime skill quality suite:
 
 - `scripts/skill-lint.ps1` validates `SKILL.md` frontmatter, lazy references,
@@ -447,36 +527,79 @@ For this repo, `kb-check` now discovers the cross-runtime skill quality suite:
 - `scripts/route-complexity-eval.ps1` validates deterministic route-complexity
   fixtures for Codex and GitHub Copilot/GHCP applicability.
 - `scripts/skill-eval.ps1` scores captured skill result JSON and self-tests
-  route/proof/claim failures.
+  route/proof/claim failures. Its `trace` checks are model-reported intent
+  unless an observed wrapper adds `observed_trace`.
 - `scripts/skill-eval-run-codex.ps1` can run route fixtures through `codex exec`
   and emits scorer-compatible result JSON; `kb-check -All` runs its dry-run.
 - `scripts/skill-eval-run-ghcp.ps1` can run route fixtures through GitHub
   Copilot CLI and emits scorer-compatible result JSON; GHCP uses strict parsing
   rather than schema enforcement because the observed CLI has no
   `--output-schema` flag. `kb-check -All` runs its dry-run.
+- `scripts/skill-eval-wrap.ps1` wraps an adapter with PATH shims and git-status
+  diffing, then adds `observed_trace` so forbidden-command and no-write safety
+  checks are externally captured instead of only self-reported.
 - `scripts/skill-eval-run-live-corpus.ps1` explicitly runs selected fixtures
   across Codex and GHCP adapters and writes local summary artifacts; it is not
   part of `kb-check -All` because it may call live models.
 - `scripts/skill-eval-claims.ps1` checks transcript-derived claim artifacts
   against deterministic file/command/read evidence and reports ambiguous claims
   without turning them into proof.
-- `scripts/skill-eval-quality.ps1` self-tests output-quality rubric scoring for
-  completeness, maintainability, relevance, proof quality, and right-sized
-  ceremony.
+- `scripts/skill-eval-quality.ps1` computes deterministic output-quality scores
+  from raw captured result JSON for completeness, maintainability-shape,
+  relevance, proof quality, and right-sized ceremony. It is independent for
+  code-checkable dimensions, not a subjective LLM style judge.
 - `scripts/skill-eval-regression-report.ps1` summarizes local live-run artifacts
   and compares pass/non-pass and size/time proxies against a selected baseline.
+- `scripts/kb-release-gate.ps1 -Profile local-release` composes the pre-sync
+  deterministic release proof. The selftest is part of `kb-check -All`; the gate
+  itself is not, because it calls `kb-check -All`.
+- `cmd/kbcheck` is a Go CLI wrapper for `core`, `local-release`, and
+  `live-release`. It is tested with `go test ./...` and intentionally delegates
+  to the PowerShell scripts instead of rewriting them.
+- `scripts/skill-surface-minimality.ps1` statically classifies skills and
+  reviewer agents as `protected`, `required`, `conditional`, `unproven`,
+  `unused-candidate`, or `trim-candidate`. Protected skills such as `ce-review`
+  and `document-review` are excluded from cold-storage deletion candidates. The
+  output is a candidate list, not deletion approval.
+- `scripts/atv-upstream-delta.ps1` reads original ATV upstream changes and
+  classifies them as "kb-owned-reject", "shared-overlap-review",
+  "atv-native-candidate", "superseded-workflow-reject", or "unknown-review".
+  It has no apply mode.
 - `scripts/skill-sync-report.ps1` compares working, global, and ATV skill
   targets without copying or overwriting anything.
+
+The unusual part is the live model-in-the-loop eval path. Dry-run adapters are
+part of `kb-check -All`; live mode is explicit because it shells to authenticated
+CLIs:
+
+```powershell
+.\scripts\skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix
+.\scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix
+.\scripts\skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp
+```
+
+Those commands generate result JSON under `.atv/eval-runs/`, then
+`scripts/skill-eval.ps1` scores route choice, model-reported trace intent, proof
+strings, and claim artifacts. For safety proof, wrap a run:
+
+```powershell
+.\scripts\skill-eval-wrap.ps1 -Runner scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun -Sealed
+```
+
+The wrapper adds `observed_trace` using PATH-shim command capture and git-status
+write/delete checks. A fixture can fail for the right reason: wrong route,
+missing planned proof command, externally observed forbidden command, observed
+write/delete during a routing eval, bad claim evidence, or regression against a
+baseline. Live mode requires installed and authenticated Codex/GHCP CLIs.
 
 The live cross-runtime eval harness work is tracked in
 `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md`.
 The core planned harness is implemented; the remaining growth path is expanding
 the fixture corpus beyond the current route set and adding optional exporters.
 
-The shared contract lives in `config/skill-quality.json`. Required targets must
-match. ATV scaffold/plugin targets are optional thin bundles; their differences
-stay warning-only unless a change explicitly ships that skill through those
-surfaces.
+The shared contract lives in `config/skill-quality.json`. Working, global, ATV
+`.github`, ATV scaffold, and ATV plugin skill roots are expected to match unless
+a deliberate packaging exception is recorded.
 
 ## Portable Repo Hygiene
 
@@ -493,10 +616,10 @@ handoff is explicitly about maintaining the skill bundle itself.
 Skill changes are propagated from this working bundle to the personal/global
 installs and the ATV fork after diff review. Before overwriting a global copy,
 compare it against this repo and merge any newer useful drift back here first.
-Then sync the approved copy to Codex, Copilot, shared agents, and
-`E:\all-the-vibes\.github\skills`. Sync ATV scaffold/plugin copies only for
-skills intentionally shipped in those thinner bundles. Keep the repo README and
-ATV README current when the visible workflow or shipped skill surface changes.
+Then sync the approved copy to Codex, Copilot, shared agents,
+`E:\all-the-vibes\.github\skills`, and the ATV scaffold/plugin copies. Keep the
+repo README and ATV README current when the visible workflow or shipped skill
+surface changes.
 
 The private reusable catalog lives at `E:\agent-marketplace` and is configured
 in `config/skill-marketplace.json`. It is not a global install. New
@@ -507,11 +630,47 @@ Reusable pipelines follow the same rule: prove them first as project-local
 `config/pipelines/*.json`, then promote approved copies to
 `E:\agent-marketplace\pipelines`.
 
+This is a hand-curated ATV-derived snapshot, pinned to the local ATV fork as of
+2026-05-31. There is no automatic upstream merge bot yet. Pulling upstream ATV
+fixes is a deliberate sync/review task: diff original upstream, keep only used
+or clearly useful changes, port improvements into the active KB/CE replacements,
+run `kb-check -All`, then propagate required targets.
+
+Use the read-only upstream report before deciding what to port from original
+ATV:
+
+```powershell
+.\scripts\atv-upstream-delta.ps1
+```
+
+The report classifies changes only. "kb-owned-reject" means upstream changed a
+skill KB owns locally; do not apply it over the KB copy. `shared-overlap-review`
+means review and manually port useful improvements. `atv-native-candidate`
+means the upstream change may matter to an ATV-native skill such as
+`atv-security`; security-sensitive rows call out OSV proof drift. Unknown rows
+need human review.
+
 `atv-security` is the current approved single-skill exception from ATV. It is
 hash-pinned in `E:\agent-marketplace\catalog\approved-skills.json`, mirrored in
 `E:\agent-marketplace\skills\atv-security`, and installed into the Codex,
 Copilot, and shared agents global skill directories. Do not bulk-install ATV
 skills globally; promote each skill through the marketplace boundary first.
+
+Use the promotion script so the safe path is also the fast path:
+
+```powershell
+.\scripts\promote-marketplace-skill.ps1 `
+  -Source <reviewed-skill-dir> `
+  -SkillId <skill-id> `
+  -ApprovalReason "<why this is approved>" `
+  -InstallTargets codex,copilot,agents `
+  -Approved
+```
+
+The script validates `SKILL.md`, copies to the approved marketplace, pins the
+SHA256 in `approved-skills.json`, syncs selected globals, verifies hash
+equality, and runs the marketplace firebreak. Direct global copying is the
+manual bypass path and should not be used for new promotions.
 
 The paired `dependency-vulnerability-osv` harness uses OSV Scanner for
 dependency vulnerability proof:
@@ -549,6 +708,9 @@ These are intentionally left out of the minimal working bundle:
 - upstream `deepen-*` passes; use `kb-research` and proportional research
 - one-shot LFG/SLFG style workflows; use `klfg` only when you actually want the
   whole pipeline
+- upstream `workflows-*` aliases; use the KB lanes directly (`kb-brainstorm`,
+  `kb-plan`, `kb-work`, `kb-review`, `ce-compound`) unless a current app
+  explicitly needs an ATV alias
 - `land`; shipping remains a deliberate separate decision
 - browser tools such as `agent-browser`; skills can call them when installed, but
   this repo does not vendor them

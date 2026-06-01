@@ -1,11 +1,26 @@
 {
   "id": "fail-irrelevant-output",
   "expected_result": "fail",
-  "quality": {
-    "completeness": { "score": 3, "judge": "deterministic", "reason": "Required fields are present." },
-    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "No maintainability issue in the captured output." },
-    "relevance": { "score": 1, "judge": "deterministic", "reason": "Selected output does not answer the fixture request." },
-    "proof_quality": { "score": 4, "judge": "deterministic", "reason": "Proof field is present." },
-    "right_sized_ceremony": { "score": 4, "judge": "deterministic", "reason": "No extra ceremony detected." }
+  "input_result": {
+    "id": "quality-fail-irrelevant-output",
+    "fixture_id": "tiny-typo-fix",
+    "actual": {
+      "route": "kb-research",
+      "user_questions": 0,
+      "artifacts": ["research notes"],
+      "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+    },
+    "trace": {
+      "files_read": ["todo.md"],
+      "commands": ["git diff --check"],
+      "tools": ["shell"]
+    }
+  },
+  "expected_quality": {
+    "completeness": { "score": 5 },
+    "maintainability": { "score": 5 },
+    "relevance": { "score": 1 },
+    "proof_quality": { "score": 5 },
+    "right_sized_ceremony": { "score": 4 }
   }
 }

@@ -1,11 +1,26 @@
 {
   "id": "fail-over-ceremonial",
   "expected_result": "fail",
-  "quality": {
-    "completeness": { "score": 4, "judge": "deterministic", "reason": "Required fields are present." },
-    "maintainability": { "score": 4, "judge": "llm-judged", "reason": "No maintainability issue in the captured output." },
-    "relevance": { "score": 4, "judge": "deterministic", "reason": "Output addresses the fixture." },
-    "proof_quality": { "score": 4, "judge": "deterministic", "reason": "Proof field is present." },
-    "right_sized_ceremony": { "score": 1, "judge": "deterministic", "reason": "Tiny typo work was escalated into broad planning ceremony." }
+  "input_result": {
+    "id": "quality-fail-over-ceremonial",
+    "fixture_id": "tiny-typo-fix",
+    "actual": {
+      "route": "kb-brainstorm",
+      "user_questions": 2,
+      "artifacts": ["brainstorm document", "risk register"],
+      "proof": ["git diff --check", "targeted text/render check if UI-visible"]
+    },
+    "trace": {
+      "files_read": ["todo.md"],
+      "commands": ["git diff --check"],
+      "tools": ["shell"]
+    }
+  },
+  "expected_quality": {
+    "completeness": { "score": 5 },
+    "maintainability": { "score": 5 },
+    "relevance": { "score": 1 },
+    "proof_quality": { "score": 5 },
+    "right_sized_ceremony": { "score": 1 }
   }
 }
