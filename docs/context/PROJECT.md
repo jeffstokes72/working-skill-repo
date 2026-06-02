@@ -79,6 +79,9 @@ See `docs/context/architecture/README.md`.
 - `kb-check` now finds skill-repo checks through `config/skill-quality.json`; working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots are expected to stay hash-synced unless a deliberate packaging exception is recorded.
 - `kb-eval-map` is now the bootstrap-owned setup skill for repo-native eval surfaces; consuming repos still need their own `docs/context/eval-map.md`.
 - Some skills are long enough to make route-start context expensive; lazy references are used inconsistently.
+- `kb-work` is now bounded-swarm oriented: independent ready slices may run in
+  isolated contexts, but shared-checkout mutation and observed write overlap
+  serialize. `expected_files` remains a forecast, not proof of disjointness.
 - ATV scaffold/plugin copies are no longer intentionally thin for the tracked KB/CE skill set; `skill-sync-report` should show matches across all tracked roots.
 - Original ATV `upstream/main` is authoritative for ATV-native changes to
   inspect, not a mirror target. Upstream KB deletions are rejected because KB is

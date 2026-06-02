@@ -126,6 +126,8 @@ func skillRepoChecks(root string) ([]Check, error) {
 		{"skill-eval-codex-dry-run", "scripts/skill-eval-run-codex.ps1", []string{"-FixtureId", "tiny-typo-fix", "-DryRun"}, "Codex skill eval adapter detected"},
 		{"skill-eval-ghcp-dry-run", "scripts/skill-eval-run-ghcp.ps1", []string{"-FixtureId", "tiny-typo-fix", "-DryRun"}, "GHCP skill eval adapter detected"},
 		{"skill-eval-quality", "scripts/skill-eval-quality.ps1", nil, "skill output quality rubric fixtures detected"},
+		{"kb-work-ready-set-selftest", "scripts/kb-work-ready-set-selftest.ps1", nil, "KB work ready-set dispatch selftest detected"},
+		{"kb-work-scope-lease-selftest", "scripts/kb-work-scope-lease-selftest.ps1", nil, "KB work scope lease overlap selftest detected"},
 		{"kb-pipeline-selftest", "scripts/kb-pipeline-selftest.ps1", nil, "KB coded pipeline spike selftest detected"},
 		{"skill-surface-report", "scripts/skill-surface-report.ps1", nil, "skill loaded-surface report detected"},
 		{"skill-marketplace-firebreak", "scripts/skill-marketplace-firebreak.ps1", nil, "private marketplace quarantine firebreak detected"},

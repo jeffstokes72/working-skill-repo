@@ -107,12 +107,15 @@ The pipeline is designed around task sizes:
 `kb-plan` produces vertical slices with expected files, verification,
 dependencies, test level, functional risk, and HITL flags.
 
-`kb-work` executes runnable slices in dependency order. Once execution starts, it
-does not ask before each slice. The default WIP cap is one active slice per
-checkout/model context; parallel exceptions require isolated contexts, disjoint
-file scopes, and a manifest note before the extra slice starts. It pauses only
-for real gates: HITL, destructive approval, blocked/human-required work, scope
-failures, QA/repair exhaustion, dependency deadlock, or explicit user stop.
+`kb-work` executes the safe ready set from the slice dependency DAG. Once
+execution starts, it does not ask before each slice. The default WIP is every
+ready slice that can run in an isolated context without a serial-only gate.
+Shared-checkout mutation still runs one slice at a time, and observed write
+overlap serializes or requeues one of the colliding slices. `expected_files` is
+a forecast, not the safety oracle. `kb-work` pauses only for real gates: HITL,
+destructive approval, blocked/human-required work, scope failures, QA/repair
+exhaustion, dependency deadlock, observed overlap that cannot be safely
+serialized, or explicit user stop.
 
 `kb-work` is not done when slices pass. It must invoke `kb-complete` after all
 runnable slices are done or intentionally skipped.

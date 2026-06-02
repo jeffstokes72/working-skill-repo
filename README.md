@@ -91,10 +91,11 @@ For a fully hands-off feature flow:
 klfg: kb-brainstorm -> kb-plan -> kb-work -> kb-complete
 ```
 
-`kb-work` now owns the loop until the work is terminal: all runnable slices are
-done or intentionally skipped, then `kb-complete` runs review, follow-up
-resolution, proof, learning, memory refresh, and cleanup. "All slices passed" is
-progress; `kb-complete` is the done gate.
+`kb-work` now owns the loop until the work is terminal. It pulls the safe ready
+set from the manifest DAG, can swarm independent slices in isolated contexts,
+serializes shared-checkout or observed-overlap work, then runs `kb-complete` for
+review, follow-up resolution, proof, learning, memory refresh, and cleanup. "All
+slices passed" is progress; `kb-complete` is the done gate.
 
 ## Common Commands
 

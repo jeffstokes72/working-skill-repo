@@ -198,6 +198,12 @@ prompt/output datasets are the native proof surface.
   placeholders. `scripts/kb-pipeline.ps1 -Status` reads the latest run back.
 - `scripts/kb-pipeline-selftest.ps1` proves the pipeline spike can start, can
   read status, writes required run artifacts, and rejects unknown pipeline IDs.
+- `scripts/kb-work-ready-set-selftest.ps1` proves KB manifest ready-set
+  selection from blockers, statuses, `can_continue_other_slices`, and cycle
+  detection.
+- `scripts/kb-work-scope-lease-selftest.ps1` proves the bounded swarm overlap
+  guard: disjoint active writes pass, overlapping active writes fail, and
+  completed/requeued leases release paths.
 - `scripts/skill-surface-report.ps1` reports route-level loaded skill surface
   with line counts, rough token estimates, and content hashes. It can compare
   against a JSON baseline when `-BaselinePath` is provided.
