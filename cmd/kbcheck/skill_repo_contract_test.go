@@ -5,19 +5,10 @@ import (
 	"testing"
 )
 
-func TestParityContractForSkillRepoCheckNames(t *testing.T) {
-	t.Setenv("KBCHECK_POWERSHELL", "pwsh")
+func TestSkillRepoContractForNativeCheckNames(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, ".github", "skills", "kb-check", "SKILL.md"), "---\nname: kb-check\ndescription: test\n---\n")
 	writeFile(t, filepath.Join(root, "config", "skill-quality.json"), "{}")
-	for _, script := range []string{
-		"scripts/skill-lint.ps1",
-		"scripts/route-complexity-eval.ps1",
-		"scripts/skill-eval.ps1",
-		"scripts/skill-sync-report.ps1",
-	} {
-		writeFile(t, filepath.Join(root, filepath.FromSlash(script)), "exit 0")
-	}
 
 	checks, err := DiscoverChecks(root)
 	if err != nil {

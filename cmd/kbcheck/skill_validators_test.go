@@ -33,9 +33,22 @@ func TestSkillLintPassesValidSkillAndFailsBadFrontmatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("computeSkillLint returned error: %v", err)
 	}
-	if result.OK || len(result.Errors) < 2 {
+	if result.OK {
 		t.Fatalf("expected bad frontmatter to fail, got %#v", result)
 	}
+	assertLintIssue(t, result.Errors, ".github/skills/bad/SKILL.md", "Missing required frontmatter field 'description'.")
+	assertLintIssue(t, result.Errors, ".github/skills/bad/SKILL.md", "Frontmatter name 'mismatch' does not match folder 'bad'.")
+	assertLintIssue(t, result.Warnings, ".github/skills/bad/SKILL.md", "Missing argument-hint frontmatter.")
+}
+
+func assertLintIssue(t *testing.T, issues []lintIssue, path, message string) {
+	t.Helper()
+	for _, issue := range issues {
+		if issue.Path == path && issue.Message == message {
+			return
+		}
+	}
+	t.Fatalf("missing lint issue path=%q message=%q in %#v", path, message, issues)
 }
 
 func TestSkillSyncReportFindsRequiredDrift(t *testing.T) {

@@ -25,12 +25,10 @@ func TestDiscoverPackageChecks(t *testing.T) {
 	}
 }
 
-func TestDiscoverSkillRepoChecksIncludesBenchmarkValidator(t *testing.T) {
-	t.Setenv("KBCHECK_POWERSHELL", "pwsh")
+func TestDiscoverSkillRepoChecksIncludesNativeValidators(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, ".github", "skills", "kb-check", "SKILL.md"), "---\nname: kb-check\ndescription: test\n---\n")
 	writeFile(t, filepath.Join(root, "config", "skill-quality.json"), "{}")
-	writeFile(t, filepath.Join(root, "scripts", "cross-model-benchmark-validate.ps1"), "exit 0")
 
 	checks, err := DiscoverChecks(root)
 	if err != nil {

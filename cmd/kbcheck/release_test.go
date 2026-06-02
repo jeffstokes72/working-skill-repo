@@ -8,7 +8,6 @@ import (
 func TestReleaseChecksUseNativeCoreNotPSGate(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, "go.mod"), "module fixture\n")
-	writeFile(t, filepath.Join(root, "scripts", "skill-sync-report.ps1"), "exit 0")
 
 	checks, err := releaseChecks(root, "local-release", func(root string, check Check) CheckResult {
 		return CheckResult{ExitCode: 0}

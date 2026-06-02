@@ -35,10 +35,8 @@ func TestParseRejectsJSONForCore(t *testing.T) {
 }
 
 func TestCoreListPrintsNativeChecks(t *testing.T) {
-	t.Setenv("KBCHECK_POWERSHELL", "pwsh")
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, "go.mod"), "module fixture\n")
-	writeFile(t, filepath.Join(root, "scripts", "skill-sync-report.ps1"), "exit 0")
 
 	var out strings.Builder
 	code := run([]string{"core", "--root", root, "--list"}, &out, &strings.Builder{})
@@ -93,7 +91,6 @@ func TestCoreFailurePropagates(t *testing.T) {
 func TestReleaseJSONReportsRequiredFailure(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, "go.mod"), "module fixture\n")
-	writeFile(t, filepath.Join(root, "scripts", "skill-sync-report.ps1"), "exit 0")
 
 	runner := func(root string, check Check) CheckResult {
 		if check.Name == "kb-check-all" {
