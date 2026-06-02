@@ -24,10 +24,28 @@ func TestParityContractForSkillRepoCheckNames(t *testing.T) {
 		t.Fatalf("DiscoverChecks returned error: %v", err)
 	}
 	got := checkNames(checks)
-	want := []string{"route-complexity-eval", "skill-eval", "skill-lint", "skill-sync-report"}
-	for i := range want {
-		if got[i] != want[i] {
-			t.Fatalf("checks=%v want prefix=%v", got, want)
+	want := []string{
+		"cross-model-benchmark-validate",
+		"kb-pipeline-selftest",
+		"kb-release-gate-selftest",
+		"kb-work-ready-set-selftest",
+		"kb-work-scope-lease-selftest",
+		"route-complexity-eval",
+		"skill-eval",
+		"skill-lint",
+		"skill-marketplace-firebreak",
+		"skill-marketplace-firebreak-selftest",
+		"skill-surface-minimality",
+		"skill-surface-minimality-selftest",
+		"skill-surface-report",
+		"skill-sync-report",
+	}
+	if len(got) < len(want) {
+		t.Fatalf("checks=%v want at least %v", got, want)
+	}
+	for _, name := range want {
+		if !contains(got, name) {
+			t.Fatalf("checks=%v missing %s", got, name)
 		}
 	}
 }

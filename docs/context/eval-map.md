@@ -1,6 +1,6 @@
 # Eval Map
 
-Checked: 2026-05-30
+Checked: 2026-06-01
 
 ## App Pattern
 
@@ -12,24 +12,24 @@ Codex/GHCP the same workflow contract.
 
 | Workflow | Surface | Current Proof | Gap | Priority |
 |---|---|---|---|---|
-| Skill structure remains valid | `.github/skills/**/SKILL.md` | `scripts/skill-lint.ps1` | Warnings remain for inherited older skills | P1 |
-| Route complexity stays calibrated | `evals/route-complexity/*.json` | `scripts/route-complexity-eval.ps1` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
-| Required skill copies stay synced | global installs and ATV `.github` skills | `scripts/skill-sync-report.ps1` | ATV scaffold/plugin shipping policy unresolved | P1 |
-| Skill edits do not regress behavior | prompt/trace/claim evals | `scripts/skill-eval.ps1`; `scripts/skill-eval-run-codex.ps1`; `scripts/skill-eval-run-ghcp.ps1` | Need broader live corpus and richer trace/claim scoring | P0 |
+| Skill structure remains valid | `.github/skills/**/SKILL.md` | `go run .\cmd\kbcheck skill-lint` | Warnings remain for inherited older skills | P1 |
+| Route complexity stays calibrated | `evals/route-complexity/*.json` | `go run .\cmd\kbcheck route-eval` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
+| Required skill copies stay synced | global installs and ATV `.github` skills | `go run .\cmd\kbcheck skill-sync-report` | ATV scaffold/plugin shipping policy unresolved | P1 |
+| Skill edits do not regress behavior | prompt/trace/claim evals | `go run .\cmd\kbcheck skill-eval`; `go run .\cmd\kbcheck eval-run-codex`; `go run .\cmd\kbcheck eval-run-ghcp` | Need broader live corpus and richer trace/claim scoring | P0 |
 
 ## Existing Harnesses
 
 - `go run .\cmd\kbcheck core`
-- `scripts/skill-lint.ps1`
-- `scripts/route-complexity-eval.ps1`
-- `scripts/skill-eval.ps1`
-- `scripts/skill-eval-run-codex.ps1`
-- `scripts/skill-eval-run-ghcp.ps1`
-- `scripts/skill-eval-run-live-corpus.ps1`
-- `scripts/skill-eval-claims.ps1`
-- `scripts/skill-eval-quality.ps1`
-- `scripts/skill-eval-regression-report.ps1`
-- `scripts/skill-sync-report.ps1`
+- `go run .\cmd\kbcheck skill-lint`
+- `go run .\cmd\kbcheck route-eval`
+- `go run .\cmd\kbcheck skill-eval`
+- `go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run`
+- `go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run`
+- `go run .\cmd\kbcheck eval-run-live-corpus --dry-run`
+- `go run .\cmd\kbcheck skill-eval-claims`
+- `go run .\cmd\kbcheck skill-eval-quality`
+- `go run .\cmd\kbcheck skill-eval-regression`
+- `go run .\cmd\kbcheck skill-sync-report`
 - `git diff --check`
 
 ## Canonical Commands
@@ -52,22 +52,19 @@ next useful smoke is not a placeholder; it is the planned live skill eval suite:
 prompt routing, trace capture, claim verification, output quality scoring, and
 cost telemetry.
 
-The first deterministic scorer now exists at `scripts/skill-eval.ps1`. It scores
+The deterministic scorer exists as `go run .\cmd\kbcheck skill-eval`. It scores
 captured agent result JSON against route fixtures and claim checks, and its
 self-test includes intentionally bad route/proof/claim outputs that must fail.
-The Codex adapter exists at `scripts/skill-eval-run-codex.ps1`; dry-run mode is
-included in `kb-check -All`, and live mode explicitly invokes `codex exec` in a
-disposable read-only worktree. The GHCP adapter exists at
-`scripts/skill-eval-run-ghcp.ps1`; it uses GitHub Copilot CLI prompt-level JSON
-constraints because the observed local CLI does not expose a Codex-style
-`--output-schema` flag. `scripts/skill-eval-run-live-corpus.ps1` runs selected
-fixtures across Codex and GHCP adapters and summarizes pass/fail/skip categories.
-`scripts/skill-eval-claims.ps1` checks transcript-derived claim artifacts
-deterministically and reports ambiguous claims without counting them as proof.
-`scripts/skill-eval-quality.ps1` scores output-quality fixtures separately from
-deterministic route/proof/claim pass/fail.
-`scripts/skill-eval-regression-report.ps1` summarizes local live-run artifacts
-and compares pass/non-pass plus size/time proxies against selected baselines.
+The Codex and GHCP adapters exist as `eval-run-codex` and `eval-run-ghcp`;
+dry-run mode is included in `core`, while live mode explicitly invokes
+authenticated local CLIs. `eval-run-live-corpus` runs selected fixtures across
+Codex and GHCP adapters and summarizes pass/fail/skip categories.
+`skill-eval-claims` checks transcript-derived claim artifacts deterministically
+and reports ambiguous claims without counting them as proof.
+`skill-eval-quality` scores output-quality fixtures separately from
+deterministic route/proof/claim pass/fail. `skill-eval-regression` summarizes
+local live-run artifacts and compares pass/non-pass plus size/time proxies
+against selected baselines.
 
 ## Deterministic vs LLM-Judged
 

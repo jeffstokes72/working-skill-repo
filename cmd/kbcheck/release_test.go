@@ -26,9 +26,10 @@ func TestReleaseChecksUseNativeCoreNotPSGate(t *testing.T) {
 	}
 }
 
-func TestLiveReleaseLabelsUnavailableCorpusExplicit(t *testing.T) {
+func TestLiveReleaseUsesNativeLiveCorpus(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, "go.mod"), "module fixture\n")
+	writeFile(t, filepath.Join(root, "evals", "route-complexity", "fixture.json"), "{}")
 	checks, err := releaseChecks(root, "live-release", func(root string, check Check) CheckResult {
 		return CheckResult{ExitCode: 0}
 	})
@@ -39,12 +40,8 @@ func TestLiveReleaseLabelsUnavailableCorpusExplicit(t *testing.T) {
 	for _, check := range checks {
 		if check.Name == "live-codex-ghcp-corpus" {
 			found = true
-			run := invokeReleaseCheck(root, check, func(root string, check Check) CheckResult {
-				t.Fatalf("unavailable check should not run")
-				return CheckResult{}
-			})
-			if run.Status != "skipped-explicit" {
-				t.Fatalf("expected skipped-explicit, got %+v", run)
+			if check.CommandString() != "kbcheck eval-run-live-corpus --runtime codex,ghcp" || check.Run == nil {
+				t.Fatalf("expected native live corpus check, got %+v", check)
 			}
 		}
 	}
@@ -53,7 +50,7 @@ func TestLiveReleaseLabelsUnavailableCorpusExplicit(t *testing.T) {
 	}
 }
 
-func TestReleaseFailsWhenRequiredSyncScriptMissing(t *testing.T) {
+func TestReleaseSkipsSyncForGenericRepoWithoutSkillConfig(t *testing.T) {
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, "go.mod"), "module fixture\n")
 
@@ -66,11 +63,38 @@ func TestReleaseFailsWhenRequiredSyncScriptMissing(t *testing.T) {
 	for _, check := range checks {
 		if check.Name == "skill-sync-report" {
 			run := invokeReleaseCheck(root, check, func(root string, check Check) CheckResult {
-				t.Fatalf("unavailable required check should not run")
+				t.Fatalf("unavailable generic-repo check should not run")
 				return CheckResult{}
 			})
-			if run.Status != "skipped-explicit" || !run.Required {
-				t.Fatalf("expected required skipped-explicit, got %+v", run)
+			if run.Status != "skipped-explicit" || run.Required {
+				t.Fatalf("expected optional skipped-explicit, got %+v", run)
+			}
+			return
+		}
+	}
+	t.Fatal("missing skill-sync-report release check")
+}
+
+func TestReleaseRequiresNativeSyncForSkillRepo(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, ".github", "skills", "demo", "SKILL.md"), "---\nname: demo\ndescription: demo\n---\n")
+	writeFile(t, filepath.Join(root, "config", "skill-quality.json"), `{
+	  "sync_targets": [
+	    {"id":"source","path":".github/skills","classification":"source","required":true},
+	    {"id":"required","path":".github/skills","classification":"required","required":true}
+	  ]
+	}`)
+
+	checks, err := releaseChecks(root, "local-release", func(root string, check Check) CheckResult {
+		return CheckResult{ExitCode: 0}
+	})
+	if err != nil {
+		t.Fatalf("releaseChecks returned error: %v", err)
+	}
+	for _, check := range checks {
+		if check.Name == "skill-sync-report" {
+			if !check.Required || check.CommandString() != "kbcheck skill-sync-report" || check.Run == nil {
+				t.Fatalf("expected required native sync check, got %+v", check)
 			}
 			return
 		}

@@ -107,44 +107,47 @@ func releaseChecks(root, profile string, runner processRunner) ([]Check, error) 
 		{Name: "git-diff-check", Args: []string{"git", "diff", "--check"}, Reason: "whitespace/conflict guard", Required: true, Confidence: "deterministic-local"},
 	}
 
-	if exists(root, "scripts/skill-sync-report.ps1") {
-		args, err := powerShellArgs("scripts/skill-sync-report.ps1")
-		if err != nil {
-			return nil, err
-		}
-		checks = append(checks, Check{Name: "skill-sync-report", Args: args, Reason: "required skill sync target config", Required: true, Confidence: "deterministic-local"})
+	if exists(root, ".github/skills") && exists(root, "config/skill-quality.json") {
+		checks = append(checks, Check{
+			Name: "skill-sync-report", Args: []string{"kbcheck", "skill-sync-report"},
+			Reason: "required skill sync target config", Required: true, Confidence: "deterministic-local",
+			Run: func(root string) CheckResult { return runNativeCommand(root, []string{"skill-sync-report"}) },
+		})
 	} else {
-		checks = append(checks, Check{Name: "skill-sync-report", Args: []string{"scripts/skill-sync-report.ps1"}, Required: true, Confidence: "deterministic-local", Available: func(string) bool { return false }, SkipReason: "required sync report script missing"})
+		checks = append(checks, Check{Name: "skill-sync-report", Args: []string{"kbcheck", "skill-sync-report"}, Required: false, Confidence: "deterministic-local", Available: func(string) bool { return false }, SkipReason: "skill sync target config unavailable"})
 	}
-	checks = append(checks, optionalPS(root, "skill-surface-minimality", "scripts/skill-surface-minimality.ps1", []string{"-Json"}, "static-report")...)
-	if exists(root, "scripts/atv-upstream-delta.ps1") && pathExists("E:/all-the-vibes") {
-		checks = append(checks, optionalPS(root, "atv-upstream-delta", "scripts/atv-upstream-delta.ps1", []string{"-Json"}, "read-only-git-diff")...)
+	if exists(root, ".github/skills") {
+		checks = append(checks, Check{
+			Name: "skill-surface-minimality", Args: []string{"kbcheck", "minimality"},
+			Required: false, Confidence: "static-report",
+			Run: func(root string) CheckResult { return runNativeCommand(root, []string{"minimality"}) },
+		})
 	} else {
-		checks = append(checks, Check{Name: "atv-upstream-delta", Args: []string{"scripts/atv-upstream-delta.ps1", "-Json"}, Required: false, Confidence: "read-only-git-diff", Available: func(string) bool { return false }, SkipReason: "ATV repo or upstream delta script unavailable"})
+		checks = append(checks, Check{Name: "skill-surface-minimality", Args: []string{"kbcheck", "minimality"}, Required: false, Confidence: "static-report", Available: func(string) bool { return false }, SkipReason: "skill surface unavailable"})
+	}
+	if pathExists("E:/all-the-vibes") && exists(root, "config/atv-upstream-delta.json") {
+		checks = append(checks, Check{
+			Name: "atv-upstream-delta", Args: []string{"kbcheck", "atv-delta", "--json"},
+			Required: false, Confidence: "read-only-git-diff", Reason: "ATV upstream repo detected",
+			Run: func(root string) CheckResult { return runNativeCommand(root, []string{"atv-delta", "--json"}) },
+		})
+	} else {
+		checks = append(checks, Check{Name: "atv-upstream-delta", Args: []string{"kbcheck", "atv-delta", "--json"}, Required: false, Confidence: "read-only-git-diff", Available: func(string) bool { return false }, SkipReason: "ATV repo unavailable"})
 	}
 	if profile == "live-release" {
-		if exists(root, "scripts/skill-eval-run-live-corpus.ps1") {
-			args, err := powerShellArgs("scripts/skill-eval-run-live-corpus.ps1", "-All", "-Runtime", "codex,ghcp")
-			if err != nil {
-				return nil, err
-			}
-			checks = append(checks, Check{Name: "live-codex-ghcp-corpus", Args: args, Required: false, Confidence: "live-model-explicit", Reason: "explicit live model corpus"})
+		if exists(root, "evals/route-complexity") {
+			checks = append(checks, Check{
+				Name: "live-codex-ghcp-corpus", Args: []string{"kbcheck", "eval-run-live-corpus", "--runtime", "codex,ghcp"},
+				Required: false, Confidence: "live-model-explicit", Reason: "explicit live model corpus",
+				Run: func(root string) CheckResult {
+					return runNativeCommand(root, []string{"eval-run-live-corpus", "--runtime", "codex,ghcp"})
+				},
+			})
 		} else {
-			checks = append(checks, Check{Name: "live-codex-ghcp-corpus", Args: []string{"scripts/skill-eval-run-live-corpus.ps1", "-All", "-Runtime", "codex,ghcp"}, Required: false, Confidence: "live-model-explicit", Available: func(string) bool { return false }, SkipReason: "live corpus runner unavailable"})
+			checks = append(checks, Check{Name: "live-codex-ghcp-corpus", Args: []string{"kbcheck", "eval-run-live-corpus", "--runtime", "codex,ghcp"}, Required: false, Confidence: "live-model-explicit", Available: func(string) bool { return false }, SkipReason: "route eval fixtures unavailable"})
 		}
 	}
 	return checks, nil
-}
-
-func optionalPS(root, name, script string, extra []string, confidence string) []Check {
-	if !exists(root, script) {
-		return []Check{{Name: name, Args: append([]string{script}, extra...), Required: false, Confidence: confidence, Available: func(string) bool { return false }, SkipReason: "script unavailable"}}
-	}
-	args, err := powerShellArgs(script, extra...)
-	if err != nil {
-		return []Check{{Name: name, Args: append([]string{script}, extra...), Required: false, Confidence: confidence, Available: func(string) bool { return false }, SkipReason: err.Error()}}
-	}
-	return []Check{{Name: name, Args: args, Required: false, Confidence: confidence}}
 }
 
 func invokeReleaseCheck(root string, check Check, runner processRunner) ReleaseCheckRun {

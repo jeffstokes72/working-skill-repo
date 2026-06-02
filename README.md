@@ -3,9 +3,9 @@
 Voice-friendly KB workflow skills and required reviewer agents for GitHub
 Copilot and Codex.
 
-Status: actively used, pre-1.0. The top-level gate is native Go and has Windows
-parity smoke proof against the prior PowerShell wrappers; expect churn while the
-marketplace, eval, and pipeline pieces settle.
+Status: actively used, pre-1.0. The quality/release gate is native Go; the old
+PowerShell validator scripts were retired after parity and release proof.
+Expect churn while the marketplace, eval, and pipeline pieces settle.
 
 Most of this repo is an augmentation layer on top of the original
 All-The-Vibes ATV StarterKit and CE review/learning workflow. KB adds the
@@ -64,7 +64,6 @@ Development scaffolding that is usually not copied into consuming projects:
 
 - `docs/` - this bundle's own memory and reference docs
 - `evals/` - route, quality, live-adapter, and benchmark fixtures
-- `scripts/` - deterministic helper/scorer/sync scripts
 - `config/` - skill quality, marketplace, and pipeline config
 
 Consuming projects get their own `todo.md`, `docs/context/`,
@@ -188,8 +187,8 @@ go run .\cmd\kbcheck live-release
 Live mode may call authenticated Codex/GHCP CLIs. A local green gate is not a
 claim that live model evals ran.
 
-The current top-level gate is Go. Several individual validators are still
-PowerShell scripts, so PowerShell 7 remains required for the full local suite.
+The current gate is Go-native. PowerShell is no longer required for the
+skill-repo quality suite.
 
 Deep dive: [testing operations](docs/context/operations/testing.md) and
 [eval map](docs/context/eval-map.md).
@@ -234,11 +233,10 @@ development machine is Windows, so examples use Windows paths.
 
 Current state:
 
-- Go owns top-level gate orchestration.
-- PowerShell 7 is still required for individual validators.
+- Go owns the quality, release, eval, marketplace, and drift-report gates.
 - Windows parity smoke proof is recorded in `docs/reports/go-gate-parity-2026-06-01.md`.
-- macOS/Linux should use the same Go entrypoint plus `pwsh`, but full OS proof
-  is still parked until those machines are available.
+- macOS/Linux should use the same Go entrypoint; full OS proof is still parked
+  until those machines are available.
 
 ## Marketplace And Security
 

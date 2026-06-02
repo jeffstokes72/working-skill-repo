@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -18,22 +17,101 @@ Usage:
   kbcheck core [--root <path>] [--list] [--dry-run]
   kbcheck local-release [--root <path>] [--json] [--dry-run]
   kbcheck live-release [--root <path>] [--json] [--dry-run]
+  kbcheck ready-set --manifest <path> [--json]
+  kbcheck ready-set-selftest
+  kbcheck scope-lease --ledger <path> [--json]
+  kbcheck scope-lease-selftest
+  kbcheck skill-lint [--root <path>] [--config <path>] [--json]
+  kbcheck skill-sync-report [--root <path>] [--config <path>] [--json] [--verbose-optional]
+  kbcheck marketplace-firebreak [--root <path>] [--config <path>] [--json]
+  kbcheck marketplace-firebreak-selftest [--root <path>] [--config <path>]
+  kbcheck marketplace-promote --source <path> --approval-reason <text> --approved [--skill-id <id>] [--install-targets codex,copilot,agents] [--json]
+  kbcheck marketplace-promote-selftest [--root <path>]
+  kbcheck atv-delta [--atv-repo <path>] [--base-ref <ref>] [--upstream-ref <ref>] [--config <path>] [--json]
+  kbcheck atv-delta-selftest
+  kbcheck benchmark-validate [--root <path>] [--fixture-root <path>] [--json]
+  kbcheck route-eval [--root <path>] [--config <path>] [--json]
+  kbcheck release-selftest
+  kbcheck surface-report [--root <path>] [--skill-root <path>] [--route <name>] [--baseline <path>] [--output <path>] [--json]
+  kbcheck minimality [--root <path>] [--skill-root <path>] [--agent-root <path>] [--trim-line-threshold <n>] [--json]
+  kbcheck minimality-selftest
+  kbcheck pipeline [--root <path>] [--start <pipeline-id> | --status] [--run-id <id>]
+  kbcheck pipeline-selftest [--root <path>]
+  kbcheck skill-eval [--root <path>] [--result-root <path>] [--result-path <path>] [--baseline <path>] [--update-baseline] [--json]
+  kbcheck skill-eval-claims [--root <path>] [--claim-root <path>] [--claim-path <path>] [--json]
+  kbcheck skill-eval-quality [--root <path>] [--quality-root <path>] [--quality-path <path>] [--min-score <n>] [--json]
+  kbcheck skill-eval-regression [--root <path>] [--run-root <path>] [--baseline <path>] [--output <path>] [--json]
+  kbcheck skill-eval-manifest-selftest [--root <path>]
+  kbcheck skill-eval-baseline-selftest [--root <path>]
+  kbcheck eval-run-codex [--root <path>] [--fixture-id <id> | --all] [--dry-run] [--keep-run] [--json]
+  kbcheck eval-run-ghcp [--root <path>] [--fixture-id <id> | --all] [--dry-run] [--keep-run] [--json]
+  kbcheck eval-run-live-corpus [--root <path>] [--runtime codex,ghcp] [--dry-run] [--json]
+  kbcheck skill-eval-wrap [--root <path>] [--runner <command>] [--fixture-id <id> | --all] [--dry-run] [--sealed] [--keep-run] [--json]
   kbcheck help
 
 Commands:
   core           Discover and run local deterministic checks.
   local-release  Run the local release gate with required and optional checks.
   live-release   Run local release checks plus explicit live-model surfaces.
+  ready-set      Compute the safe KB manifest ready set.
+  scope-lease    Validate observed active slice/file write leases.
 `
 
 type processRunner func(root string, check Check) CheckResult
 
 type options struct {
-	command string
-	root    string
-	json    bool
-	dryRun  bool
-	list    bool
+	command           string
+	root              string
+	json              bool
+	dryRun            bool
+	list              bool
+	manifest          string
+	ledger            string
+	config            string
+	verboseOptional   bool
+	fixtureRoot       string
+	route             string
+	baseline          string
+	output            string
+	skillRoot         string
+	agentRoot         string
+	trimLineThreshold int
+	start             string
+	status            bool
+	runID             string
+	resultRoot        string
+	resultPath        string
+	requiredRunID     string
+	manifestPath      string
+	updateBaseline    bool
+	qualityRoot       string
+	qualityPath       string
+	claimRoot         string
+	claimPath         string
+	minScore          int
+	runRoot           string
+	fixtureID         string
+	all               bool
+	keepRun           bool
+	sealed            bool
+	runner            string
+	runtime           string
+	model             string
+	agentCommand      string
+	source            string
+	skillID           string
+	approvalReason    string
+	approvedBy        string
+	sourceType        string
+	upstreamRepo      string
+	installTargets    string
+	codexSkillsRoot   string
+	copilotSkillsRoot string
+	agentsSkillsRoot  string
+	approved          bool
+	atvRepo           string
+	baseRef           string
+	upstreamRef       string
 }
 
 func main() {
@@ -66,6 +144,66 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runCore(root, opts, stdout, stderr, runProcessCheck)
 	case "local-release", "live-release":
 		return runRelease(root, opts, stdout, stderr, runProcessCheck)
+	case "ready-set":
+		return runReadySetCommand(root, opts, stdout, stderr)
+	case "ready-set-selftest":
+		return runReadySetSelftest(stdout, stderr)
+	case "scope-lease":
+		return runScopeLeaseCommand(root, opts, stdout, stderr)
+	case "scope-lease-selftest":
+		return runScopeLeaseSelftest(stdout, stderr)
+	case "skill-lint":
+		return runSkillLintCommand(root, opts, stdout, stderr)
+	case "skill-sync-report":
+		return runSkillSyncReportCommand(root, opts, stdout, stderr)
+	case "marketplace-firebreak":
+		return runMarketplaceFirebreakCommand(root, opts, stdout, stderr)
+	case "marketplace-firebreak-selftest":
+		return runMarketplaceFirebreakSelftest(root, opts, stdout, stderr)
+	case "marketplace-promote":
+		return runMarketplacePromoteCommand(root, opts, stdout, stderr)
+	case "marketplace-promote-selftest":
+		return runMarketplacePromoteSelftest(root, stdout, stderr)
+	case "atv-delta":
+		return runAtvDeltaCommand(root, opts, stdout, stderr)
+	case "atv-delta-selftest":
+		return runAtvDeltaSelftest(stdout, stderr)
+	case "benchmark-validate":
+		return runBenchmarkValidateCommand(root, opts, stdout, stderr)
+	case "route-eval":
+		return runRouteEvalCommand(root, opts, stdout, stderr)
+	case "release-selftest":
+		return runReleaseSelftestCommand(stdout, stderr)
+	case "surface-report":
+		return runSurfaceReportCommand(root, opts, stdout, stderr)
+	case "minimality":
+		return runMinimalityCommand(root, opts, stdout, stderr)
+	case "minimality-selftest":
+		return runMinimalitySelftest(stdout, stderr)
+	case "pipeline":
+		return runPipelineCommand(root, opts, stdout, stderr)
+	case "pipeline-selftest":
+		return runPipelineSelftest(root, stdout, stderr)
+	case "skill-eval":
+		return runSkillEvalCommand(root, opts, stdout, stderr)
+	case "skill-eval-claims":
+		return runSkillEvalClaimsCommand(root, opts, stdout, stderr)
+	case "skill-eval-quality":
+		return runSkillEvalQualityCommand(root, opts, stdout, stderr)
+	case "skill-eval-regression":
+		return runSkillEvalRegressionCommand(root, opts, stdout, stderr)
+	case "skill-eval-manifest-selftest":
+		return runSkillEvalManifestSelftest(root, stdout, stderr)
+	case "skill-eval-baseline-selftest":
+		return runSkillEvalBaselineSelftest(root, stdout, stderr)
+	case "eval-run-codex":
+		return runEvalAdapterCommand(root, opts, "codex", stdout, stderr)
+	case "eval-run-ghcp":
+		return runEvalAdapterCommand(root, opts, "ghcp", stdout, stderr)
+	case "eval-run-live-corpus":
+		return runEvalLiveCorpusCommand(root, opts, stdout, stderr)
+	case "skill-eval-wrap":
+		return runSkillEvalWrapCommand(root, opts, stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "unsupported command %q\n", opts.command)
 		return 2
@@ -81,7 +219,22 @@ func parse(args []string) (options, error) {
 	if cmd == "-h" || cmd == "--help" || cmd == "help" {
 		return options{command: "help", root: "."}, nil
 	}
-	if cmd != "core" && cmd != "local-release" && cmd != "live-release" {
+	knownCommands := map[string]bool{
+		"core": true, "local-release": true, "live-release": true,
+		"ready-set": true, "ready-set-selftest": true,
+		"scope-lease": true, "scope-lease-selftest": true,
+		"skill-lint": true, "skill-sync-report": true,
+		"marketplace-firebreak": true, "marketplace-firebreak-selftest": true,
+		"marketplace-promote": true, "marketplace-promote-selftest": true,
+		"atv-delta": true, "atv-delta-selftest": true,
+		"benchmark-validate": true, "route-eval": true, "release-selftest": true,
+		"surface-report": true, "minimality": true, "minimality-selftest": true,
+		"pipeline": true, "pipeline-selftest": true,
+		"skill-eval": true, "skill-eval-claims": true, "skill-eval-quality": true, "skill-eval-regression": true,
+		"skill-eval-manifest-selftest": true, "skill-eval-baseline-selftest": true,
+		"eval-run-codex": true, "eval-run-ghcp": true, "eval-run-live-corpus": true, "skill-eval-wrap": true,
+	}
+	if !knownCommands[cmd] {
 		return options{}, fmt.Errorf("unknown command %q", cmd)
 	}
 
@@ -92,6 +245,53 @@ func parse(args []string) (options, error) {
 	fs.BoolVar(&opts.json, "json", false, "emit JSON when supported")
 	fs.BoolVar(&opts.dryRun, "dry-run", false, "print commands instead of running them")
 	fs.BoolVar(&opts.list, "list", false, "list checks without running them")
+	fs.StringVar(&opts.manifest, "manifest", "", "KB manifest path")
+	fs.StringVar(&opts.ledger, "ledger", "", "scope lease ledger path")
+	fs.StringVar(&opts.config, "config", "", "validator config path")
+	fs.BoolVar(&opts.verboseOptional, "verbose-optional", false, "print optional sync/report rows")
+	fs.StringVar(&opts.fixtureRoot, "fixture-root", "", "fixture root path")
+	fs.StringVar(&opts.route, "route", "", "route filter")
+	fs.StringVar(&opts.baseline, "baseline", "", "baseline path")
+	fs.StringVar(&opts.output, "output", "", "output path")
+	fs.StringVar(&opts.skillRoot, "skill-root", "", "skill root path")
+	fs.StringVar(&opts.agentRoot, "agent-root", "", "agent root path")
+	fs.IntVar(&opts.trimLineThreshold, "trim-line-threshold", 250, "line threshold for trim candidates")
+	fs.StringVar(&opts.start, "start", "", "pipeline id to start")
+	fs.BoolVar(&opts.status, "status", false, "show pipeline status")
+	fs.StringVar(&opts.runID, "run-id", "", "pipeline run id")
+	fs.StringVar(&opts.resultRoot, "result-root", "", "skill eval result root")
+	fs.StringVar(&opts.resultPath, "result-path", "", "skill eval result path")
+	fs.StringVar(&opts.requiredRunID, "required-run-id", "", "required eval run id")
+	fs.StringVar(&opts.manifestPath, "manifest-path", "", "eval run manifest path")
+	fs.BoolVar(&opts.updateBaseline, "update-baseline", false, "update baseline file")
+	fs.StringVar(&opts.qualityRoot, "quality-root", "", "quality fixture root")
+	fs.StringVar(&opts.qualityPath, "quality-path", "", "single quality fixture path")
+	fs.StringVar(&opts.claimRoot, "claim-root", "", "claim fixture root")
+	fs.StringVar(&opts.claimPath, "claim-path", "", "single claim fixture path")
+	fs.IntVar(&opts.minScore, "min-score", 3, "minimum quality score")
+	fs.StringVar(&opts.runRoot, "run-root", "", "eval run root")
+	fs.StringVar(&opts.fixtureID, "fixture-id", "", "route fixture id")
+	fs.BoolVar(&opts.all, "all", false, "run all fixtures")
+	fs.BoolVar(&opts.keepRun, "keep-run", false, "keep generated run directory")
+	fs.BoolVar(&opts.sealed, "sealed", false, "block forbidden command attempts")
+	fs.StringVar(&opts.runner, "runner", "", "wrapped runner command")
+	fs.StringVar(&opts.runtime, "runtime", "", "runtime list")
+	fs.StringVar(&opts.model, "model", "", "model name")
+	fs.StringVar(&opts.agentCommand, "command", "", "agent CLI command")
+	fs.StringVar(&opts.source, "source", "", "source skill path")
+	fs.StringVar(&opts.skillID, "skill-id", "", "skill id")
+	fs.StringVar(&opts.approvalReason, "approval-reason", "", "human approval reason")
+	fs.StringVar(&opts.approvedBy, "approved-by", os.Getenv("USERNAME"), "human approver")
+	fs.StringVar(&opts.sourceType, "source-type", "local-reviewed", "marketplace source type")
+	fs.StringVar(&opts.upstreamRepo, "upstream-repo", "", "upstream repository or source URL")
+	fs.StringVar(&opts.installTargets, "install-targets", "", "comma-separated install targets: codex,copilot,agents,none")
+	fs.StringVar(&opts.codexSkillsRoot, "codex-skills-root", filepath.Join(os.Getenv("USERPROFILE"), ".codex", "skills"), "Codex skills root")
+	fs.StringVar(&opts.copilotSkillsRoot, "copilot-skills-root", filepath.Join(os.Getenv("USERPROFILE"), ".copilot", "skills"), "Copilot skills root")
+	fs.StringVar(&opts.agentsSkillsRoot, "agents-skills-root", filepath.Join(os.Getenv("USERPROFILE"), ".agents", "skills"), "Agents skills root")
+	fs.BoolVar(&opts.approved, "approved", false, "confirm human-approved marketplace promotion")
+	fs.StringVar(&opts.atvRepo, "atv-repo", "E:/all-the-vibes", "ATV repository path")
+	fs.StringVar(&opts.baseRef, "base-ref", "HEAD", "base git ref")
+	fs.StringVar(&opts.upstreamRef, "upstream-ref", "upstream/main", "upstream git ref")
 	if err := fs.Parse(args[1:]); err != nil {
 		return options{}, err
 	}
@@ -99,10 +299,32 @@ func parse(args []string) (options, error) {
 		return options{}, fmt.Errorf("unexpected argument %q", fs.Arg(0))
 	}
 	if opts.command == "core" && opts.json {
-		return options{}, fmt.Errorf("--json is only supported for release gate commands")
+		return options{}, fmt.Errorf("--json is only supported for release gate and utility commands")
 	}
 	if opts.command != "core" && opts.list {
 		return options{}, fmt.Errorf("--list is only supported for core")
+	}
+	dryRunAllowed := map[string]bool{"core": true, "local-release": true, "live-release": true, "eval-run-codex": true, "eval-run-ghcp": true, "eval-run-live-corpus": true, "skill-eval-wrap": true}
+	if !dryRunAllowed[opts.command] && opts.dryRun {
+		return options{}, fmt.Errorf("--dry-run is only supported for gate commands")
+	}
+	if opts.command != "ready-set" && opts.manifest != "" {
+		return options{}, fmt.Errorf("--manifest is only supported for ready-set")
+	}
+	if opts.command != "scope-lease" && opts.ledger != "" {
+		return options{}, fmt.Errorf("--ledger is only supported for scope-lease")
+	}
+	if opts.config != "" && opts.command != "skill-lint" && opts.command != "skill-sync-report" && opts.command != "marketplace-firebreak" && opts.command != "marketplace-firebreak-selftest" && opts.command != "marketplace-promote" && opts.command != "atv-delta" {
+		return options{}, fmt.Errorf("--config is only supported for native validator commands")
+	}
+	if opts.verboseOptional && opts.command != "skill-sync-report" {
+		return options{}, fmt.Errorf("--verbose-optional is only supported for skill-sync-report")
+	}
+	if opts.command == "ready-set" && opts.manifest == "" {
+		return options{}, fmt.Errorf("ready-set requires --manifest")
+	}
+	if opts.command == "scope-lease" && opts.ledger == "" {
+		return options{}, fmt.Errorf("scope-lease requires --ledger")
 	}
 	return opts, nil
 }
@@ -172,35 +394,10 @@ func runProcessCheck(root string, check Check) CheckResult {
 	return result
 }
 
-func findPowerShell() (string, error) {
-	if override := os.Getenv("KBCHECK_POWERSHELL"); override != "" {
-		return override, nil
-	}
-	for _, candidate := range []string{"pwsh", "powershell"} {
-		if path, err := exec.LookPath(candidate); err == nil {
-			return path, nil
-		}
-	}
-	if runtime.GOOS == "windows" {
-		if path, err := exec.LookPath("powershell.exe"); err == nil {
-			return path, nil
-		}
-	}
-	return "", errors.New("PowerShell not found; install PowerShell 7 (pwsh) or set KBCHECK_POWERSHELL")
-}
-
-func powerShellArgs(script string, extra ...string) ([]string, error) {
-	ps, err := findPowerShell()
-	if err != nil {
-		return nil, err
-	}
-	base := strings.ToLower(filepath.Base(ps))
-	args := []string{ps}
-	if base == "powershell" || base == "powershell.exe" {
-		args = append(args, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script)
-	} else {
-		args = append(args, "-NoProfile", "-File", script)
-	}
-	args = append(args, extra...)
-	return args, nil
+func runNativeCommand(root string, args []string) CheckResult {
+	var out, errOut strings.Builder
+	fullArgs := append([]string{}, args...)
+	fullArgs = append(fullArgs, "--root", root)
+	code := run(fullArgs, &out, &errOut)
+	return CheckResult{ExitCode: code, Stdout: out.String(), Stderr: errOut.String()}
 }

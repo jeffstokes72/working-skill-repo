@@ -111,55 +111,123 @@ func dotnetChecks(root string) []Check {
 }
 
 func skillRepoChecks(root string) ([]Check, error) {
-	type psCheck struct {
+	type nativeCheck struct {
 		Name   string
-		Script string
-		Extra  []string
 		Reason string
 	}
-	psChecks := []psCheck{
-		{"skill-lint", "scripts/skill-lint.ps1", nil, "skill quality config detected"},
-		{"route-complexity-eval", "scripts/route-complexity-eval.ps1", nil, "route complexity eval fixtures detected"},
-		{"skill-eval", "scripts/skill-eval.ps1", nil, "skill eval selftest fixtures detected"},
-		{"skill-eval-manifest-selftest", "scripts/skill-eval-manifest-selftest.ps1", nil, "skill eval protected-file hash selftest detected"},
-		{"skill-eval-baseline-selftest", "scripts/skill-eval-baseline-selftest.ps1", nil, "skill eval baseline regression selftest detected"},
-		{"skill-eval-codex-dry-run", "scripts/skill-eval-run-codex.ps1", []string{"-FixtureId", "tiny-typo-fix", "-DryRun"}, "Codex skill eval adapter detected"},
-		{"skill-eval-ghcp-dry-run", "scripts/skill-eval-run-ghcp.ps1", []string{"-FixtureId", "tiny-typo-fix", "-DryRun"}, "GHCP skill eval adapter detected"},
-		{"skill-eval-quality", "scripts/skill-eval-quality.ps1", nil, "skill output quality rubric fixtures detected"},
-		{"kb-work-ready-set-selftest", "scripts/kb-work-ready-set-selftest.ps1", nil, "KB work ready-set dispatch selftest detected"},
-		{"kb-work-scope-lease-selftest", "scripts/kb-work-scope-lease-selftest.ps1", nil, "KB work scope lease overlap selftest detected"},
-		{"kb-pipeline-selftest", "scripts/kb-pipeline-selftest.ps1", nil, "KB coded pipeline spike selftest detected"},
-		{"skill-surface-report", "scripts/skill-surface-report.ps1", nil, "skill loaded-surface report detected"},
-		{"skill-marketplace-firebreak", "scripts/skill-marketplace-firebreak.ps1", nil, "private marketplace quarantine firebreak detected"},
-		{"skill-marketplace-firebreak-selftest", "scripts/skill-marketplace-firebreak-selftest.ps1", nil, "private marketplace quarantine firebreak negative selftest detected"},
-		{"marketplace-promotion-selftest", "scripts/promote-marketplace-skill-selftest.ps1", nil, "private marketplace safe promotion selftest detected"},
-		{"kb-release-gate-selftest", "scripts/kb-release-gate-selftest.ps1", nil, "release gate profile selftest detected"},
-		{"skill-surface-minimality-selftest", "scripts/skill-surface-minimality-selftest.ps1", nil, "skill/agent minimality classification selftest detected"},
-		{"skill-surface-minimality", "scripts/skill-surface-minimality.ps1", nil, "static skill/agent minimality report detected"},
-		{"cross-model-benchmark-validate", "scripts/cross-model-benchmark-validate.ps1", nil, "cross-model benchmark prompt fixtures detected"},
-		{"atv-upstream-delta-selftest", "scripts/atv-upstream-delta-selftest.ps1", nil, "read-only ATV upstream delta selftest detected"},
-		{"atv-upstream-delta", "scripts/atv-upstream-delta.ps1", nil, "read-only ATV upstream delta report detected"},
-		{"skill-sync-report", "scripts/skill-sync-report.ps1", nil, "skill sync target config detected"},
+	nativeChecks := []nativeCheck{
+		{"skill-lint", "skill quality config detected"},
+		{"route-complexity-eval", "route complexity eval fixtures detected"},
+		{"skill-eval", "skill eval selftest fixtures detected"},
+		{"skill-eval-manifest-selftest", "skill eval protected-file hash selftest detected"},
+		{"skill-eval-baseline-selftest", "skill eval baseline regression selftest detected"},
+		{"skill-eval-codex-dry-run", "Codex skill eval adapter detected"},
+		{"skill-eval-ghcp-dry-run", "GHCP skill eval adapter detected"},
+		{"skill-eval-quality", "skill output quality rubric fixtures detected"},
+		{"kb-work-ready-set-selftest", "KB work ready-set dispatch selftest detected"},
+		{"kb-work-scope-lease-selftest", "KB work scope lease overlap selftest detected"},
+		{"kb-pipeline-selftest", "KB coded pipeline spike selftest detected"},
+		{"skill-surface-report", "skill loaded-surface report detected"},
+		{"skill-marketplace-firebreak", "private marketplace quarantine firebreak detected"},
+		{"skill-marketplace-firebreak-selftest", "private marketplace quarantine firebreak negative selftest detected"},
+		{"marketplace-promotion-selftest", "private marketplace safe promotion selftest detected"},
+		{"kb-release-gate-selftest", "release gate profile selftest detected"},
+		{"skill-surface-minimality-selftest", "skill/agent minimality classification selftest detected"},
+		{"skill-surface-minimality", "static skill/agent minimality report detected"},
+		{"cross-model-benchmark-validate", "cross-model benchmark prompt fixtures detected"},
+		{"atv-upstream-delta-selftest", "read-only ATV upstream delta selftest detected"},
+		{"atv-upstream-delta", "read-only ATV upstream delta report detected"},
+		{"skill-sync-report", "skill sync target config detected"},
 	}
 
-	checks := make([]Check, 0, len(psChecks)+1)
-	for _, pc := range psChecks {
-		if !exists(root, pc.Script) {
+	checks := make([]Check, 0, len(nativeChecks)+1)
+	for _, pc := range nativeChecks {
+		if pc.Name == "kb-work-ready-set-selftest" {
+			checks = append(checks, Check{
+				Name: "kb-work-ready-set-selftest", Args: []string{"kbcheck", "ready-set-selftest"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeSelftest(runReadySetSelftest) },
+			})
 			continue
 		}
-		args, err := powerShellArgs(pc.Script, pc.Extra...)
-		if err != nil {
-			return nil, err
+		if pc.Name == "kb-work-scope-lease-selftest" {
+			checks = append(checks, Check{
+				Name: "kb-work-scope-lease-selftest", Args: []string{"kbcheck", "scope-lease-selftest"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeSelftest(runScopeLeaseSelftest) },
+			})
+			continue
 		}
-		checks = append(checks, Check{Name: pc.Name, Args: args, Reason: pc.Reason, Required: true, Confidence: "deterministic-local"})
-	}
-	if exists(root, "scripts/skill-eval-wrap.ps1") && exists(root, "scripts/skill-eval-run-ghcp.ps1") {
-		args, err := powerShellArgs("scripts/skill-eval-wrap.ps1", "-Runner", "scripts/skill-eval-run-ghcp.ps1", "-FixtureId", "tiny-typo-fix", "-DryRun", "-Sealed")
-		if err != nil {
-			return nil, err
+		if pc.Name == "skill-lint" {
+			checks = append(checks, Check{
+				Name: "skill-lint", Args: []string{"kbcheck", "skill-lint"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeCommand(root, []string{"skill-lint"}) },
+			})
+			continue
 		}
-		checks = append(checks, Check{Name: "skill-eval-observed-trace-dry-run", Args: args, Reason: "observed trace eval wrapper detected", Required: true, Confidence: "deterministic-local"})
+		if pc.Name == "skill-sync-report" {
+			checks = append(checks, Check{
+				Name: "skill-sync-report", Args: []string{"kbcheck", "skill-sync-report"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeCommand(root, []string{"skill-sync-report"}) },
+			})
+			continue
+		}
+		if pc.Name == "skill-marketplace-firebreak" {
+			checks = append(checks, Check{
+				Name: "skill-marketplace-firebreak", Args: []string{"kbcheck", "marketplace-firebreak"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeCommand(root, []string{"marketplace-firebreak"}) },
+			})
+			continue
+		}
+		if pc.Name == "skill-marketplace-firebreak-selftest" {
+			checks = append(checks, Check{
+				Name: "skill-marketplace-firebreak-selftest", Args: []string{"kbcheck", "marketplace-firebreak-selftest"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult {
+					return runNativeCommand(root, []string{"marketplace-firebreak-selftest"})
+				},
+			})
+			continue
+		}
+		nativeCommandByCheck := map[string][]string{
+			"cross-model-benchmark-validate":    {"benchmark-validate"},
+			"route-complexity-eval":             {"route-eval"},
+			"skill-eval":                        {"skill-eval"},
+			"skill-eval-quality":                {"skill-eval-quality"},
+			"skill-eval-manifest-selftest":      {"skill-eval-manifest-selftest"},
+			"skill-eval-baseline-selftest":      {"skill-eval-baseline-selftest"},
+			"skill-eval-claims":                 {"skill-eval-claims"},
+			"skill-eval-regression":             {"skill-eval-regression"},
+			"skill-eval-codex-dry-run":          {"eval-run-codex", "--fixture-id", "tiny-typo-fix", "--dry-run"},
+			"skill-eval-ghcp-dry-run":           {"eval-run-ghcp", "--fixture-id", "tiny-typo-fix", "--dry-run"},
+			"kb-release-gate-selftest":          {"release-selftest"},
+			"skill-surface-report":              {"surface-report"},
+			"skill-surface-minimality":          {"minimality"},
+			"skill-surface-minimality-selftest": {"minimality-selftest"},
+			"kb-pipeline-selftest":              {"pipeline-selftest"},
+			"marketplace-promotion-selftest":    {"marketplace-promote-selftest"},
+			"atv-upstream-delta-selftest":       {"atv-delta-selftest"},
+			"atv-upstream-delta":                {"atv-delta"},
+		}
+		if command, ok := nativeCommandByCheck[pc.Name]; ok {
+			checks = append(checks, Check{
+				Name: pc.Name, Args: append([]string{"kbcheck"}, command...),
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
+				Run: func(root string) CheckResult { return runNativeCommand(root, command) },
+			})
+			continue
+		}
 	}
+	checks = append(checks, Check{
+		Name: "skill-eval-observed-trace-dry-run", Args: []string{"kbcheck", "skill-eval-wrap", "--fixture-id", "tiny-typo-fix", "--dry-run", "--sealed"},
+		Reason: "observed trace eval wrapper detected", Required: true, Confidence: "deterministic-local",
+		Run: func(root string) CheckResult {
+			return runNativeCommand(root, []string{"skill-eval-wrap", "--fixture-id", "tiny-typo-fix", "--dry-run", "--sealed"})
+		},
+	})
 	sort.SliceStable(checks, func(i, j int) bool {
 		return checks[i].Name < checks[j].Name
 	})

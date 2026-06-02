@@ -46,17 +46,23 @@ ATV resync epic: `docs/context/epics/atv-upstream-resync.md`
 ATV resync manifest: `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md`
 Claude remaining hardening epic: `docs/context/epics/claude-remaining-hardening.md`
 Claude remaining hardening manifest: `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md`
+Go validator replacement epic: `docs/context/epics/go-native-validator-port.md`
+Go validator full replacement manifest: `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md`
 
 ## Current Truth
 
 - This repo is the working source for portable skills under `.github/skills/`.
 - Personal/global installs and tracked ATV skill roots are expected to match this repo for KB skills.
 - ATV scaffold/plugin copies are no longer intentionally thin for tracked skills.
-- Deterministic skill lint, route-complexity fixtures, captured-result scoring, observed trace scoring, claim verification, computed output-quality checks, regression reporting, sync drift checks, and Codex/GHCP live adapters exist. Live model calls remain explicit and outside `kb-check -All`.
-- `cmd/kbcheck` provides the native Go top-level gate for `core`,
-  `local-release`, and `live-release`. Several individual validators remain
-  PowerShell scripts until separately ported.
-- `skill-surface-minimality.ps1` has a protected classification so repo-policy
+- Deterministic skill lint, route-complexity fixtures, captured-result scoring,
+  observed trace scoring, claim verification, computed output-quality checks,
+  regression reporting, sync drift checks, marketplace firebreak/promotion
+  checks, ATV delta reporting, and Codex/GHCP live adapters exist. Live model
+  calls remain explicit and outside the default `core` gate.
+- `cmd/kbcheck` provides the native Go gate for `core`, `local-release`,
+  `live-release`, eval adapters, marketplace promotion, and drift reports.
+  `rg --files -g "*.ps1"` returns no files in this repo.
+- `kbcheck minimality` has a protected classification so repo-policy
   dependencies such as `ce-review`, `ce-compound`, `ce-compound-refresh`, and
   `document-review` do not become deletion candidates from static analysis
   alone.
@@ -67,6 +73,7 @@ Claude remaining hardening manifest: `docs/plans/2026-06-01-080-kb-claude-remain
 | Workstream | Status | Priority | Link |
 |---|---|---|---|
 | Claude remaining hardening | ✅ done | P1 | `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` |
+| Go validator full replacement | ✅ done | P1 | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` |
 
 ## Queued Improvements
 
@@ -95,17 +102,6 @@ None.
 
 ## Work Log
 
-- 2026-05-31: Hardened future-work gaps: computed output-quality scoring from raw result JSON, collapsed `kb-start` to one ranked routing list, and made harness subprocesses prefer PowerShell 7 (`pwsh`) with Windows PowerShell fallback. Proof: `kb-check -All`, `skill-sync-report`, and `git diff --check` passed.
-- 2026-05-31: Planned ATV upstream resync as a six-slice epic. Original ATV `upstream/main` is authoritative for inspecting ATV-native changes; KB-owned skills are preserved as this repo's overlay, shared overlap skills get three-way review, and superseded workflow skills stay out unless currently used.
-- 2026-05-31: Completed ATV upstream resync correction. Backed out transient `lfg`, `slfg`, and `workflows-*` imports, rejected upstream KB deletions and the `atv-security` OSV regression, kept globals clean, and confirmed useful upstream `ce-review` mechanics are already present locally. Proof: `kb-check -All`, `skill-sync-report`, working/ATV/marketplace `git diff --check`, focused review-skill diff, and direct `Test-Path` checks for removed workflow dirs.
-- 2026-05-29: Completed cross-runtime skill quality manifest. `kb-check -All` now runs skill lint, route-complexity evals, and read-only sync drift report for Codex and GHCP.
-- 2026-05-30: Completed `kb-eval-map` manifest. Bootstrap now invokes repo-native eval mapping; required Codex/Copilot/agents/ATV skill copies are synced; proof: `kb-check -All` and `git diff --check` passed.
-- 2026-05-30: Added deterministic `skill-eval` scorer for captured skill result JSON. `kb-check -All` now self-tests route/proof/claim failures before sync drift.
-- 2026-05-30: Added Codex live skill eval adapter. `scripts/skill-eval-run-codex.ps1` runs route fixtures through `codex exec`, captures schema JSON, and scores it with `skill-eval`; dry-run is included in `kb-check -All`.
-- 2026-05-30: Planned the remaining live cross-runtime eval harness: GHCP adapter, live corpus runner, trace/claim scoring, output quality, cost regression, and eval-map negative validation.
-- 2026-05-30: Completed the live cross-runtime eval harness. GHCP adapter, corpus runner, trace/claim scoring, output-quality selftests, regression reports, and eval-map scaffold negative-validation are implemented and documented.
-- 2026-05-31: Planned the skill minimalism/proof harness epic into four manifests: proof pipeline spike, learning landmines, routing trim, and lazy lane consolidation.
-- 2026-05-31: Completed and reviewed the skill minimalism/proof harness epic. Proof: `kb-check -All`, `git diff --check`, and required sync report passed; one baseline-regression review finding was fixed.
-- 2026-05-31: Completed warning-quality cleanup. Missing `argument-hint` warnings were removed, review local fallback was codified, and optional sync drift output was compacted by default.
-- 2026-06-01: Planned Claude remaining hardening into release confidence, skill-surface minimality classification, read-only upstream delta report, and parked Go wrapper plus trim/deletion queues. Manifest: `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md`.
-- 2026-06-01: Completed Claude remaining hardening. Added release confidence gate profiles, skill/agent minimality classification, read-only ATV upstream delta reporting, and fixed a concurrent baseline-selftest temp-directory collision found during completion. Proof: `kb-check -All`, `kb-release-gate.ps1 -Profile local-release`, `skill-sync-report`, protected selftests, and `git diff --check` passed.
+- 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run .\cmd\kbcheck core`, `go run .\cmd\kbcheck local-release --json`, `go run .\cmd\kbcheck ready-set --manifest docs\plans\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
+
+Older completed work is archived in `todo-done.md`.

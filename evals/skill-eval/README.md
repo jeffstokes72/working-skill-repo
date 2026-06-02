@@ -7,7 +7,7 @@ The runner does not call a model. It scores captured agent results against the
 route-complexity dataset:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1
+go run .\cmd\kbcheck skill-eval
 ```
 
 Default mode is a self-test under `evals/skill-eval/selftest/`. The self-test
@@ -17,7 +17,7 @@ pass the good result and fail the bad ones; otherwise the scorer is too weak.
 For real captured runs, write a result JSON and pass it explicitly:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval.ps1 -ResultPath path\to\captured-result.json
+go run .\cmd\kbcheck skill-eval --result-path path\to\captured-result.json
 ```
 
 ## Result Shape
@@ -67,7 +67,7 @@ Supported claim checks:
 planned files, commands, and tools, but it is not observed behavior.
 
 Optional `observed_trace` is the externally captured safety layer. It is added
-by `scripts/skill-eval-wrap.ps1` and currently records PATH-shim command hits
+by `go run .\cmd\kbcheck skill-eval-wrap` and currently records PATH-shim command hits
 plus git-status write/delete changes. Existing results may omit it; omitted
 observation is reported as lower confidence instead of silently treated as
 proof.
@@ -112,12 +112,12 @@ them unless a future adapter wants the model to emit them directly.
 Wrap a dry-run adapter with external command/write capture:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-wrap.ps1 -Runner scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun -Sealed
+go run .\cmd\kbcheck skill-eval-wrap --fixture-id tiny-typo-fix --dry-run --sealed
 ```
 
 The wrapper prepends temporary PATH shims for selected commands, runs the
 existing adapter with preserved result JSON, adds `observed_trace`, then reruns
-`scripts/skill-eval.ps1` against the augmented result. Without `-KeepRun`, the
+`skill-eval` against the augmented result. Without `--keep-run`, the
 temporary run directory is removed after scoring.
 
 `-Sealed` logs dangerous attempts and blocks known destructive patterns such as
@@ -138,7 +138,7 @@ Transcript-derived claim checks live outside the model transcript as JSON claim
 artifacts:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-claims.ps1
+go run .\cmd\kbcheck skill-eval-claims
 ```
 
 Supported deterministic claim types match structured result claim checks:
@@ -147,15 +147,15 @@ Supported deterministic claim types match structured result claim checks:
 proof. False deterministic claims fail; ambiguous claims are visible but do not
 fail by themselves.
 
-`scripts/skill-eval.ps1` also checks any result-level `claim_artifacts` array by
-running each artifact through `scripts/skill-eval-claims.ps1`.
+`skill-eval` also checks any result-level `claim_artifacts` array by running
+each artifact through `skill-eval-claims`.
 
 ## Output Quality Rubric
 
 Run the quality rubric self-test:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-quality.ps1
+go run .\cmd\kbcheck skill-eval-quality
 ```
 
 The rubric is separate from deterministic route/proof/claim pass/fail. It
@@ -182,78 +182,79 @@ runs are explicit because they require runtime auth and spend.
 Run the Codex adapter in safe dry-run mode:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix -DryRun
+go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run
 ```
 
 Run one live Codex eval:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix -KeepRun
+go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --keep-run
 ```
 
 The live adapter creates a disposable git worktree under `.atv/eval-runs/`, runs
 `codex exec` in read-only mode with a JSON output schema, writes `result.json`,
-then calls `scripts/skill-eval.ps1 -ResultPath <result.json>`.
+then calls `skill-eval --result-path <result.json>`.
 
-Dry-run mode is part of `kb-check -All`; live mode is explicit because it calls a
-model.
+Dry-run mode is part of `core`; live mode is explicit because it calls a
+model. Dry-run artifacts are cleaned unless `--keep-run` is set.
 
 ## GHCP Adapter
 
 Run the GHCP adapter in safe dry-run mode:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun
+go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run
 ```
 
 Run one live GHCP eval:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -KeepRun
+go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --keep-run
 ```
 
 The GHCP adapter creates a disposable git worktree under `.atv/eval-runs/`, runs
 GitHub Copilot CLI non-interactively, captures stdout/stderr plus a transcript
 artifact when available, parses strict JSON from the final response, writes
-`result.json`, then calls `scripts/skill-eval.ps1 -ResultPath <result.json>`.
+`result.json`, then calls `skill-eval --result-path <result.json>`.
 
 GHCP does not expose a Codex-style `--output-schema` flag in the currently
 observed local CLI help, so this adapter uses prompt-level JSON constraints and
 deterministic parsing. Invalid or missing JSON is a hard adapter failure, not a
 pass.
 
+Dry-run artifacts are cleaned unless `--keep-run` is set.
+
 ## Live Corpus Runner
 
 Run both adapters in dry-run mode:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun
+go run .\cmd\kbcheck eval-run-live-corpus --runtime codex,ghcp --dry-run
 ```
 
 Run one explicit live cross-runtime fixture:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-run-live-corpus.ps1 -FixtureId tiny-typo-fix -Runtime codex,ghcp
+go run .\cmd\kbcheck eval-run-live-corpus --runtime codex,ghcp
 ```
 
 The corpus runner writes `summary.json` and `summary.md` under
 `.atv/eval-runs/<timestamp>-live-corpus*/`. Result statuses distinguish pass,
 adapter-missing, adapter-failed, invalid-json, score-failed, and
-runtime-unavailable. Live corpus runs are never part of the default
-`kb-check -All` gate.
+runtime-unavailable. Live corpus runs are never part of the default `core` gate.
 
 ## Cost And Regression Report
 
 Summarize local run artifacts:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs
+go run .\cmd\kbcheck skill-eval-regression --run-root .atv/eval-runs
 ```
 
 Compare against a selected baseline:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs -BaselinePath path\to\baseline.json
+go run .\cmd\kbcheck skill-eval-regression --run-root .atv/eval-runs --baseline path\to\baseline.json
 ```
 
 The report uses local cost proxies: runtime, fixture, mode, status, duration

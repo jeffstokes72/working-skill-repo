@@ -58,7 +58,7 @@
   },
   "quarantine_firebreak": {
     "never_load_from_quarantine": true,
-    "enforced_by": "scripts/skill-marketplace-firebreak.ps1",
+    "enforced_by": "go run .\\cmd\\kbcheck marketplace-firebreak",
     "additional_active_skill_roots": [
       "E:/all-the-vibes/.github/skills"
     ],

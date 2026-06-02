@@ -4,7 +4,7 @@ This document holds operational detail that should not live in the root README.
 
 ## Repo Boundary
 
-This repo should contain skills, agents, scripts, templates, and durable
+This repo should contain skills, agents, native gate tooling, templates, and durable
 references needed by the workflow. It should not carry consuming-project
 brainstorms, plans, handoffs, research notes, or context maps unless the work is
 explicitly about maintaining this skill bundle.
@@ -40,24 +40,9 @@ Live release:
 go run .\cmd\kbcheck live-release
 ```
 
-`cmd/kbcheck` owns top-level orchestration. Individual validators are still
-mixed Go and PowerShell.
-
-Important scripts:
-
-- `scripts/skill-lint.ps1`
-- `scripts/route-complexity-eval.ps1`
-- `scripts/skill-eval.ps1`
-- `scripts/skill-eval-run-codex.ps1`
-- `scripts/skill-eval-run-ghcp.ps1`
-- `scripts/skill-eval-wrap.ps1`
-- `scripts/skill-eval-run-live-corpus.ps1`
-- `scripts/skill-eval-claims.ps1`
-- `scripts/skill-eval-quality.ps1`
-- `scripts/skill-eval-regression-report.ps1`
-- `scripts/skill-surface-minimality.ps1`
-- `scripts/atv-upstream-delta.ps1`
-- `scripts/skill-sync-report.ps1`
+`cmd/kbcheck` owns quality, release, eval, marketplace, and drift-report
+orchestration. The current skill-repo harness is Go-native; `rg --files -g
+"*.ps1"` should return no files.
 
 Live model evals are explicit because they shell to authenticated local CLIs.
 Dry-run adapters are part of the local gate; live calls are not implied by a
@@ -106,7 +91,7 @@ not a mirror target. KB-owned skills are this repo's overlay.
 Use the read-only upstream report before deciding what to port:
 
 ```powershell
-.\scripts\atv-upstream-delta.ps1
+go run .\cmd\kbcheck atv-delta
 ```
 
 Classifications:
@@ -134,15 +119,15 @@ Promotion requires:
 5. approved copy placed under `E:\agent-marketplace\skills`;
 6. runtime roots synced only from the approved copy.
 
-Use the promotion script so the safe path is also the fast path:
+Use the promotion command so the safe path is also the fast path:
 
 ```powershell
-.\scripts\promote-marketplace-skill.ps1 `
-  -Source <reviewed-skill-dir> `
-  -SkillId <skill-id> `
-  -ApprovalReason "<why this is approved>" `
-  -InstallTargets codex,copilot,agents `
-  -Approved
+go run .\cmd\kbcheck marketplace-promote `
+  --source <reviewed-skill-dir> `
+  --skill-id <skill-id> `
+  --approval-reason "<why this is approved>" `
+  --install-targets codex,copilot,agents `
+  --approved
 ```
 
 Quarantine is a firebreak, not a category label. Active and approved skill roots

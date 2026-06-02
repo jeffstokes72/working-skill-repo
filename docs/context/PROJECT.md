@@ -5,7 +5,7 @@ Bootstrap confidence: mixed
 
 ## What This Is
 
-Portable skill bundle for KB workflow skills, reviewer agents, root `AGENTS.md`, Copilot instructions, and helper scripts. The repo is the working source that syncs into personal/global installs and selected ATV copies. Original ATV `upstream/main` is a source to mine for useful ATV-native changes; this repo remains the source of truth for the KB overlay and its replacements.
+Portable skill bundle for KB workflow skills, reviewer agents, root `AGENTS.md`, Copilot instructions, and native Go validation tooling. The repo is the working source that syncs into personal/global installs and selected ATV copies. Original ATV `upstream/main` is a source to mine for useful ATV-native changes; this repo remains the source of truth for the KB overlay and its replacements.
 
 ## How To Run
 
@@ -22,10 +22,8 @@ go run .\cmd\kbcheck local-release
 git diff --check
 ```
 
-On macOS/Linux, install PowerShell 7 and run the same gates with `pwsh
--NoProfile -File <script>.ps1`. Child harness calls prefer `pwsh` and fall back
-to Windows PowerShell only when needed. `cmd/kbcheck` is the native Go gate for
-top-level orchestration; some individual validators still require PowerShell.
+On macOS/Linux, use the same Go entrypoint. Windows is the proven development
+environment today; full non-Windows proof is still parked.
 
 ## How To Test
 
@@ -82,6 +80,10 @@ See `docs/context/architecture/README.md`.
 - `kb-work` is now bounded-swarm oriented: independent ready slices may run in
   isolated contexts, but shared-checkout mutation and observed write overlap
   serialize. `expected_files` remains a forecast, not proof of disjointness.
+- Go-native validator migration is complete for the skill-repo harness:
+  `cmd/kbcheck` owns the default quality/release/eval/marketplace gates and
+  `rg --files -g "*.ps1"` returns no files in this repo. See
+  `docs/context/epics/go-native-validator-port.md`.
 - ATV scaffold/plugin copies are no longer intentionally thin for the tracked KB/CE skill set; `skill-sync-report` should show matches across all tracked roots.
 - Original ATV `upstream/main` is authoritative for ATV-native changes to
   inspect, not a mirror target. Upstream KB deletions are rejected because KB is

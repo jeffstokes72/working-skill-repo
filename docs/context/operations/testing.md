@@ -1,6 +1,6 @@
 # Testing Operations
 
-Checked: 2026-05-31
+Checked: 2026-06-01
 
 ## Current Commands
 
@@ -26,10 +26,10 @@ It defines:
 The private marketplace contract lives in `config/skill-marketplace.json`. It
 records `E:/agent-marketplace` as the approved catalog root and defines the
 project-local-first promotion policy for learned skills and reusable pipelines.
-`scripts/skill-marketplace-firebreak.ps1` enforces the quarantine boundary:
+`go run .\cmd\kbcheck marketplace-firebreak` enforces the quarantine boundary:
 active skill roots, approved catalog paths, and loadable skill links must never
-resolve into `E:/agent-marketplace/quarantine`. This is a blocking
-`kb-check -All` gate, not a naming convention.
+resolve into `E:/agent-marketplace/quarantine`. This is a blocking `core` gate,
+not a naming convention.
 
 The approved `atv-security` marketplace skill also has a dependency
 vulnerability proof harness:
@@ -43,23 +43,22 @@ available. If the scanner is not installed, record `skipped-unavailable` and the
 official install command instead of using model judgment as proof.
 
 `cmd/kbcheck` discovers this repo as a skill repo when `.github/skills` and
-`config/skill-quality.json` exist. Top-level gate orchestration is native Go;
-several individual validators are still PowerShell scripts until ported.
+`config/skill-quality.json` exist. The skill-repo quality harness is Go-native.
 
 The sync drift report is read-only: it never copies files. It still exits
-nonzero for required-target drift and is part of the blocking `kb-check -All`
-gate. Current policy expects ATV scaffold/plugin copies to match the working
-skill root for all tracked skills.
+nonzero for required-target drift and is part of the blocking `core` gate.
+Current policy expects ATV scaffold/plugin copies to match the working skill
+root for all tracked skills.
 
 ```powershell
-pwsh -NoProfile -File scripts\skill-sync-report.ps1
-pwsh -NoProfile -File scripts\skill-sync-report.ps1 -VerboseOptional
+go run .\cmd\kbcheck skill-sync-report
+go run .\cmd\kbcheck skill-sync-report --verbose-optional
 ```
 
 Default output prints required issues in detail and summarizes any optional ATV
 scaffold/plugin differences. Current expected state is full match across
 working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots.
-Use `-VerboseOptional` when reviewing a deliberate packaging exception.
+Use `--verbose-optional` when reviewing a deliberate packaging exception.
 
 ## Current Result
 
@@ -147,89 +146,35 @@ prompt/output datasets are the native proof surface.
 
 ## Implemented Harness
 
-- `scripts/skill-lint.ps1` validates required skill frontmatter, conflict
-  markers, configured line budgets, allowlisted long skills, and referenced
-  local files.
-- `scripts/route-complexity-eval.ps1` validates the route-complexity fixture
-  schema, computes deterministic complexity tiers, and checks over/under
-  planning guard coverage.
-- `scripts/skill-eval.ps1` scores captured skill result JSON against route
-  fixtures, trace evidence, and structured claim checks. Its default self-test
-  includes intentionally bad route/proof/claim results that must fail. When
-  passed `-ManifestPath`, it also verifies protected verifier-file SHA256 hashes
-  before accepting the result.
-- `scripts/skill-eval-manifest-selftest.ps1` creates a dry-run eval manifest,
-  proves the valid manifest passes, then corrupts the fixture SHA in a copied
-  manifest and requires deterministic scoring to fail.
-- `scripts/skill-eval-baseline-selftest.ps1` creates a temporary baseline from
-  selftest results, proves unchanged comparison passes, removes proof from a
-  copied passing result, and mutates a negative fixture so it incorrectly
-  passes. Both mutations must fail baseline comparison.
-- `scripts/skill-eval-run-codex.ps1 -FixtureId tiny-typo-fix -DryRun` validates
-  the Codex live-adapter plumbing without calling a model and writes a
-  protected-file hash manifest. Live mode is explicit because it invokes
-  `codex exec`.
-- `scripts/skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun` validates
-  the GHCP live-adapter plumbing without calling a model and writes a
-  protected-file hash manifest. Live mode is explicit because it invokes GitHub
-  Copilot CLI and relies on prompt-level JSON constraints plus deterministic
-  parsing.
-- `scripts/skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun`
-  validates corpus orchestration across both adapters. Live mode is explicit and
-  not part of `kb-check -All`.
-- `scripts/skill-eval-claims.ps1` self-tests transcript-derived claim artifacts:
-  true deterministic claims pass, false deterministic claims fail, and ambiguous
-  claims are reported without becoming proof.
-- `scripts/skill-eval-quality.ps1` computes deterministic output-quality scores
-  from raw captured result JSON for completeness, maintainability-shape,
-  relevance, proof quality, and right-sized ceremony.
-- `scripts/skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs`
-  summarizes local live-run artifacts and compares them to a selected baseline
-  when `-BaselinePath` is provided.
-- `cmd/kbcheck` composes the native `core`, `local-release`, and `live-release`
-  gates. `scripts/kb-release-gate-selftest.ps1` proves profile selection,
-  explicit-live skip labeling, and required-check failure propagation through
-  the Go path.
-- `scripts/go-ps1-parity-report.ps1` recorded the Windows parity smoke proof used to
-  retire the old top-level PowerShell wrappers.
-- `scripts/kb-pipeline.ps1 -Start skill-bundle-proof-spike` creates a
-  non-agent pipeline spike run under `.atv/pipeline-runs/` with selected
-  pipeline metadata, phase prompts, protected-file hashes, and proof command
-  placeholders. `scripts/kb-pipeline.ps1 -Status` reads the latest run back.
-- `scripts/kb-pipeline-selftest.ps1` proves the pipeline spike can start, can
-  read status, writes required run artifacts, and rejects unknown pipeline IDs.
-- `scripts/kb-work-ready-set-selftest.ps1` proves KB manifest ready-set
-  selection from blockers, statuses, `can_continue_other_slices`, and cycle
-  detection.
-- `scripts/kb-work-scope-lease-selftest.ps1` proves the bounded swarm overlap
-  guard: disjoint active writes pass, overlapping active writes fail, and
-  completed/requeued leases release paths.
-- `scripts/skill-surface-report.ps1` reports route-level loaded skill surface
-  with line counts, rough token estimates, and content hashes. It can compare
-  against a JSON baseline when `-BaselinePath` is provided.
-- `scripts/skill-surface-minimality.ps1` statically classifies skills and
-  reviewer agents as required, conditional, unproven, unused candidates, or trim
-  candidates, with protected repo-policy skills excluded from cold-storage
-  deletion candidates. It produces candidates only; it does not approve
-  deletion.
-- `scripts/atv-upstream-delta.ps1` compares local ATV/fork state to original
-  ATV upstream with read-only git diff commands and classifies changed skills as
-  KB-owned rejects, shared-overlap reviews, ATV-native candidates, superseded
-  workflow rejects, or unknown reviews. Security-sensitive rows, including
-  `atv-security`, warn when OSV proof may have changed.
-- `scripts/skill-marketplace-firebreak.ps1` enforces the marketplace quarantine
-  boundary by failing when any active/approved skill root or approved catalog
-  entry resolves into quarantine. Quarantine entries cannot become loadable by
-  being marked approved in place.
-- `scripts/skill-marketplace-firebreak-selftest.ps1` proves the firebreak trips
-  by generating a temporary config that points an active skill root at
-  quarantine and requiring a nonzero result.
-- `scripts/promote-marketplace-skill-selftest.ps1` proves the one-command
-  marketplace promotion path with a temp marketplace: happy path promotion,
-  catalog hash pinning, temp global sync, and quarantine destination refusal.
-- `scripts/skill-sync-report.ps1` validates required skill-copy hashes across
-  the working repo, Codex global, Copilot global, shared agents global, and ATV
-  `.github` skills.
+All current harness commands are native `cmd/kbcheck` commands:
+
+- `skill-lint` validates required skill frontmatter, conflict markers,
+  configured line budgets, allowlisted long skills, and referenced local files.
+- `route-eval` validates route-complexity fixtures, computes deterministic
+  complexity tiers, and checks over/under-planning guard coverage.
+- `skill-eval`, `skill-eval-claims`, `skill-eval-quality`, and
+  `skill-eval-regression` score captured result JSON, trace evidence, claim
+  artifacts, rubric quality, baselines, and protected verifier-file hashes.
+- `eval-run-codex`, `eval-run-ghcp`, `eval-run-live-corpus`, and
+  `skill-eval-wrap` provide dry-run/live adapters and observed-trace wrapping.
+- `release-selftest` proves profile selection, explicit-live skip labeling, and
+  required-check failure propagation through the Go release path.
+- `pipeline` and `pipeline-selftest` create/read coded pipeline spike runs
+  under `.atv/pipeline-runs/` and reject unknown pipeline IDs.
+- `ready-set` and `scope-lease` prove KB manifest DAG ready-set selection and
+  bounded-swarm write-overlap guards.
+- `surface-report` and `minimality` report loaded skill surface and static
+  skill/agent minimality classifications.
+- `atv-delta` compares local ATV/fork state to original ATV upstream with
+  read-only git diff commands and classifies changed skills as KB-owned rejects,
+  shared-overlap reviews, ATV-native candidates, superseded workflow rejects, or
+  unknown reviews.
+- `marketplace-firebreak`, `marketplace-firebreak-selftest`,
+  `marketplace-promote`, and `marketplace-promote-selftest` enforce quarantine
+  boundaries and prove the reviewed promotion path.
+- `skill-sync-report` validates required skill-copy hashes across the working
+  repo, Codex global, Copilot global, shared agents global, and ATV `.github`
+  skills.
 
 ## Remaining Harness Growth
 

@@ -37,7 +37,31 @@ func TestDiscoverSkillRepoChecksIncludesBenchmarkValidator(t *testing.T) {
 		t.Fatalf("DiscoverChecks returned error: %v", err)
 	}
 	got := checkNames(checks)
-	want := []string{"cross-model-benchmark-validate"}
+	want := []string{
+		"atv-upstream-delta",
+		"atv-upstream-delta-selftest",
+		"cross-model-benchmark-validate",
+		"kb-pipeline-selftest",
+		"kb-release-gate-selftest",
+		"kb-work-ready-set-selftest",
+		"kb-work-scope-lease-selftest",
+		"marketplace-promotion-selftest",
+		"route-complexity-eval",
+		"skill-eval",
+		"skill-eval-baseline-selftest",
+		"skill-eval-codex-dry-run",
+		"skill-eval-ghcp-dry-run",
+		"skill-eval-manifest-selftest",
+		"skill-eval-observed-trace-dry-run",
+		"skill-eval-quality",
+		"skill-lint",
+		"skill-marketplace-firebreak",
+		"skill-marketplace-firebreak-selftest",
+		"skill-surface-minimality",
+		"skill-surface-minimality-selftest",
+		"skill-surface-report",
+		"skill-sync-report",
+	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("checks=%v want=%v", got, want)
 	}
