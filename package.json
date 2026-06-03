@@ -4,8 +4,8 @@
   "description": "Portable KB workflow skill bundle installer for Codex and GitHub Copilot.",
   "type": "module",
   "bin": {
-    "working-skill-repo": "./bin/kb-install.mjs",
-    "kb-install": "./bin/kb-install.mjs"
+    "working-skill-repo": "bin/kb-install.mjs",
+    "kb-install": "bin/kb-install.mjs"
   },
   "files": [
     "AGENTS.md",
