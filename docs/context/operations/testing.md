@@ -176,6 +176,11 @@ All current harness commands are native `cmd/kbcheck` commands:
   repo, Codex global, Copilot global, shared agents global, and ATV `.github`
   skills.
 
+For unattended runners, `skill-sync-report` is a release blocker, not a cleanup
+task. Required drift means source and deployed runner behavior disagree. If a
+global copy is newer, merge useful drift back into the repo first, prove it, and
+only then sync outward from the repo source.
+
 ## Remaining Harness Growth
 
 The current harness covers the core planned eval stack. Remaining growth areas:

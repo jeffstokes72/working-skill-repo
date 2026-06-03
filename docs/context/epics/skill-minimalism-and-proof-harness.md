@@ -116,9 +116,8 @@ Propagation policy
 - Review: P0=0 P1=1(resolved locally) P2=0 P3=0.
 - Resolved finding: skill-eval baseline comparison now fails negative fixtures
   that incorrectly start passing.
-- Proof: `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`,
-  `git diff --check`, and `scripts\skill-sync-report.ps1` passed with 0
-  required sync issues.
+- Proof: `go run .\cmd\kbcheck core`, `git diff --check`, and
+  `go run .\cmd\kbcheck skill-sync-report` passed with 0 required sync issues.
 - Review limitation: subagent review was not spawned because this session's
   delegation tool requires explicit user authorization for subagents; review was
   performed locally.
@@ -172,7 +171,7 @@ Resolved execution/ship decision:
 ## Completion Criteria
 
 - Every workstream has a manifest or is explicitly parked with rationale.
-- `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` exits 0.
+- `go run .\cmd\kbcheck core` exits 0.
 - `git diff --check` exits 0 in every touched repo.
 - Required sync targets report zero required issues.
 - Token/line reduction is measured, not estimated from memory.

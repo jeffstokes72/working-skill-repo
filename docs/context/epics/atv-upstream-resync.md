@@ -119,6 +119,6 @@ Assumptions recorded for execution:
 
 - Every accepted upstream change is traceable to a source commit/path.
 - Every rejected upstream deletion or addition has a recorded rationale.
-- `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` exits 0.
-- `scripts\skill-sync-report.ps1` reports zero required issues.
+- `go run .\cmd\kbcheck core` exits 0.
+- `go run .\cmd\kbcheck skill-sync-report` reports zero required issues.
 - `git diff --check` exits 0 in `E:\working-skill-repo` and `E:\all-the-vibes`.

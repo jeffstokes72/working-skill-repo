@@ -17,10 +17,13 @@ This repo is the portable skill bundle. Do not bootstrap consuming-project memor
 Canonical quality gate for this skill repo:
 
 ```powershell
-.\.github\skills\kb-check\scripts\kb-check.ps1 -All
+go run .\cmd\kbcheck core
 ```
 
-This command is GHCP-compatible because it uses repo files and PowerShell scripts, not Codex-only tools. It runs skill lint, route complexity fixture validation, and the read-only sync drift report configured in `config/skill-quality.json`.
+This command is GHCP-compatible because it uses repo files and the native Go
+`cmd/kbcheck` gate, not Codex-only tools. It runs skill lint, route complexity
+fixture validation, eval selftests, marketplace firebreak checks, and read-only
+sync/ATV drift reports configured in `config/skill-quality.json`.
 
 Every token must pay rent:
 

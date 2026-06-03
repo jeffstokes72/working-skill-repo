@@ -1,2 +1,5 @@
 .atv/eval-runs/
 .atv/pipeline-runs/
+.tmp/
+__pycache__/
+*.pyc

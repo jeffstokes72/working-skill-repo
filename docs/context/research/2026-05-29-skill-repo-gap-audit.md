@@ -13,13 +13,13 @@ Where is this portable skill repo weakest compared with current agent-workflow b
 
 At audit time, the repo described benchmarking in `README.md`, but had no runnable harness. `kb-check.ps1 -List` found no checks because this repo had no conventional app manifest.
 
-Current status: resolved by the cross-runtime quality work. `kb-check.ps1 -List` now reports `skill-lint`, `route-complexity-eval`, and `skill-sync-report`.
+Current status: resolved by the cross-runtime quality work. `go run .\cmd\kbcheck core --list` now reports `skill-lint`, `route-complexity-eval`, and `skill-sync-report`.
 
 Impact: route quality, complexity, and verification discipline are currently enforced by prose. Prose is not enough for "best on the planet."
 
 Required fix:
 
-- Add a `scripts/skill-lint.ps1` or extend `kb-check.ps1` for this repo.
+- Add deterministic skill lint and route eval coverage under the Go `cmd/kbcheck` gate.
 - Add route eval fixtures: prompt, repo state, expected skill, expected asks, expected proof.
 - Make `git diff --check` plus skill lint plus route eval the standard pre-sync gate.
 

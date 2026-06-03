@@ -1,7 +1,7 @@
 # Working Skill Repo
 
-Voice-friendly KB workflow skills and required reviewer agents for GitHub
-Copilot and Codex.
+Portable KB workflow skills, reviewer agents, and a Go-native validation
+harness for GitHub Copilot and Codex.
 
 Status: actively used, pre-1.0. The quality/release gate is native Go; the old
 PowerShell validator scripts were retired after parity and release proof.
@@ -15,12 +15,29 @@ skills and reviewer agents. Original ATV `upstream/main` is a source to mine
 for useful ATV-native changes, while this repo remains the source of truth for
 the KB overlay and any KB replacements.
 
-This repo is the portable skill bundle I use when I want an agent to walk into a
-project, recover local project memory, choose the right workflow, execute work in
-vertical slices, test its own changes, review the result, and leave durable
-handoff/context files behind.
+This repo is two things:
+
+1. A portable KB runtime bundle that teaches an agent how to recover local
+   project memory, route work by shape, execute vertical slices, test its own
+   changes, review the result, and leave durable handoff/context files behind.
+2. A development harness that tests whether the bundle, routes, sync targets,
+   eval fixtures, marketplace rules, and release gates still match the claims.
 
 ![KB routing workflow](docs/assets/kb-routing-workflow.png)
+
+## What Makes This Different
+
+- `kb-start` routes work instead of forcing every request through one heavy
+  workflow.
+- `kb-map` keeps repo-local memory so fresh sessions can recover without chat
+  history.
+- `kb-plan` decomposes clear work into vertical slices with verification
+  contracts.
+- `kb-work` executes manifest slices using ready-set and scope-lease rules.
+- `kb-complete` runs review, proof, follow-up cleanup, learning, and memory
+  refresh.
+- `cmd/kbcheck` is a Go-native gate for route fixtures, skill lint, sync drift,
+  eval scoring, marketplace firebreaks, and release profiles.
 
 ## Routing And Rework Control
 
@@ -53,9 +70,9 @@ prefix because it works better with voice input.
 
 ## What Is Installed
 
-This is not the full ATV StarterKit. It is the smaller KB overlay that should be
-safe to copy into active projects without dragging in every experiment or
-historical workflow.
+This is not the full ATV StarterKit. It is a portable KB overlay plus its
+development harness. The repository is intentionally larger than the installed
+runtime surface.
 
 The installed runtime surface is intentionally smaller than the repository:
 about 37 skills plus 52 reviewer/specialist agents.
@@ -67,7 +84,7 @@ Installed/runtime surface:
 - `AGENTS.md` - Codex/agent repo contract
 - `.github/copilot-instructions.md` and `.github/instructions/*.instructions.md`
   - Copilot guidance
-- `cmd/kbcheck` - Go quality/release gate entrypoint
+- `cmd/kbcheck` - optional Go quality/release gate entrypoint
 
 Development scaffolding that is usually not copied into consuming projects:
 
@@ -82,10 +99,13 @@ Consuming projects get their own `todo.md`, `docs/context/`,
 
 Install or sync the bundle globally, then start work inside a target repo:
 
-```powershell
+```text
 cd E:\path\to\your\project
 kb-start "what I want done"
 ```
+
+`kb-start` is a skill invocation through Codex, Copilot/GHCP, or another agent
+that has this bundle installed. It is not a standalone shell binary.
 
 Normal flow:
 
@@ -105,6 +125,27 @@ serializes shared-checkout or observed-overlap work, then runs `kb-complete` for
 review, follow-up resolution, proof, learning, memory refresh, and cleanup. "All
 slices passed" is progress; `kb-complete` is the done gate.
 
+## Execution Model
+
+The pipeline is built around task shape, not a fixed ceremony:
+
+- **Small:** `kb-fix` for known bugs, typos, and narrow edits; or
+  `kb-troubleshoot` when broken behavior needs diagnosis. Identify or write a
+  failing signal, make the smallest fix, verify deterministically, and stop if
+  the loop stalls.
+- **Medium:** `kb-brainstorm -> kb-plan -> kb-work` when framing or
+  requirements need clarification before slicing. `kb-plan` writes vertical
+  slices with expected files, verification, dependencies, and HITL flags.
+- **Large:** `kb-epic` for migrations, rewrites, deletion policy, proof-harness
+  changes, or multi-stream work. It breaks the initiative into multiple
+  brainstorms or manifests before execution.
+
+`kb-gate` owns P0-P4 phase policy. P0/P1 findings block progression but do not
+automatically require a human; the agent fixes actionable issues itself and asks
+for help only for product decisions, credentials, unsafe operations, or genuine
+ambiguity. `kb-check` and `kb-functional-test` push verification into executable
+checks instead of letting the model re-inspect behavior by hand.
+
 ## Common Commands
 
 | Command | Use When |
@@ -116,6 +157,8 @@ slices passed" is progress; `kb-complete` is the done gate.
 | `kb-fix` | Narrow bug, failing test, or small contained change |
 | `kb-troubleshoot` | Broken behavior needs logs/browser/test investigation |
 | `kb-brainstorm` | Product or technical framing is still unclear |
+| `kb-research` | External docs, prior art, or framework/market behavior matters |
+| `kb-architecture-deepening` | Explore where a codebase should get deeper, simpler, or more modular |
 | `kb-plan` | Requirements exist and need vertical slices |
 | `kb-work` | A manifest exists and should be executed |
 | `kb-review` | KB-specific code review with structural quality review |
@@ -123,8 +166,44 @@ slices passed" is progress; `kb-complete` is the done gate.
 | `kb-memory-review` | High-cost pass for stale, bloated, or contradictory memory |
 | `kb-ship` | Release, PR, deploy, or final readiness check |
 | `kb-epic` | Large migration, rewrite, or multi-brainstorm initiative |
+| `kb-compact` | Memory, docs, or output have gone too verbose |
 | `klfg` | Fully hands-off route from brainstorm through completion |
 | `repo-critic` | Claims-vs-code evidence review before a claim ships |
+
+## Installed Skills
+
+Routing and memory:
+
+- `kb-start` - default router / lane picker
+- `kb-map` - project-memory lookup, refresh, and project-root anchoring
+- `kb-map-bootstrap` - expensive deep index plus standard memory layout
+- `kb-compact` - compress memory/docs/output without losing technical truth
+- `kb-handoff` - compact a session into a restart packet
+
+Execution lanes:
+
+- `kb-fix`, `kb-troubleshoot`, `kb-brainstorm`, `kb-research`
+- `kb-architecture-deepening`, `kb-plan`, `kb-work`, `kb-complete`
+- `kb-ship`, `kb-epic`, `kb-task`, `kb-first-principles`, `klfg`
+
+Verification and gates:
+
+- `kb-check` - deterministic verification harness
+- `kb-functional-test` - functional/e2e/browser test strategy and audit
+- `kb-gate` - shared P0/P1/P2/P3/P4 phase-gate policy
+- `kb-qa` - per-slice QA gate
+- `kb-repair` - surgical fix loop with stuck detection
+- `kb-regression-snapshot` - capture/replay deterministic regression snapshots
+- `kb-review` - tiered-persona structural review
+- `kb-eval-map` - map repo-native eval surfaces and proof commands
+- `kb-memory-review` - high-cost project-memory maintenance pass
+
+Direct dependencies include `ce-review`, `ce-compound`,
+`ce-compound-refresh`, `document-review`, `tdd`, `learn`, `evolve`,
+`todo-create`, and `todo-triage`. Do not remove `kb-review`, `ce-review`,
+`ce-compound`, or `ce-compound-refresh` unless the skills that invoke them are
+rewritten first. `kb-complete` uses `kb-review`; `ce-review` remains the
+generalized CE review skill.
 
 ## Project Memory
 
@@ -185,6 +264,13 @@ and [kb-review persona catalog](.github/skills/kb-review/references/persona-cata
 
 ## Quality Gates
 
+The harness is not just install plumbing. `cmd/kbcheck` validates route
+fixtures, skill structure, sync drift, marketplace firebreaks, eval result
+scoring, baseline regression checks, and release readiness.
+
+The Go tooling follows the repo's `go.mod` version requirement (`go 1.26` at
+the time of writing).
+
 Run before propagating skill changes:
 
 ```powershell
@@ -199,6 +285,10 @@ go run .\cmd\kbcheck local-release
 
 `local-release` composes deterministic local proof: native `core`, sync drift,
 line-ending checks, static reports, and the available local eval surfaces.
+For unattended runners, required sync drift is a release blocker. The repo is
+the source of truth; globals are deployed copies. If a global copy contains
+newer useful behavior, merge it back into this repo first, prove it here, then
+sync outward.
 `live-release` is explicit:
 
 ```powershell
@@ -210,6 +300,27 @@ claim that live model evals ran.
 
 The current gate is Go-native. PowerShell is no longer required for the
 skill-repo quality suite.
+
+Useful subcommands:
+
+- `core --list` / `core --dry-run` - list or dry-run core gate steps
+- `local-release`, `live-release` - release-readiness gates
+- `skill-lint` - deterministic `SKILL.md` structure lint
+- `skill-sync-report` - read-only drift report across install targets
+- `route-eval` - validate `evals/route-complexity/*` fixtures
+- `skill-eval`, `skill-eval-claims`, `skill-eval-quality`,
+  `skill-eval-regression` - prompt/trace/claim/quality eval surfaces
+- `eval-run-codex`, `eval-run-ghcp`, `eval-run-live-corpus`,
+  `skill-eval-wrap` - dry-run/live adapters and observed-trace wrapping
+- `minimality`, `surface-report` - loaded-surface and trim measurement
+- `ready-set`, `scope-lease` - swarm execution proof helpers used by `kb-work`
+- `atv-delta` - upstream ATV drift report
+- `marketplace-firebreak`, `marketplace-promote` - private marketplace checks
+  and promotion path
+
+Two PowerShell helpers remain for narrow skill jobs:
+`kb-regression-snapshot/scripts/kb-regression-snapshot.ps1` and
+`kb-map-bootstrap/scripts/code-intel.ps1`.
 
 Deep dive: [testing operations](docs/context/operations/testing.md) and
 [eval map](docs/context/eval-map.md).
@@ -245,6 +356,17 @@ Copy-Item "$src\*" "$env:USERPROFILE\.agents\skills" -Recurse -Force
 Use repo-local installs only when a project needs pinned/project-specific
 overrides or when the skills should be versioned with that codebase.
 
+Repo-local install:
+
+```powershell
+$src = 'E:\working-skill-repo'
+$dst = 'E:\path\to\your\project'
+Copy-Item "$src\.github\skills" "$dst\.github\skills" -Recurse -Force
+Copy-Item "$src\.github\agents" "$dst\.github\agents" -Recurse -Force
+Copy-Item "$src\AGENTS.md" "$dst\AGENTS.md" -Force
+Copy-Item "$src\.github\copilot-instructions.md" "$dst\.github\copilot-instructions.md" -Force
+```
+
 Deep dive: [skill bundle maintenance](docs/context/operations/skill-bundle-maintenance.md).
 
 ## Platform Reality
@@ -268,7 +390,8 @@ the marketplace only after evidence, review, hash pinning, and human approval.
 Public imports go to quarantine first. Quarantine is an enforced firebreak:
 active and approved skill roots must not resolve into quarantine.
 
-`atv-security` is the current approved ATV security skill. Dependency
+`atv-security` is the current approved ATV security skill, but it lives in the
+approved marketplace/global skill surface rather than this KB overlay. Dependency
 vulnerability proof prefers OSV Scanner machine evidence when `osv-scanner` is
 installed.
 
@@ -279,7 +402,7 @@ Deep dive:
 
 ## What Is Not Bundled
 
-These are intentionally left out of the minimal working bundle:
+These are intentionally left out of the portable runtime bundle:
 
 - upstream `deepen-*` passes; use `kb-research` and proportional research
 - one-shot LFG/SLFG style workflows; use `klfg` only when you want the full
