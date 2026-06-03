@@ -48,7 +48,7 @@ sync is faster than accidental mirroring or stale drift.
 
 ## Scope Boundaries
 
-- Do not build a bot that auto-merges upstream into `E:\all-the-vibes`.
+- Do not build a bot that auto-merges upstream into `<atv-repo>`.
 - Do not auto-install upstream skills globally.
 - Do not revive superseded `lfg`, `slfg`, or `workflows-*` routes without an app
   use case.
@@ -62,7 +62,7 @@ sync is faster than accidental mirroring or stale drift.
 
 ## Dependencies / Assumptions
 
-- Assumption: `E:\all-the-vibes` has `upstream` configured to original ATV.
+- Assumption: `<atv-repo>` has `upstream` configured to original ATV.
 - Assumption: reports can use `git show`/`git diff` object reads to avoid dirty
   checkout mutation.
 

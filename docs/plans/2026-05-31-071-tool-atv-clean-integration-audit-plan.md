@@ -35,6 +35,6 @@ can_continue_other_slices: false
 
 ## Test Scenarios
 
-- `git -C E:\all-the-vibes diff --name-status origin/main..upstream/main -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills`
-- `git -C E:\all-the-vibes diff --name-status origin/main..origin/feat/pocock-skills -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills`
+- `git -C <atv-repo> diff --name-status origin/main..upstream/main -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills`
+- `git -C <atv-repo> diff --name-status origin/main..origin/feat/pocock-skills -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills`
 - Verify no tracked file changed except the audit artifact.

@@ -125,7 +125,7 @@ func releaseChecks(root, profile string, runner processRunner) ([]Check, error) 
 	} else {
 		checks = append(checks, Check{Name: "skill-surface-minimality", Args: []string{"kbcheck", "minimality"}, Required: false, Confidence: "static-report", Available: func(string) bool { return false }, SkipReason: "skill surface unavailable"})
 	}
-	if pathExists("E:/all-the-vibes") && exists(root, "config/atv-upstream-delta.json") {
+	if pathExists(resolveRepoPath(root, "../all-the-vibes")) && exists(root, "config/atv-upstream-delta.json") {
 		checks = append(checks, Check{
 			Name: "atv-upstream-delta", Args: []string{"kbcheck", "atv-delta", "--json"},
 			Required: false, Confidence: "read-only-git-diff", Reason: "ATV upstream repo detected",

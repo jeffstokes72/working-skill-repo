@@ -8,19 +8,19 @@ test_level: functional-cli
 functional_risk: narrow
 hitl: false
 expected_files:
-  - path: "E:/agent-marketplace/skills/atv-security/SKILL.md"
+  - path: "<agent-marketplace>/skills/atv-security/SKILL.md"
     op: edit
     scope: "Install the final approved atv-security skill body."
-  - path: "C:/Users/marowe/.codex/skills/atv-security/SKILL.md"
+  - path: "~/.codex/skills/atv-security/SKILL.md"
     op: edit
     scope: "Install the final approved atv-security skill body for Codex."
-  - path: "C:/Users/marowe/.copilot/skills/atv-security/SKILL.md"
+  - path: "~/.copilot/skills/atv-security/SKILL.md"
     op: edit
     scope: "Install the final approved atv-security skill body for Copilot."
-  - path: "C:/Users/marowe/.agents/skills/atv-security/SKILL.md"
+  - path: "~/.agents/skills/atv-security/SKILL.md"
     op: edit
     scope: "Install the final approved atv-security skill body for shared agents."
-  - path: "E:/agent-marketplace/catalog/approved-skills.json"
+  - path: "<agent-marketplace>/catalog/approved-skills.json"
     op: edit
     scope: "Pin the final installed skill SHA256."
 protected_oracles: []

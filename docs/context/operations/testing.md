@@ -24,11 +24,11 @@ It defines:
 - Required and optional sync targets.
 
 The private marketplace contract lives in `config/skill-marketplace.json`. It
-records `E:/agent-marketplace` as the approved catalog root and defines the
+records `<agent-marketplace>` as the approved catalog root and defines the
 project-local-first promotion policy for learned skills and reusable pipelines.
 `go run .\cmd\kbcheck marketplace-firebreak` enforces the quarantine boundary:
 active skill roots, approved catalog paths, and loadable skill links must never
-resolve into `E:/agent-marketplace/quarantine`. This is a blocking `core` gate,
+resolve into `<agent-marketplace>/quarantine`. This is a blocking `core` gate,
 not a naming convention.
 
 The approved `atv-security` marketplace skill also has a dependency

@@ -18,20 +18,20 @@ scope-verified-files:
   - docs/context/operations/testing.md
   - docs/context/architecture/private-skill-marketplace.md
   - docs/context/memory-maintenance.md
-  - E:/agent-marketplace/README.md
-  - E:/agent-marketplace/catalog/approved-skills.json
-  - E:/agent-marketplace/catalog/harness-index.json
-  - E:/agent-marketplace/harnesses/README.md
-  - E:/agent-marketplace/harnesses/dependency-vulnerability-osv.json
-  - E:/agent-marketplace/skills/README.md
-  - E:/agent-marketplace/skills/atv-security/SKILL.md
-  - E:/all-the-vibes/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md
-  - E:/all-the-vibes/pkg/scaffold/templates/skills/atv-security/SKILL.md
-  - E:/all-the-vibes/plugins/atv-pack-security/skills/atv-security/SKILL.md
-  - E:/all-the-vibes/plugins/atv-everything/skills/atv-security/SKILL.md
-  - C:/Users/marowe/.codex/skills/atv-security/SKILL.md
-  - C:/Users/marowe/.copilot/skills/atv-security/SKILL.md
-  - C:/Users/marowe/.agents/skills/atv-security/SKILL.md
+  - <agent-marketplace>/README.md
+  - <agent-marketplace>/catalog/approved-skills.json
+  - <agent-marketplace>/catalog/harness-index.json
+  - <agent-marketplace>/harnesses/README.md
+  - <agent-marketplace>/harnesses/dependency-vulnerability-osv.json
+  - <agent-marketplace>/skills/README.md
+  - <agent-marketplace>/skills/atv-security/SKILL.md
+  - <atv-repo>/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md
+  - <atv-repo>/pkg/scaffold/templates/skills/atv-security/SKILL.md
+  - <atv-repo>/plugins/atv-pack-security/skills/atv-security/SKILL.md
+  - <atv-repo>/plugins/atv-everything/skills/atv-security/SKILL.md
+  - ~/.codex/skills/atv-security/SKILL.md
+  - ~/.copilot/skills/atv-security/SKILL.md
+  - ~/.agents/skills/atv-security/SKILL.md
 slices:
   - id: slice-051
     title: "Promote ATV security into the approved marketplace catalog"
@@ -99,7 +99,7 @@ slices:
     next_agent_action: "Run json parsing, firebreak checks, kb-check -All, diff checks, and marketplace/global hash proof."
     human_action: ""
     can_continue_other_slices: true
-    notes: "scope-check: forecast=7 changed=7 discovered=5 unexplained=0; scope-discovery: .atv/kb-completions.txt - kb-complete cadence counter; scope-discovery: E:/agent-marketplace/* - marketplace promotion outputs; scope-discovery: E:/all-the-vibes/* - trusted ATV shipped copies; scope-discovery: C:/Users/marowe/.codex/.copilot/.agents skills - explicit global install targets; proof: marketplace JSON parse passed; hash equality unique_hashes=1 across 8 source/install targets; firebreak and selftest passed; kb-check -All passed with 0 required sync issues; git diff --check passed in working repo, marketplace, and ATV with line-ending warnings only; osv-scanner installed version=2.3.8 after completion; review-mode: local-fallback P0=0 P1=0 P2=0 P3=0; follow-up-resolution: resolved 0, logged 0, blocked 0; kb-map-refresh: done - PROJECT.md, operations/testing.md, architecture/private-skill-marketplace.md, memory-maintenance.md; compound: skipped - promotion/proof wiring, no novel implementation pattern beyond documented marketplace contract; learn: no new generic instincts; evolve: skipped - completion counter 4; compact: skipped - no startup bloat; cleanup: done"
+    notes: "scope-check: forecast=7 changed=7 discovered=5 unexplained=0; scope-discovery: .atv/kb-completions.txt - kb-complete cadence counter; scope-discovery: <agent-marketplace>/* - marketplace promotion outputs; scope-discovery: <atv-repo>/* - trusted ATV shipped copies; scope-discovery: ~/.codex/.copilot/.agents skills - explicit global install targets; proof: marketplace JSON parse passed; hash equality unique_hashes=1 across 8 source/install targets; firebreak and selftest passed; kb-check -All passed with 0 required sync issues; git diff --check passed in working repo, marketplace, and ATV with line-ending warnings only; osv-scanner installed version=2.3.8 after completion; review-mode: local-fallback P0=0 P1=0 P2=0 P3=0; follow-up-resolution: resolved 0, logged 0, blocked 0; kb-map-refresh: done - PROJECT.md, operations/testing.md, architecture/private-skill-marketplace.md, memory-maintenance.md; compound: skipped - promotion/proof wiring, no novel implementation pattern beyond documented marketplace contract; learn: no new generic instincts; evolve: skipped - completion counter 4; compact: skipped - no startup bloat; cleanup: done"
     protected_oracles: []
 ---
 
@@ -136,10 +136,10 @@ Brainstorm: `chat:2026-05-31-atv-security-marketplace`
 - `scripts/skill-marketplace-firebreak.ps1` passed with `issues=0`.
 - `scripts/skill-marketplace-firebreak-selftest.ps1` passed by requiring the quarantined active-root case to fail.
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` passed with 0 required sync issues.
-- `git diff --check` passed in `E:/working-skill-repo`, `E:/agent-marketplace`, and `E:/all-the-vibes`; output contained line-ending warnings only.
+- `git diff --check` passed in `<working-skill-repo>`, `<agent-marketplace>`, and `<atv-repo>`; output contained line-ending warnings only.
 
 ## Assumptions
 
-- `E:/all-the-vibes/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md` is the trusted source for this promotion.
-- `E:/agent-marketplace` is the approved private catalog, not an auto-loaded global skill root.
+- `<atv-repo>/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md` is the trusted source for this promotion.
+- `<agent-marketplace>` is the approved private catalog, not an auto-loaded global skill root.
 - OSV Scanner is an optional executable proof path: absence of `osv-scanner` is recorded as `skipped-unavailable`, not silently replaced by model judgment.

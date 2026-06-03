@@ -4,7 +4,7 @@ Checked: 2026-05-31
 
 ## Purpose
 
-`E:/agent-marketplace` is the private trusted catalog for reusable agent skills
+`<agent-marketplace>` is the private trusted catalog for reusable agent skills
 and pipelines. It is not a global install directory. It is an approval boundary
 between project-local experiments, public marketplace imports, and global agent
 skill directories.
@@ -15,7 +15,7 @@ The working skill repo knows about the marketplace through
 ## Directory Contract
 
 ```text
-E:/agent-marketplace/
+<agent-marketplace>/
   skills/       Approved reusable skill directories.
   pipelines/    Approved reusable pipeline manifests.
   harnesses/    Approved proof/check harness definitions.
@@ -42,7 +42,7 @@ Consuming projects keep local drift and run evidence in their own repos:
    `.github/skills/learned-*` in that project after maturity and approval.
 3. The learned skill stays project-local until it proves reuse value.
 4. After repeated successful reuse, review, and human approval, the skill can be
-   copied into `E:/agent-marketplace/skills/<skill>`.
+   copied into `<agent-marketplace>/skills/<skill>`.
 5. Global installs pull only explicitly selected approved skills or loader
    skills. Quarantine never installs globally.
 
@@ -52,7 +52,7 @@ Pipeline promotion follows the same shape:
 2. Accumulate successful run artifacts under `.atv/pipeline-runs/`.
 3. Reference proof harnesses by ID rather than hard-coding every check into the
    skill.
-4. Promote to `E:/agent-marketplace/pipelines/<pipeline>.json` only after proof
+4. Promote to `<agent-marketplace>/pipelines/<pipeline>.json` only after proof
    artifacts, review, and approval.
 
 ## Promotion Signals
@@ -71,7 +71,7 @@ or broad workflow skills still need manual review even when the numbers pass.
 ## Trust Rules
 
 - Public marketplaces are discovery sources only.
-- Public imports land in `E:/agent-marketplace/quarantine/`.
+- Public imports land in `<agent-marketplace>/quarantine/`.
 - Runtime loaders must never read from quarantine. The blocking firebreak is
   `scripts/skill-marketplace-firebreak.ps1`, wired into `kb-check -All`.
 - Approved marketplace skills are pinned by hash before pull/install.
@@ -88,7 +88,7 @@ or broad workflow skills still need manual review even when the numbers pass.
 the local ATV security plugin maintained by trusted people. It is installed as a
 single global security capability, not as a bulk import of ATV skills.
 
-The approval is pinned in `E:/agent-marketplace/catalog/approved-skills.json`.
+The approval is pinned in `<agent-marketplace>/catalog/approved-skills.json`.
 The approved marketplace copy and global Codex, Copilot, and shared agents
 copies must hash-match the trusted ATV source before they are treated as
 current.

@@ -145,8 +145,8 @@ marketplace quarantine policy, shared skill forks, and proof gates.
 
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` passed.
 - `scripts\skill-sync-report.ps1` reported `216 comparisons, 0 required issues`.
-- `git diff --check` passed in `E:\working-skill-repo`,
-  `E:\all-the-vibes`, and `E:\agent-marketplace`; only LF/CRLF warnings were
+- `git diff --check` passed in `<working-skill-repo>`,
+  `<atv-repo>`, and `<agent-marketplace>`; only LF/CRLF warnings were
   emitted.
 - `osv-scanner` was run narrowly against the transient original-ATV workflow
   skill directories before cleanup and returned `No package sources found`, so
@@ -178,7 +178,7 @@ marketplace quarantine policy, shared skill forks, and proof gates.
 
 ## Execution Notes
 
-- Do not pull directly into dirty `E:\all-the-vibes`.
+- Do not pull directly into dirty `<atv-repo>`.
 - Prefer `git show <ref>:<path>` and clean temporary worktrees over checkout.
 - Do not accept upstream deletion of KB-owned skills.
 - Do not keep original ATV workflow skills merely because upstream has them.

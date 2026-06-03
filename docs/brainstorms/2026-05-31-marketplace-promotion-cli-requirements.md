@@ -18,7 +18,7 @@ will eventually win when the user is tired.
   active/global sync from quarantine, missing source skill, and catalog hash
   mismatches.
 - R4: The command must copy the reviewed skill into
-  `E:/agent-marketplace/skills/<skill>`, compute the `SKILL.md` SHA256, and pin
+  `<agent-marketplace>/skills/<skill>`, compute the `SKILL.md` SHA256, and pin
   that hash in `catalog/approved-skills.json`.
 - R5: The command must support selected global targets: Codex, Copilot, and
   shared agents.
@@ -31,7 +31,7 @@ will eventually win when the user is tired.
 
 - Do not build a public marketplace importer.
 - Do not automate LLM code review inside the script.
-- Do not make `E:/agent-marketplace` a runtime skill root.
+- Do not make `<agent-marketplace>` a runtime skill root.
 - Do not replace `skill-marketplace-firebreak.ps1`; reuse it as the blocking
   policy proof.
 

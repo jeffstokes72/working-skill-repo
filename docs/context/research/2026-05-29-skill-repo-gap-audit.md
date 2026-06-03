@@ -55,7 +55,7 @@ Remaining fix:
 
 Hash probe result:
 
-- working repo, `E:\all-the-vibes\.github\skills`, and personal/global installs match for KB skills;
+- working repo, `<atv-repo>\.github\skills`, and personal/global installs match for KB skills;
 - ATV scaffold/plugin copies are missing many KB skills or carry older inherited skill variants.
 
 Impact: no machine-readable distinction between "intentional not shipped there" and "forgot to propagate."

@@ -4,11 +4,11 @@ Date: 2026-05-31
 
 ## Compared Refs
 
-- ATV fork repo: `E:\all-the-vibes`
+- ATV fork repo: `<atv-repo>`
 - Fork head: `origin/main` at `35b0925 Add OSV proof to ATV security skill`
 - Upstream head: `upstream/main` at `cbe5d07 docs: add comprehensive /atv-security user guide (#49)`
 - Parked branch source: `origin/feat/pocock-skills`
-- Working bundle source: `E:\working-skill-repo`
+- Working bundle source: `<working-skill-repo>`
 
 Method: `git fetch --all --prune`, then object/ref comparisons with
 `git diff --name-status` and `git show`. No merge, checkout, or pull was run in
@@ -16,12 +16,12 @@ the dirty ATV worktree.
 
 ## Dirty Local State Before Import
 
-`E:\all-the-vibes` already contains propagated local skill changes in
+`<atv-repo>` already contains propagated local skill changes in
 `.github/skills`, `pkg/scaffold/templates/skills`, and
 `plugins/atv-everything/skills`. Treat that worktree as unsafe for direct
 upstream merge until committed or copied into a clean integration branch.
 
-`E:\working-skill-repo` is also dirty with current proof-harness,
+`<working-skill-repo>` is also dirty with current proof-harness,
 marketplace-promotion, and ATV-resync planning work. Do not stage unrelated
 files as part of this resync without a separate commit decision.
 
@@ -187,11 +187,11 @@ These remain parked because they are branch-only, not current original ATV
 ## Commands Used
 
 ```powershell
-git -C E:\all-the-vibes fetch --all --prune
-git -C E:\all-the-vibes diff --name-status origin/main..upstream/main -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills
-git -C E:\all-the-vibes diff --name-status origin/main..origin/feat/pocock-skills -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills
-git -C E:\all-the-vibes diff --stat origin/main..upstream/main -- .github/skills/ce-compound .github/skills/ce-compound-refresh .github/skills/ce-review .github/skills/document-review .github/skills/evolve .github/skills/learn
-osv-scanner scan source -r E:\all-the-vibes\.github\skills\lfg E:\all-the-vibes\.github\skills\slfg E:\all-the-vibes\.github\skills\workflows-brainstorm E:\all-the-vibes\.github\skills\workflows-compound E:\all-the-vibes\.github\skills\workflows-plan E:\all-the-vibes\.github\skills\workflows-review E:\all-the-vibes\.github\skills\workflows-work --format json --output E:\all-the-vibes\docs\security\osv-atv-workflow-skills-2026-05-31.json
+git -C <atv-repo> fetch --all --prune
+git -C <atv-repo> diff --name-status origin/main..upstream/main -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills
+git -C <atv-repo> diff --name-status origin/main..origin/feat/pocock-skills -- .github/skills pkg/scaffold/templates/skills plugins/atv-everything/skills
+git -C <atv-repo> diff --stat origin/main..upstream/main -- .github/skills/ce-compound .github/skills/ce-compound-refresh .github/skills/ce-review .github/skills/document-review .github/skills/evolve .github/skills/learn
+osv-scanner scan source -r <atv-repo>\.github\skills\lfg <atv-repo>\.github\skills\slfg <atv-repo>\.github\skills\workflows-brainstorm <atv-repo>\.github\skills\workflows-compound <atv-repo>\.github\skills\workflows-plan <atv-repo>\.github\skills\workflows-review <atv-repo>\.github\skills\workflows-work --format json --output <atv-repo>\docs\security\osv-atv-workflow-skills-2026-05-31.json
 ```
 
 ## Recommended Actions

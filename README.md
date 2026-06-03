@@ -1,11 +1,9 @@
 # Working Skill Repo
 
-Portable KB workflow skills, reviewer agents, and a Go-native validation
-harness for GitHub Copilot and Codex.
+Portable KB workflow skills for GitHub Copilot and Codex.
 
-Status: actively used, pre-1.0. The quality/release gate is native Go; the old
-PowerShell validator scripts were retired after parity and release proof.
-Expect churn while the marketplace, eval, and pipeline pieces settle.
+Status: actively used, pre-1.0. Expect churn while the marketplace, eval, and
+pipeline maintenance pieces settle.
 
 Most of this repo is an augmentation layer on top of the original
 All-The-Vibes ATV StarterKit and CE review/learning workflow. KB adds the
@@ -14,6 +12,41 @@ proportional planning, and execution gates; it still depends on selected ATV
 skills and reviewer agents. Original ATV `upstream/main` is a source to mine
 for useful ATV-native changes, while this repo remains the source of truth for
 the KB overlay and any KB replacements.
+
+Most users only need the runtime skills. You do not need Go, the eval harness,
+or the marketplace machinery to use the workflow in your own repo.
+
+## Start Here
+
+Clone this repo, install the skills, then ask `kb-start` to route your first
+task from inside a project:
+
+```powershell
+git clone https://github.com/Irtechie/working-skill-repo.git
+cd working-skill-repo
+pwsh ./scripts/install-kb.ps1 -Target all
+cd <your-project>
+kb-start "what I want done"
+```
+
+`kb-start` is a skill invocation through Codex, Copilot/GHCP, or another agent
+that has this bundle installed. It is not a standalone shell binary.
+
+The core loop is six skills:
+
+| Skill | Job |
+| --- | --- |
+| `kb-start` | Pick the smallest correct lane for the request |
+| `kb-map` | Build or read repo-local memory so fresh sessions recover quickly |
+| `kb-fix` | Handle narrow bugs and small contained edits |
+| `kb-plan` | Turn clear work into vertical slices with verification |
+| `kb-work` | Execute ready slices and prove each one |
+| `kb-complete` | Review, fix follow-ups, refresh memory, and mark done |
+
+Everything else is optional depth for bigger work, maintenance, or release
+proof.
+
+## What This Repo Contains
 
 This repo is two things:
 
@@ -36,8 +69,8 @@ This repo is two things:
 - `kb-work` executes manifest slices using ready-set and scope-lease rules.
 - `kb-complete` runs review, proof, follow-up cleanup, learning, and memory
   refresh.
-- `cmd/kbcheck` is a Go-native gate for route fixtures, skill lint, sync drift,
-  eval scoring, marketplace firebreaks, and release profiles.
+- `cmd/kbcheck` is a maintainer gate for route fixtures, skill lint, sync
+  drift, eval scoring, marketplace firebreaks, and release profiles.
 
 ## Routing And Rework Control
 
@@ -97,15 +130,8 @@ Consuming projects get their own `todo.md`, `docs/context/`,
 
 ## Quick Start
 
-Install or sync the bundle globally, then start work inside a target repo:
-
-```text
-cd E:\path\to\your\project
-kb-start "what I want done"
-```
-
-`kb-start` is a skill invocation through Codex, Copilot/GHCP, or another agent
-that has this bundle installed. It is not a standalone shell binary.
+Use the `Start Here` install path above, then run `kb-start` from the target
+project.
 
 Normal flow:
 
@@ -330,10 +356,19 @@ Deep dive: [testing operations](docs/context/operations/testing.md) and
 Default to personal/global installs. They keep active project repos clean and
 avoid skill drift between copies.
 
+The snippets below assume PowerShell and that `$src` points to your clone.
+Adjust `$src` and `$dst` for your machine.
+
+One-command install:
+
+```powershell
+pwsh ./scripts/install-kb.ps1 -Target all
+```
+
 GitHub Copilot personal install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
+$src = '<path-to-working-skill-repo>'
 Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.copilot\skills" -Recurse -Force
 Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
 ```
@@ -341,7 +376,7 @@ Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
 Codex personal install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
+$src = '<path-to-working-skill-repo>'
 Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.codex\skills" -Recurse -Force
 Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
 ```
@@ -349,7 +384,7 @@ Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
 Shared agent-skills install:
 
 ```powershell
-$src = 'E:\working-skill-repo\.github\skills'
+$src = '<path-to-working-skill-repo>\.github\skills'
 Copy-Item "$src\*" "$env:USERPROFILE\.agents\skills" -Recurse -Force
 ```
 
@@ -359,8 +394,8 @@ overrides or when the skills should be versioned with that codebase.
 Repo-local install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
-$dst = 'E:\path\to\your\project'
+$src = '<path-to-working-skill-repo>'
+$dst = '<path-to-your-project>'
 Copy-Item "$src\.github\skills" "$dst\.github\skills" -Recurse -Force
 Copy-Item "$src\.github\agents" "$dst\.github\agents" -Recurse -Force
 Copy-Item "$src\AGENTS.md" "$dst\AGENTS.md" -Force
@@ -383,7 +418,7 @@ Current state:
 
 ## Marketplace And Security
 
-`E:\agent-marketplace` is a private approved catalog, not a global install. New
+`<agent-marketplace>` is a private approved catalog, not a global install. New
 skills and pipelines should prove themselves project-local first, then move into
 the marketplace only after evidence, review, hash pinning, and human approval.
 

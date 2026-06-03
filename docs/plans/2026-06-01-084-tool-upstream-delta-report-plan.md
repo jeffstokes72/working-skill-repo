@@ -60,7 +60,7 @@ install anything.
 
 - Run `powershell -ExecutionPolicy Bypass -File scripts/atv-upstream-delta-selftest.ps1`.
 - Run `powershell -ExecutionPolicy Bypass -File scripts/atv-upstream-delta.ps1`.
-- Confirm `git -C E:\all-the-vibes status --short` is not mutated by the report.
+- Confirm `git -C <atv-repo> status --short` is not mutated by the report.
 - Run `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`.
 
 ## Scope Boundary

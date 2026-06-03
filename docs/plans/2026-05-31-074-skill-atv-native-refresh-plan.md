@@ -43,6 +43,6 @@ can_continue_other_slices: true
 
 ## Test Scenarios
 
-- `git -C E:\all-the-vibes diff --check`.
+- `git -C <atv-repo> diff --check`.
 - Run ATV security self/proof command if the skill exposes one.
 - Run repo-level `kb-check -All` after any mirrored portable-skill change.

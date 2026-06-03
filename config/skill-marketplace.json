@@ -2,7 +2,7 @@
   "schema_version": 1,
   "marketplace": {
     "id": "local-agent-marketplace",
-    "local_root": "E:/agent-marketplace",
+    "local_root": "../agent-marketplace",
     "remote": "https://github.com/Irtechie/agent-marketplace.git",
     "trust_model": "private-approved-catalog",
     "directories": {
@@ -54,13 +54,13 @@
       "review decision",
       "proof command or manual review reason"
     ],
-    "promotion_target": "E:/agent-marketplace/skills/<skill>"
+    "promotion_target": "skills/<skill>"
   },
   "quarantine_firebreak": {
     "never_load_from_quarantine": true,
     "enforced_by": "go run .\\cmd\\kbcheck marketplace-firebreak",
     "additional_active_skill_roots": [
-      "E:/all-the-vibes/.github/skills"
+      "../all-the-vibes/.github/skills"
     ],
     "fail_closed_rules": [
       "active skill roots must not be inside quarantine",
@@ -72,8 +72,8 @@
   "pipeline_policy": {
     "project_local_first": true,
     "project_pipeline_path": "config/pipelines/<pipeline>.json",
-    "marketplace_pipeline_path": "E:/agent-marketplace/pipelines/<pipeline>.json",
-    "marketplace_harness_path": "E:/agent-marketplace/harnesses/<harness>.json",
+    "marketplace_pipeline_path": "pipelines/<pipeline>.json",
+    "marketplace_harness_path": "harnesses/<harness>.json",
     "promote_after": {
       "successful_project_runs": 2,
       "proof_artifacts_required": true,

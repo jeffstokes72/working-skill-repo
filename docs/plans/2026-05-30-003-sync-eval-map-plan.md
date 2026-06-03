@@ -8,16 +8,16 @@ test_level: functional-cli
 functional_risk: narrow
 hitl: false
 expected_files:
-  - path: C:/Users/marowe/.codex/skills/kb-eval-map/SKILL.md
+  - path: ~/.codex/skills/kb-eval-map/SKILL.md
     op: create
     scope: "sync approved skill to Codex global install"
-  - path: C:/Users/marowe/.copilot/skills/kb-eval-map/SKILL.md
+  - path: ~/.copilot/skills/kb-eval-map/SKILL.md
     op: create
     scope: "sync approved skill to Copilot global install"
-  - path: C:/Users/marowe/.agents/skills/kb-eval-map/SKILL.md
+  - path: ~/.agents/skills/kb-eval-map/SKILL.md
     op: create
     scope: "sync approved skill to shared agents global install"
-  - path: E:/all-the-vibes/.github/skills/kb-eval-map/SKILL.md
+  - path: <atv-repo>/.github/skills/kb-eval-map/SKILL.md
     op: create
     scope: "sync approved skill to ATV .github skills"
 status: done
@@ -48,12 +48,12 @@ the skill repo remains clean.
 
 - Run `scripts/skill-sync-report.ps1`.
 - Run `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`.
-- Run `git diff --check` in `E:\working-skill-repo` and `E:\all-the-vibes`.
+- Run `git diff --check` in `<working-skill-repo>` and `<atv-repo>`.
 
 Result:
 
 - Required target hashes match for `kb-eval-map` and `kb-map-bootstrap`.
 - `scripts/skill-sync-report.ps1` reported 0 required issues.
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All` exited 0.
-- `git diff --check` exited 0 in `E:\working-skill-repo` and
-  `E:\all-the-vibes`.
+- `git diff --check` exited 0 in `<working-skill-repo>` and
+  `<atv-repo>`.

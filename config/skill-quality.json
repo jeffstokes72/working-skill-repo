@@ -11,8 +11,8 @@
       },
       "skill_directories": {
         ".github/skills": "supported",
-        "C:/Users/marowe/.codex/skills": "supported",
-        "C:/Users/marowe/.agents/skills": "supported"
+        "~/.codex/skills": "supported",
+        "~/.agents/skills": "supported"
       },
       "agents": "supported",
       "scripts": "supported",
@@ -32,8 +32,8 @@
       },
       "skill_directories": {
         ".github/skills": "supported",
-        "C:/Users/marowe/.copilot/skills": "supported",
-        "C:/Users/marowe/.agents/skills": "supported"
+        "~/.copilot/skills": "supported",
+        "~/.agents/skills": "supported"
       },
       "agents": "supported",
       "scripts": "supported",
@@ -108,49 +108,49 @@
     {
       "id": "working",
       "label": "working repo",
-      "path": "E:/working-skill-repo/.github/skills",
+      "path": ".github/skills",
       "classification": "source",
       "required": true
     },
     {
       "id": "codex-global",
       "label": "Codex global",
-      "path": "C:/Users/marowe/.codex/skills",
+      "path": "~/.codex/skills",
       "classification": "required",
       "required": true
     },
     {
       "id": "copilot-global",
       "label": "Copilot global",
-      "path": "C:/Users/marowe/.copilot/skills",
+      "path": "~/.copilot/skills",
       "classification": "required",
       "required": true
     },
     {
       "id": "agents-global",
       "label": "shared agents global",
-      "path": "C:/Users/marowe/.agents/skills",
+      "path": "~/.agents/skills",
       "classification": "required",
       "required": true
     },
     {
       "id": "atv-github",
       "label": "ATV .github skills",
-      "path": "E:/all-the-vibes/.github/skills",
+      "path": "../all-the-vibes/.github/skills",
       "classification": "required",
       "required": true
     },
     {
       "id": "atv-scaffold",
       "label": "ATV scaffold template",
-      "path": "E:/all-the-vibes/pkg/scaffold/templates/skills",
+      "path": "../all-the-vibes/pkg/scaffold/templates/skills",
       "classification": "optional",
       "required": false
     },
     {
       "id": "atv-plugin",
       "label": "ATV everything plugin",
-      "path": "E:/all-the-vibes/plugins/atv-everything/skills",
+      "path": "../all-the-vibes/plugins/atv-everything/skills",
       "classification": "optional",
       "required": false
     }

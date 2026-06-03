@@ -59,7 +59,7 @@ Finish the promotion with machine-verifiable proof, status updates, and targeted
 - Run `powershell -ExecutionPolicy Bypass -File scripts/skill-marketplace-firebreak.ps1`.
 - Run `powershell -ExecutionPolicy Bypass -File scripts/skill-marketplace-firebreak-selftest.ps1`.
 - Run `powershell -ExecutionPolicy Bypass -File ./.github/skills/kb-check/scripts/kb-check.ps1 -All`.
-- Run `git diff --check` in `E:/working-skill-repo`, `E:/agent-marketplace`, and `E:/all-the-vibes`.
+- Run `git diff --check` in `<working-skill-repo>`, `<agent-marketplace>`, and `<atv-repo>`.
 
 ## Scope Boundary
 

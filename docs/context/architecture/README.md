@@ -39,7 +39,7 @@ Reference docs:
 
 See `docs/context/architecture/private-skill-marketplace.md`.
 
-`E:\agent-marketplace` is the private approved catalog for reusable skills and
+`<agent-marketplace>` is the private approved catalog for reusable skills and
 pipelines. New learned skills should prove themselves project-local first, then
 move into the marketplace only after evidence, review, hash pinning, and human
 approval. Public marketplace imports go to quarantine, never directly to global
@@ -49,20 +49,20 @@ skill directories.
 
 Working source:
 
-- `E:\working-skill-repo\.github\skills\<skill>\`
+- `<working-skill-repo>\.github\skills\<skill>\`
 
 Sync targets:
 
-- `C:\Users\marowe\.codex\skills\<skill>\`
-- `C:\Users\marowe\.copilot\skills\<skill>\`
-- `C:\Users\marowe\.agents\skills\<skill>\`
-- `E:\all-the-vibes\.github\skills\<skill>\`
+- `~/.codex/skills\<skill>\`
+- `~/.copilot/skills\<skill>\`
+- `~/.agents/skills\<skill>\`
+- `<atv-repo>\.github\skills\<skill>\`
 - ATV scaffold/plugin copies when the skill is intentionally shipped there.
 
 Approved reusable catalog:
 
-- `E:\agent-marketplace\skills\<skill>\`
-- `E:\agent-marketplace\pipelines\<pipeline>.json`
+- `<agent-marketplace>\skills\<skill>\`
+- `<agent-marketplace>\pipelines\<pipeline>.json`
 
 ## Current Coverage Gaps
 

@@ -17,10 +17,10 @@ expected_files:
   - path: todo.md
     op: edit
     scope: "Mark this manifest complete or record any parked follow-up."
-  - path: E:\all-the-vibes\.github\skills\kb-work\SKILL.md
+  - path: <atv-repo>\.github\skills\kb-work\SKILL.md
     op: edit
     scope: "Sync approved kb-work copy after repo changes."
-  - path: C:\Users\marowe\.codex\skills\kb-work\SKILL.md
+  - path: ~/.codex/skills\kb-work\SKILL.md
     op: edit
     scope: "Sync approved kb-work copy after repo changes."
 protected_oracles: []

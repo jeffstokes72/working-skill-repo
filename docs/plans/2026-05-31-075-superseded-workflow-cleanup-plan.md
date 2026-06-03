@@ -56,8 +56,8 @@ can_continue_other_slices: true
 
 ## Test Scenarios
 
-- `git -C E:\all-the-vibes status --short | Select-String -Pattern 'lfg|slfg|workflows-'`
-- `Test-Path E:\all-the-vibes\.github\skills\lfg` returns `False`.
-- `Test-Path E:\all-the-vibes\.github\skills\workflows-plan` returns `False`.
+- `git -C <atv-repo> status --short | Select-String -Pattern 'lfg|slfg|workflows-'`
+- `Test-Path <atv-repo>\.github\skills\lfg` returns `False`.
+- `Test-Path <atv-repo>\.github\skills\workflows-plan` returns `False`.
 - Global skill roots contain no `lfg`, `slfg`, `workflows-*`, or `kanban-*`
   directories.

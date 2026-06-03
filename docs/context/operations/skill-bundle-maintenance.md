@@ -52,19 +52,19 @@ local green run.
 
 Working source:
 
-- `E:\working-skill-repo\.github\skills\<skill>\`
+- `<working-skill-repo>\.github\skills\<skill>\`
 
 Required targets:
 
-- `C:\Users\marowe\.codex\skills\<skill>\`
-- `C:\Users\marowe\.copilot\skills\<skill>\`
-- `C:\Users\marowe\.agents\skills\<skill>\`
-- `E:\all-the-vibes\.github\skills\<skill>\`
+- `~/.codex/skills/<skill>/`
+- `~/.copilot/skills/<skill>/`
+- `~/.agents/skills/<skill>/`
+- `<atv-repo>\.github\skills\<skill>\`
 
 ATV shipped copies:
 
-- `E:\all-the-vibes\pkg\scaffold\templates\skills\<skill>\`
-- `E:\all-the-vibes\plugins\atv-everything\skills\<skill>\`
+- `<atv-repo>\pkg\scaffold\templates\skills\<skill>\`
+- `<atv-repo>\plugins\atv-everything\skills\<skill>\`
 
 Before overwriting a global or ATV copy, review drift. Newer useful work found
 only in a global install must be merged back into this repo first, not
@@ -72,7 +72,7 @@ discarded.
 
 Source-of-truth invariant:
 
-- `E:\working-skill-repo\.github\skills` is the source for KB-owned skills.
+- `<working-skill-repo>\.github\skills` is the source for KB-owned skills.
 - Required global/ATV installs are deployed copies for runners, not authorship
   locations.
 - A red `skill-sync-report` is a release blocker for unattended runners. It may
@@ -120,7 +120,7 @@ unless a current app uses them or a focused porting plan proves value.
 
 ## Marketplace
 
-`E:\agent-marketplace` is a private approved catalog, not a global install.
+`<agent-marketplace>` is a private approved catalog, not a global install.
 
 Promotion requires:
 
@@ -128,7 +128,7 @@ Promotion requires:
 2. human approval;
 3. `SKILL.md` review;
 4. hash pin;
-5. approved copy placed under `E:\agent-marketplace\skills`;
+5. approved copy placed under `<agent-marketplace>\skills`;
 6. runtime roots synced only from the approved copy.
 
 Use the promotion command so the safe path is also the fast path:
@@ -143,13 +143,13 @@ go run .\cmd\kbcheck marketplace-promote `
 ```
 
 Quarantine is a firebreak, not a category label. Active and approved skill roots
-must not resolve into `E:\agent-marketplace\quarantine`.
+must not resolve into `<agent-marketplace>\quarantine`.
 
 ## Security
 
 `atv-security` is the current approved single-skill exception from ATV. It is
-hash-pinned in `E:\agent-marketplace\catalog\approved-skills.json`, mirrored in
-`E:\agent-marketplace\skills\atv-security`, and installed into the Codex,
+hash-pinned in `<agent-marketplace>\catalog\approved-skills.json`, mirrored in
+`<agent-marketplace>\skills\atv-security`, and installed into the Codex,
 Copilot, and shared agents global skill directories.
 
 Do not bulk-install ATV skills globally. Promote each skill through the
@@ -169,7 +169,7 @@ vulnerability findings from version age alone.
 GitHub Copilot personal install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
+$src = '<path-to-working-skill-repo>'
 Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.copilot\skills" -Recurse -Force
 Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
 ```
@@ -177,7 +177,7 @@ Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
 Codex personal install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
+$src = '<path-to-working-skill-repo>'
 Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.codex\skills" -Recurse -Force
 Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
 ```
@@ -185,8 +185,8 @@ Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
 Repo-local GitHub Copilot install:
 
 ```powershell
-$src = 'E:\working-skill-repo'
-$dst = 'E:\path\to\your\project'
+$src = '<path-to-working-skill-repo>'
+$dst = '<path-to-your-project>'
 Copy-Item "$src\.github\skills" "$dst\.github\skills" -Recurse -Force
 Copy-Item "$src\.github\agents" "$dst\.github\agents" -Recurse -Force
 Copy-Item "$src\AGENTS.md" "$dst\AGENTS.md" -Force

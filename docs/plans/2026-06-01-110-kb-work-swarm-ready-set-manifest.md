@@ -1,7 +1,7 @@
 ---
 type: kb-manifest
 kb_id: kb-2026-06-01-kb-work-swarm-ready-set
-brainstorm_path: "C:\\Users\\marowe\\.codex\\attachments\\a29e65a7-d0b8-4cf1-9922-04958dfdac4d\\pasted-text.txt"
+brainstorm_path: "<codex-attachment>/pasted-text.txt"
 created: 2026-06-01
 status: completed
 workflow_shape: "pipeline-change"

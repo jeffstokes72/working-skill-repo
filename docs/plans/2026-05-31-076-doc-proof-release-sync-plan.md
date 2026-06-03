@@ -39,8 +39,8 @@ can_continue_other_slices: false
 
 - Canonical gate passes: `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`.
 - `scripts\skill-sync-report.ps1` reports zero required issues.
-- `git diff --check` passes in `E:\working-skill-repo` and
-  `E:\all-the-vibes`.
+- `git diff --check` passes in `<working-skill-repo>` and
+  `<atv-repo>`.
 - README/project memory/todo files reflect the new source-of-truth boundaries.
 - Final summary lists accepted upstream imports, rejected deletions, quarantined
   candidates, and remaining parked work.
@@ -50,4 +50,4 @@ can_continue_other_slices: false
 - `.\.github\skills\kb-check\scripts\kb-check.ps1 -All`
 - `scripts\skill-sync-report.ps1`
 - `git diff --check`
-- `git -C E:\all-the-vibes diff --check`
+- `git -C <atv-repo> diff --check`

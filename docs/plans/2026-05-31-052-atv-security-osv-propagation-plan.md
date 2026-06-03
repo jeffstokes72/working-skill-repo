@@ -8,16 +8,16 @@ test_level: functional-cli
 functional_risk: narrow
 hitl: false
 expected_files:
-  - path: "E:/all-the-vibes/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md"
+  - path: "<atv-repo>/plugins/atv-skill-atv-security/skills/atv-security/SKILL.md"
     op: edit
     scope: "Add deterministic OSV Scanner guidance to A06 dependency vulnerability checks."
-  - path: "E:/all-the-vibes/pkg/scaffold/templates/skills/atv-security/SKILL.md"
+  - path: "<atv-repo>/pkg/scaffold/templates/skills/atv-security/SKILL.md"
     op: edit
     scope: "Sync the final ATV security skill body."
-  - path: "E:/all-the-vibes/plugins/atv-pack-security/skills/atv-security/SKILL.md"
+  - path: "<atv-repo>/plugins/atv-pack-security/skills/atv-security/SKILL.md"
     op: edit
     scope: "Sync the final ATV security skill body."
-  - path: "E:/all-the-vibes/plugins/atv-everything/skills/atv-security/SKILL.md"
+  - path: "<atv-repo>/plugins/atv-everything/skills/atv-security/SKILL.md"
     op: edit
     scope: "Sync the final ATV security skill body."
 protected_oracles: []
@@ -48,7 +48,7 @@ Update the trusted ATV `atv-security` skill so A06 dependency checks prefer OSV 
 
 - `Select-String` confirms the final skill names OSV, skip behavior, and no-fix behavior.
 - `Get-FileHash` confirms all targeted ATV `SKILL.md` copies match the trusted source.
-- `git -C E:/all-the-vibes diff --check` passes for touched files.
+- `git -C <atv-repo> diff --check` passes for touched files.
 
 ## Scope Boundary
 

@@ -42,7 +42,7 @@ git diff --check
 For touched ATV repo copies:
 
 ```powershell
-git -C E:\all-the-vibes diff --check
+git -C <atv-repo> diff --check
 ```
 
 ## Scaffolding Decisions

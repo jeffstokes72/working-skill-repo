@@ -86,9 +86,9 @@ than relying on agent prose.
 ## Applies When
 
 - Changing skill content in `.github/skills/**`.
-- Syncing to `C:\Users\marowe\.codex\skills`,
-  `C:\Users\marowe\.copilot\skills`, or
-  `C:\Users\marowe\.agents\skills`.
+- Syncing to `~/.codex/skills`,
+  `~/.copilot/skills`, or
+  `~/.agents/skills`.
 - Syncing or pruning ATV `.github/skills`, scaffold, or plugin copies.
 - Designing the next distribution contract and sync/check scripts.
 - Deciding whether a behavior belongs in `SKILL.md`, `references/`, `assets/`,

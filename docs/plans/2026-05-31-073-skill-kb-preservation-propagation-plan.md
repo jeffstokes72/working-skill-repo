@@ -42,5 +42,5 @@ can_continue_other_slices: true
 ## Test Scenarios
 
 - `scripts\skill-sync-report.ps1` returns 0 required issues.
-- `rg -n "image-backcheck|quarantine" C:\Users\marowe\.codex\skills C:\Users\marowe\.copilot\skills C:\Users\marowe\.agents\skills` only reports approved policy/docs if any.
+- `rg -n "image-backcheck|quarantine" ~/.codex/skills ~/.copilot/skills ~/.agents/skills` only reports approved policy/docs if any.
 - `git diff --check` in both repos.

@@ -468,6 +468,7 @@ func readJSONFile(path string, value any) error {
 }
 
 func resolveRepoPath(root, path string) string {
+	path = expandPathText(path)
 	if filepath.IsAbs(path) {
 		abs, _ := filepath.Abs(path)
 		return abs
@@ -477,12 +478,26 @@ func resolveRepoPath(root, path string) string {
 }
 
 func resolveMarketplacePath(marketplaceRoot, path string) string {
+	path = expandPathText(path)
 	if filepath.IsAbs(path) {
 		abs, _ := filepath.Abs(path)
 		return abs
 	}
 	abs, _ := filepath.Abs(filepath.Join(marketplaceRoot, filepath.FromSlash(path)))
 	return abs
+}
+
+func expandPathText(path string) string {
+	expanded := os.ExpandEnv(path)
+	if expanded == "~" || strings.HasPrefix(expanded, "~/") || strings.HasPrefix(expanded, `~\`) {
+		if home, err := os.UserHomeDir(); err == nil && home != "" {
+			if expanded == "~" {
+				return home
+			}
+			return filepath.Join(home, filepath.FromSlash(strings.TrimLeft(expanded[1:], `/\`)))
+		}
+	}
+	return expanded
 }
 
 func relativePath(root, path string) string {
@@ -679,7 +694,7 @@ func knownSkillRoots(root, marketplaceRoot string, config marketplaceConfig) []s
 	if config.Marketplace.Directories.ApprovedSkills != "" {
 		roots = append(roots, resolveMarketplacePath(marketplaceRoot, config.Marketplace.Directories.ApprovedSkills))
 	}
-	if userProfile := os.Getenv("USERPROFILE"); userProfile != "" {
+	if userProfile, err := os.UserHomeDir(); err == nil && userProfile != "" {
 		for _, rel := range []string{".codex/skills", ".copilot/skills", ".agents/skills"} {
 			roots = append(roots, filepath.Join(userProfile, filepath.FromSlash(rel)))
 		}

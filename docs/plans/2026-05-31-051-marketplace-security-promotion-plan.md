@@ -8,22 +8,22 @@ test_level: functional-cli
 functional_risk: narrow
 hitl: false
 expected_files:
-  - path: "E:/agent-marketplace/catalog/approved-skills.json"
+  - path: "<agent-marketplace>/catalog/approved-skills.json"
     op: edit
     scope: "Add approved atv-security entry with source, approval reason, final sha256, and proof commands."
-  - path: "E:/agent-marketplace/catalog/harness-index.json"
+  - path: "<agent-marketplace>/catalog/harness-index.json"
     op: edit
     scope: "Register dependency-vulnerability-osv harness."
-  - path: "E:/agent-marketplace/harnesses/dependency-vulnerability-osv.json"
+  - path: "<agent-marketplace>/harnesses/dependency-vulnerability-osv.json"
     op: create
     scope: "Describe the OSV dependency-vulnerability proof command and pass criteria."
-  - path: "E:/agent-marketplace/README.md"
+  - path: "<agent-marketplace>/README.md"
     op: edit
     scope: "Document the approved atv-security promotion and quarantine boundary."
-  - path: "E:/agent-marketplace/skills/README.md"
+  - path: "<agent-marketplace>/skills/README.md"
     op: edit
     scope: "List approved marketplace skills and atv-security install intent."
-  - path: "E:/agent-marketplace/harnesses/README.md"
+  - path: "<agent-marketplace>/harnesses/README.md"
     op: edit
     scope: "Document dependency-vulnerability-osv harness use."
 protected_oracles: []
@@ -40,7 +40,7 @@ can_continue_other_slices: true
 
 ## What To Build
 
-Promote `atv-security` as a trusted, explicitly approved security skill in `E:/agent-marketplace`, with a matching OSV harness entry and clear docs that this is approved catalog content, not quarantine.
+Promote `atv-security` as a trusted, explicitly approved security skill in `<agent-marketplace>`, with a matching OSV harness entry and clear docs that this is approved catalog content, not quarantine.
 
 ## Acceptance Criteria
 

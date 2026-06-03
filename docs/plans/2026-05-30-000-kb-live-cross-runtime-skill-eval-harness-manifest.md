@@ -47,7 +47,7 @@ slices:
     next_agent_action: ""
     human_action: ""
     can_continue_other_slices: true
-    notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; scope-discovery: E:/all-the-vibes/.github/skills/kb-check/scripts/kb-check.ps1 - required ATV skill sync target; proof: kb-check -List showed skill-eval-ghcp-dry-run; proof: kb-check -All exit=0 including Codex and GHCP dry-runs; proof: skill-sync-report required issues=0; memory-impact: durable; areas=testing,quality-contract,sync"
+    notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; scope-discovery: <atv-repo>/.github/skills/kb-check/scripts/kb-check.ps1 - required ATV skill sync target; proof: kb-check -List showed skill-eval-ghcp-dry-run; proof: kb-check -All exit=0 including Codex and GHCP dry-runs; proof: skill-sync-report required issues=0; memory-impact: durable; areas=testing,quality-contract,sync"
   - id: slice-003
     title: "Add live cross-runtime corpus runner"
     path: docs/plans/2026-05-30-003-tool-live-cross-runtime-corpus-runner-plan.md

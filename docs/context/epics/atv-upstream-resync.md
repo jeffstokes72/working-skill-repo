@@ -12,7 +12,7 @@ that KB already replaced.
 
 The resync is a merge, not an overwrite:
 
-- KB-owned skills stay sourced from `E:\working-skill-repo`.
+- KB-owned skills stay sourced from `<working-skill-repo>`.
 - ATV-native skills can update from upstream after review when they are still
   part of the local app/workflow surface.
 - Shared CE/learning skills require manual three-way comparison.
@@ -39,7 +39,7 @@ The resync is a merge, not an overwrite:
 
 ## Architecture Decisions
 
-- Do not merge `upstream/main` directly into `E:\all-the-vibes` while that
+- Do not merge `upstream/main` directly into `<atv-repo>` while that
   worktree is dirty from skill propagation.
 - Treat `origin/main` as the current Irtechie fork state and `upstream/main` as
   the latest ATV source to compare against.
@@ -121,4 +121,4 @@ Assumptions recorded for execution:
 - Every rejected upstream deletion or addition has a recorded rationale.
 - `go run .\cmd\kbcheck core` exits 0.
 - `go run .\cmd\kbcheck skill-sync-report` reports zero required issues.
-- `git diff --check` exits 0 in `E:\working-skill-repo` and `E:\all-the-vibes`.
+- `git diff --check` exits 0 in `<working-skill-repo>` and `<atv-repo>`.

@@ -20,7 +20,7 @@ non-PowerShell tooling or keep the claim scoped to `pwsh`.
   Node/Python port remains future work.
 - `scripts/powershell-helpers.ps1` centralizes PowerShell invocation.
 - `kb-check.ps1` and harness scripts are `.ps1` today.
-- Local ATV uses Go for its installer/CLI surface: `E:\all-the-vibes\go.mod`,
+- Local ATV uses Go for its installer/CLI surface: `<atv-repo>\go.mod`,
   `main.go`, `cmd/*`, and Go tests.
 
 **Confidence:** High - local toolchain is visibly PowerShell-first.

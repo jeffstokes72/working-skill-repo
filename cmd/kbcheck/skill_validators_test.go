@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -71,6 +72,18 @@ func TestSkillSyncReportFindsRequiredDrift(t *testing.T) {
 	}
 	if result.OK || result.RequiredIssues != 1 {
 		t.Fatalf("expected required drift, got %#v", result)
+	}
+}
+
+func TestResolveRepoPathExpandsHome(t *testing.T) {
+	home, err := os.UserHomeDir()
+	if err != nil || home == "" {
+		t.Skip("home directory unavailable")
+	}
+	got := resolveRepoPath(t.TempDir(), "~/.codex/skills")
+	want := filepath.Join(home, ".codex", "skills")
+	if got != want {
+		t.Fatalf("expected %q, got %q", want, got)
 	}
 }
 
