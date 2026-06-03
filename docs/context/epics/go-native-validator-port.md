@@ -13,7 +13,7 @@ parity proof, then the `.ps1` is deleted or demoted out of the default gate.
 
 ## Success Criteria
 
-- `go run .\cmd\kbcheck local-release` passes without requiring PowerShell for
+- `go run ./cmd/kbcheck local-release` passes without requiring PowerShell for
   the normal local suite.
 - Every removed `.ps1` has a Go command or Go selftest proving the same
   behavior.
@@ -47,7 +47,7 @@ parity proof, then the `.ps1` is deleted or demoted out of the default gate.
 2. Wire native command into `cmd/kbcheck core` or release gate.
 3. Delete the corresponding `.ps1`.
 4. Update docs and memory.
-5. Run `go run .\cmd\kbcheck local-release`.
+5. Run `go run ./cmd/kbcheck local-release`.
 
 ## Human Checkpoints
 

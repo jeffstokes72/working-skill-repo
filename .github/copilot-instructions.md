@@ -16,8 +16,8 @@ This repo is the portable skill bundle. Do not bootstrap consuming-project memor
 
 Canonical quality gate for this skill repo:
 
-```powershell
-go run .\cmd\kbcheck core
+```shell
+go run ./cmd/kbcheck core
 ```
 
 This command is GHCP-compatible because it uses repo files and the native Go

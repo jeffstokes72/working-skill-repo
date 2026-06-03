@@ -12,30 +12,30 @@ Codex/GHCP the same workflow contract.
 
 | Workflow | Surface | Current Proof | Gap | Priority |
 |---|---|---|---|---|
-| Skill structure remains valid | `.github/skills/**/SKILL.md` | `go run .\cmd\kbcheck skill-lint` | Warnings remain for inherited older skills | P1 |
-| Route complexity stays calibrated | `evals/route-complexity/*.json` | `go run .\cmd\kbcheck route-eval` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
-| Required skill copies stay synced | global installs and ATV `.github` skills | `go run .\cmd\kbcheck skill-sync-report` | ATV scaffold/plugin shipping policy unresolved | P1 |
-| Skill edits do not regress behavior | prompt/trace/claim evals | `go run .\cmd\kbcheck skill-eval`; `go run .\cmd\kbcheck eval-run-codex`; `go run .\cmd\kbcheck eval-run-ghcp` | Need broader live corpus and richer trace/claim scoring | P0 |
+| Skill structure remains valid | `.github/skills/**/SKILL.md` | `go run ./cmd/kbcheck skill-lint` | Warnings remain for inherited older skills | P1 |
+| Route complexity stays calibrated | `evals/route-complexity/*.json` | `go run ./cmd/kbcheck route-eval` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
+| Required skill copies stay synced | global installs and ATV `.github` skills | `go run ./cmd/kbcheck skill-sync-report` | ATV scaffold/plugin shipping policy unresolved | P1 |
+| Skill edits do not regress behavior | prompt/trace/claim evals | `go run ./cmd/kbcheck skill-eval`; `go run ./cmd/kbcheck eval-run-codex`; `go run ./cmd/kbcheck eval-run-ghcp` | Need broader live corpus and richer trace/claim scoring | P0 |
 
 ## Existing Harnesses
 
-- `go run .\cmd\kbcheck core`
-- `go run .\cmd\kbcheck skill-lint`
-- `go run .\cmd\kbcheck route-eval`
-- `go run .\cmd\kbcheck skill-eval`
-- `go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run`
-- `go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run`
-- `go run .\cmd\kbcheck eval-run-live-corpus --dry-run`
-- `go run .\cmd\kbcheck skill-eval-claims`
-- `go run .\cmd\kbcheck skill-eval-quality`
-- `go run .\cmd\kbcheck skill-eval-regression`
-- `go run .\cmd\kbcheck skill-sync-report`
+- `go run ./cmd/kbcheck core`
+- `go run ./cmd/kbcheck skill-lint`
+- `go run ./cmd/kbcheck route-eval`
+- `go run ./cmd/kbcheck skill-eval`
+- `go run ./cmd/kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run`
+- `go run ./cmd/kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run`
+- `go run ./cmd/kbcheck eval-run-live-corpus --dry-run`
+- `go run ./cmd/kbcheck skill-eval-claims`
+- `go run ./cmd/kbcheck skill-eval-quality`
+- `go run ./cmd/kbcheck skill-eval-regression`
+- `go run ./cmd/kbcheck skill-sync-report`
 - `git diff --check`
 
 ## Canonical Commands
 
 ```powershell
-go run .\cmd\kbcheck core
+go run ./cmd/kbcheck core
 git diff --check
 ```
 
@@ -52,7 +52,7 @@ next useful smoke is not a placeholder; it is the planned live skill eval suite:
 prompt routing, trace capture, claim verification, output quality scoring, and
 cost telemetry.
 
-The deterministic scorer exists as `go run .\cmd\kbcheck skill-eval`. It scores
+The deterministic scorer exists as `go run ./cmd/kbcheck skill-eval`. It scores
 captured agent result JSON against route fixtures and claim checks, and its
 self-test includes intentionally bad route/proof/claim outputs that must fail.
 The Codex and GHCP adapters exist as `eval-run-codex` and `eval-run-ghcp`;

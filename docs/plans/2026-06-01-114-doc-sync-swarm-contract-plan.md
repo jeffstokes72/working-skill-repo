@@ -42,12 +42,12 @@ global and ATV tracked roots, update memory/docs, and run the release gate.
   overlap proof.
 - `todo.md` points to this manifest while active and records the result when
   done.
-- `go run .\cmd\kbcheck local-release --json` passes.
+- `go run ./cmd/kbcheck local-release --json` passes.
 
 ## Test Scenarios
 
 - `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\skill-sync-report.ps1`
-- `go run .\cmd\kbcheck local-release --json`
+- `go run ./cmd/kbcheck local-release --json`
 - `git diff --check`
 
 ## Scope Boundary
@@ -61,6 +61,6 @@ global and ATV tracked roots, update memory/docs, and run the release gate.
 - Synced `kb-work` to Codex global, Copilot global, shared agents global, ATV
   `.github`, ATV scaffold, and ATV plugin roots.
 - Updated README, project memory, and operations docs for bounded swarming.
-- `go run .\cmd\kbcheck local-release --json` exited 0 with required failures
+- `go run ./cmd/kbcheck local-release --json` exited 0 with required failures
   0 and optional failures 0.
 - Working repo and ATV `git diff --check` exited 0.

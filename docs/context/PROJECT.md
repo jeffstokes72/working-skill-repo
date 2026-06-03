@@ -13,17 +13,17 @@ There is no app runtime.
 
 Use repo inspection and deterministic scripts:
 
-```powershell
+```shell
 git status --short
-Get-ChildItem .\.github\skills -Directory
-go run .\cmd\kbcheck core --list
-go run .\cmd\kbcheck core
-go run .\cmd\kbcheck local-release
+ls .github/skills
+go run ./cmd/kbcheck core --list
+go run ./cmd/kbcheck core
+go run ./cmd/kbcheck local-release
 git diff --check
 ```
 
-On macOS/Linux, use the same Go entrypoint. Windows is the proven development
-environment today; full non-Windows proof is still parked.
+On macOS/Linux, use the same Go entrypoint. CI runs the Go package tests and
+core gate on Windows, macOS, and Linux.
 
 ## How To Test
 
@@ -37,8 +37,8 @@ Primary testing today is structural:
 
 The canonical quality command is now:
 
-```powershell
-go run .\cmd\kbcheck core
+```shell
+go run ./cmd/kbcheck core
 ```
 
 It runs skill lint, route-complexity fixture validation, and read-only sync

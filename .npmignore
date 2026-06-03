@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.github/skills/**/__pycache__/
+.github/skills/**/*.pyc

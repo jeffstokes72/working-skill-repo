@@ -137,4 +137,4 @@ skill propagation rules.
 - A deterministic ready-set check proves which slices may dispatch together.
 - A deterministic overlap/lease selftest proves shared file writes are caught.
 - Globals and ATV tracked skill roots match this repo.
-- `go run .\cmd\kbcheck local-release` passes.
+- `go run ./cmd/kbcheck local-release` passes.

@@ -65,10 +65,10 @@ Move the bounded-swarm proof utilities from PowerShell into `cmd/kbcheck`:
 
 ## Test Scenarios
 
-- `go run .\cmd\kbcheck ready-set-selftest`
-- `go run .\cmd\kbcheck scope-lease-selftest`
+- `go run ./cmd/kbcheck ready-set-selftest`
+- `go run ./cmd/kbcheck scope-lease-selftest`
 - `go test ./...`
-- `go run .\cmd\kbcheck core --list`
+- `go run ./cmd/kbcheck core --list`
 
 ## Scope Boundary
 
@@ -80,5 +80,5 @@ Move the bounded-swarm proof utilities from PowerShell into `cmd/kbcheck`:
 
 - Added native commands and Go tests.
 - Removed the four superseded scripts.
-- `go run .\cmd\kbcheck ready-set-selftest` exited 0.
-- `go run .\cmd\kbcheck scope-lease-selftest` exited 0.
+- `go run ./cmd/kbcheck ready-set-selftest` exited 0.
+- `go run ./cmd/kbcheck scope-lease-selftest` exited 0.

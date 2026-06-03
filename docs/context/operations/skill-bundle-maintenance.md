@@ -25,24 +25,24 @@ Consuming projects own their local:
 Core:
 
 ```powershell
-go run .\cmd\kbcheck core
+go run ./cmd/kbcheck core
 ```
 
 Local release:
 
 ```powershell
-go run .\cmd\kbcheck local-release
+go run ./cmd/kbcheck local-release
 ```
 
 Live release:
 
 ```powershell
-go run .\cmd\kbcheck live-release
+go run ./cmd/kbcheck live-release
 ```
 
 `cmd/kbcheck` owns quality, release, eval, marketplace, and drift-report
-orchestration. The current skill-repo harness is Go-native; `rg --files -g
-"*.ps1"` should return no files.
+orchestration. The current skill-repo quality/release harness is Go-native.
+Remaining `.ps1` files are narrow helper scripts, not the top-level gate.
 
 Live model evals are explicit because they shell to authenticated local CLIs.
 Dry-run adapters are part of the local gate; live calls are not implied by a
@@ -88,7 +88,7 @@ and ATV shipped copies when that skill intentionally ships there.
 Verify:
 
 ```powershell
-go run .\cmd\kbcheck local-release
+go run ./cmd/kbcheck local-release
 git diff --check
 ```
 
@@ -103,7 +103,7 @@ not a mirror target. KB-owned skills are this repo's overlay.
 Use the read-only upstream report before deciding what to port:
 
 ```powershell
-go run .\cmd\kbcheck atv-delta
+go run ./cmd/kbcheck atv-delta
 ```
 
 Classifications:
@@ -134,7 +134,7 @@ Promotion requires:
 Use the promotion command so the safe path is also the fast path:
 
 ```powershell
-go run .\cmd\kbcheck marketplace-promote `
+go run ./cmd/kbcheck marketplace-promote `
   --source <reviewed-skill-dir> `
   --skill-id <skill-id> `
   --approval-reason "<why this is approved>" `
@@ -166,29 +166,20 @@ vulnerability findings from version age alone.
 
 ## Install Snippets
 
-GitHub Copilot personal install:
+Core global install:
 
-```powershell
-$src = '<path-to-working-skill-repo>'
-Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.copilot\skills" -Recurse -Force
-Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
+```shell
+npx github:Irtechie/working-skill-repo --target all --profile core
 ```
 
-Codex personal install:
+Full global install:
 
-```powershell
-$src = '<path-to-working-skill-repo>'
-Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.codex\skills" -Recurse -Force
-Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
+```shell
+npx github:Irtechie/working-skill-repo --target all --profile full
 ```
 
 Repo-local GitHub Copilot install:
 
-```powershell
-$src = '<path-to-working-skill-repo>'
-$dst = '<path-to-your-project>'
-Copy-Item "$src\.github\skills" "$dst\.github\skills" -Recurse -Force
-Copy-Item "$src\.github\agents" "$dst\.github\agents" -Recurse -Force
-Copy-Item "$src\AGENTS.md" "$dst\AGENTS.md" -Force
-Copy-Item "$src\.github\copilot-instructions.md" "$dst\.github\copilot-instructions.md" -Force
+```shell
+npx github:Irtechie/working-skill-repo --target repo --repo <path-to-your-project> --profile core
 ```

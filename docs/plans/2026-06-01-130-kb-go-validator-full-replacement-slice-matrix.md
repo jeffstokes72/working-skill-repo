@@ -46,4 +46,4 @@ the slice acceptance criteria, not a later cleanup task.
   parks deletion because a live external adapter still needs a compatibility
   window.
 - `go test ./...` passes.
-- `go run .\cmd\kbcheck local-release --json` passes.
+- `go run ./cmd/kbcheck local-release --json` passes.

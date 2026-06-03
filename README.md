@@ -21,10 +21,10 @@ or the marketplace machinery to use the workflow in your own repo.
 Clone this repo, install the skills, then ask `kb-start` to route your first
 task from inside a project:
 
-```powershell
+```shell
 git clone https://github.com/Irtechie/working-skill-repo.git
 cd working-skill-repo
-pwsh ./scripts/install-kb.ps1 -Target all
+npx github:Irtechie/working-skill-repo --target all --profile core
 cd <your-project>
 kb-start "what I want done"
 ```
@@ -45,6 +45,11 @@ The core loop is six skills:
 
 Everything else is optional depth for bigger work, maintenance, or release
 proof.
+
+The default installer profile is intentionally small. `core` installs the six
+skills above. `full` installs the complete runtime surface: all skills plus the
+reviewer/specialist agents. The Go gate and marketplace are maintainer tools;
+they are not required to start using the workflow.
 
 ## What This Repo Contains
 
@@ -299,14 +304,14 @@ the time of writing).
 
 Run before propagating skill changes:
 
-```powershell
-go run .\cmd\kbcheck core
+```shell
+go run ./cmd/kbcheck core
 ```
 
 Run before releasing or syncing globals:
 
-```powershell
-go run .\cmd\kbcheck local-release
+```shell
+go run ./cmd/kbcheck local-release
 ```
 
 `local-release` composes deterministic local proof: native `core`, sync drift,
@@ -317,8 +322,8 @@ newer useful behavior, merge it back into this repo first, prove it here, then
 sync outward.
 `live-release` is explicit:
 
-```powershell
-go run .\cmd\kbcheck live-release
+```shell
+go run ./cmd/kbcheck live-release
 ```
 
 Live mode may call authenticated Codex/GHCP CLIs. A local green gate is not a
@@ -356,50 +361,47 @@ Deep dive: [testing operations](docs/context/operations/testing.md) and
 Default to personal/global installs. They keep active project repos clean and
 avoid skill drift between copies.
 
-The snippets below assume PowerShell and that `$src` points to your clone.
-Adjust `$src` and `$dst` for your machine.
+Most users should use the npx installer. It is only needed to copy the skills;
+Node is not required afterward.
 
-One-command install:
+Core personal install for Codex, Copilot, and shared agents:
 
-```powershell
-pwsh ./scripts/install-kb.ps1 -Target all
+```shell
+npx github:Irtechie/working-skill-repo --target all --profile core
 ```
 
-GitHub Copilot personal install:
+Full personal install:
 
-```powershell
-$src = '<path-to-working-skill-repo>'
-Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.copilot\skills" -Recurse -Force
-Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.copilot\agents" -Force
+```shell
+npx github:Irtechie/working-skill-repo --target all --profile full
 ```
 
-Codex personal install:
+Single-runtime installs:
 
-```powershell
-$src = '<path-to-working-skill-repo>'
-Copy-Item "$src\.github\skills\*" "$env:USERPROFILE\.codex\skills" -Recurse -Force
-Copy-Item "$src\.github\agents\*" "$env:USERPROFILE\.codex\agents" -Force
+```shell
+npx github:Irtechie/working-skill-repo --target codex --profile core
+npx github:Irtechie/working-skill-repo --target copilot --profile core
+npx github:Irtechie/working-skill-repo --target agents --profile core
 ```
 
-Shared agent-skills install:
+The installer detects changed existing skills. It skips identical copies,
+prompts before overwriting, and writes backups under `.kb-install-backups/`
+when a changed copy is replaced. Use `--yes` only when you want automatic
+backup-and-replace behavior.
 
-```powershell
-$src = '<path-to-working-skill-repo>\.github\skills'
-Copy-Item "$src\*" "$env:USERPROFILE\.agents\skills" -Recurse -Force
+Repo-local install:
+
+```shell
+npx github:Irtechie/working-skill-repo --target repo --repo <path-to-your-project> --profile core
 ```
 
 Use repo-local installs only when a project needs pinned/project-specific
 overrides or when the skills should be versioned with that codebase.
 
-Repo-local install:
+PowerShell fallback from a local clone:
 
 ```powershell
-$src = '<path-to-working-skill-repo>'
-$dst = '<path-to-your-project>'
-Copy-Item "$src\.github\skills" "$dst\.github\skills" -Recurse -Force
-Copy-Item "$src\.github\agents" "$dst\.github\agents" -Recurse -Force
-Copy-Item "$src\AGENTS.md" "$dst\AGENTS.md" -Force
-Copy-Item "$src\.github\copilot-instructions.md" "$dst\.github\copilot-instructions.md" -Force
+pwsh ./scripts/install-kb.ps1 -Target all
 ```
 
 Deep dive: [skill bundle maintenance](docs/context/operations/skill-bundle-maintenance.md).
@@ -407,14 +409,16 @@ Deep dive: [skill bundle maintenance](docs/context/operations/skill-bundle-maint
 ## Platform Reality
 
 This repo supports Codex and GitHub Copilot/GHCP instruction surfaces. The
-development machine is Windows, so examples use Windows paths.
+runtime skills are Markdown instructions; install and gate proof are
+cross-platform.
 
 Current state:
 
 - Go owns the quality, release, eval, marketplace, and drift-report gates.
 - Windows parity smoke proof is recorded in `docs/reports/go-gate-parity-2026-06-01.md`.
-- macOS/Linux should use the same Go entrypoint; full OS proof is still parked
-  until those machines are available.
+- CI runs `go test ./...` and `go run ./cmd/kbcheck core` on Windows, macOS,
+  and Linux.
+- The npx installer runs on Windows, macOS, and Linux and does not require Go.
 
 ## Marketplace And Security
 

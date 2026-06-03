@@ -54,7 +54,7 @@ Ready means:
 ## Test Scenarios
 
 - `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\kb-work-ready-set-selftest.ps1`
-- `go run .\cmd\kbcheck core`
+- `go run ./cmd/kbcheck core`
 
 ## Scope Boundary
 

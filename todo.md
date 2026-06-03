@@ -29,8 +29,8 @@ Make this the highest-reliability portable skill bundle for the user's workflow:
 ## Current Focus
 
 No active work claimed. Cold storage follow-through is complete. The canonical
-quality and release gates are now `go run .\cmd\kbcheck core` and
-`go run .\cmd\kbcheck local-release`.
+quality and release gates are now `go run ./cmd/kbcheck core` and
+`go run ./cmd/kbcheck local-release`.
 
 Audit note: `docs/context/research/2026-05-29-skill-repo-gap-audit.md`
 Requirements: `docs/brainstorms/2026-05-29-cross-runtime-skill-quality-requirements.md`
@@ -61,7 +61,8 @@ Go validator full replacement manifest: `docs/plans/2026-06-01-130-kb-go-validat
   calls remain explicit and outside the default `core` gate.
 - `cmd/kbcheck` provides the native Go gate for `core`, `local-release`,
   `live-release`, eval adapters, marketplace promotion, and drift reports.
-  `rg --files -g "*.ps1"` returns no files in this repo.
+  Remaining `.ps1` files are narrow skill helpers, not top-level gate
+  dependencies.
 - `kbcheck minimality` has a protected classification so repo-policy
   dependencies such as `ce-review`, `ce-compound`, `ce-compound-refresh`, and
   `document-review` do not become deletion candidates from static analysis
@@ -92,9 +93,6 @@ None.
   until a dedicated trim/deletion pass reviews the new evidence classes.
 - Live cross-model benchmark execution is parked; fixtures and deterministic
   schema validation now exist, but live model calls remain explicit.
-- macOS/Linux proof for the Go gate is parked until those environments are
-  available. Windows parity is recorded in
-  `docs/reports/go-gate-parity-2026-06-01.md`.
 
 ## Blocked
 
@@ -102,6 +100,7 @@ None.
 
 ## Work Log
 
-- 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run .\cmd\kbcheck core`, `go run .\cmd\kbcheck local-release --json`, `go run .\cmd\kbcheck ready-set --manifest docs\plans\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
+- 2026-06-03: Completed cross-platform adoption on-ramp. Added `npx` installer with core/full profiles, non-destructive backups, repo-local install, and Windows/macOS/Linux CI proof. Proof: installer smoke checks, `go test ./...`, `go run ./cmd/kbcheck core`, working/ATV `git diff --check`, and required sync report passed.
+- 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run ./cmd/kbcheck core`, `go run ./cmd/kbcheck local-release --json`, `go run ./cmd/kbcheck ready-set --manifest docs\plans\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
 
 Older completed work is archived in `todo-done.md`.

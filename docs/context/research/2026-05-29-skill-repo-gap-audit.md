@@ -13,7 +13,7 @@ Where is this portable skill repo weakest compared with current agent-workflow b
 
 At audit time, the repo described benchmarking in `README.md`, but had no runnable harness. `kb-check.ps1 -List` found no checks because this repo had no conventional app manifest.
 
-Current status: resolved by the cross-runtime quality work. `go run .\cmd\kbcheck core --list` now reports `skill-lint`, `route-complexity-eval`, and `skill-sync-report`.
+Current status: resolved by the cross-runtime quality work. `go run ./cmd/kbcheck core --list` now reports `skill-lint`, `route-complexity-eval`, and `skill-sync-report`.
 
 Impact: route quality, complexity, and verification discipline are currently enforced by prose. Prose is not enough for "best on the planet."
 

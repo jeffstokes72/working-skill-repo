@@ -7,7 +7,7 @@ The runner does not call a model. It scores captured agent results against the
 route-complexity dataset:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval
+go run ./cmd/kbcheck skill-eval
 ```
 
 Default mode is a self-test under `evals/skill-eval/selftest/`. The self-test
@@ -17,7 +17,7 @@ pass the good result and fail the bad ones; otherwise the scorer is too weak.
 For real captured runs, write a result JSON and pass it explicitly:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval --result-path path\to\captured-result.json
+go run ./cmd/kbcheck skill-eval --result-path path\to\captured-result.json
 ```
 
 ## Result Shape
@@ -67,7 +67,7 @@ Supported claim checks:
 planned files, commands, and tools, but it is not observed behavior.
 
 Optional `observed_trace` is the externally captured safety layer. It is added
-by `go run .\cmd\kbcheck skill-eval-wrap` and currently records PATH-shim command hits
+by `go run ./cmd/kbcheck skill-eval-wrap` and currently records PATH-shim command hits
 plus git-status write/delete changes. Existing results may omit it; omitted
 observation is reported as lower confidence instead of silently treated as
 proof.
@@ -112,7 +112,7 @@ them unless a future adapter wants the model to emit them directly.
 Wrap a dry-run adapter with external command/write capture:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval-wrap --fixture-id tiny-typo-fix --dry-run --sealed
+go run ./cmd/kbcheck skill-eval-wrap --fixture-id tiny-typo-fix --dry-run --sealed
 ```
 
 The wrapper prepends temporary PATH shims for selected commands, runs the
@@ -138,7 +138,7 @@ Transcript-derived claim checks live outside the model transcript as JSON claim
 artifacts:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval-claims
+go run ./cmd/kbcheck skill-eval-claims
 ```
 
 Supported deterministic claim types match structured result claim checks:
@@ -155,7 +155,7 @@ each artifact through `skill-eval-claims`.
 Run the quality rubric self-test:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval-quality
+go run ./cmd/kbcheck skill-eval-quality
 ```
 
 The rubric is separate from deterministic route/proof/claim pass/fail. It
@@ -182,13 +182,13 @@ runs are explicit because they require runtime auth and spend.
 Run the Codex adapter in safe dry-run mode:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run
+go run ./cmd/kbcheck eval-run-codex --fixture-id tiny-typo-fix --dry-run
 ```
 
 Run one live Codex eval:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-codex --fixture-id tiny-typo-fix --keep-run
+go run ./cmd/kbcheck eval-run-codex --fixture-id tiny-typo-fix --keep-run
 ```
 
 The live adapter creates a disposable git worktree under `.atv/eval-runs/`, runs
@@ -203,13 +203,13 @@ model. Dry-run artifacts are cleaned unless `--keep-run` is set.
 Run the GHCP adapter in safe dry-run mode:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run
+go run ./cmd/kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --dry-run
 ```
 
 Run one live GHCP eval:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --keep-run
+go run ./cmd/kbcheck eval-run-ghcp --fixture-id tiny-typo-fix --keep-run
 ```
 
 The GHCP adapter creates a disposable git worktree under `.atv/eval-runs/`, runs
@@ -229,13 +229,13 @@ Dry-run artifacts are cleaned unless `--keep-run` is set.
 Run both adapters in dry-run mode:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-live-corpus --runtime codex,ghcp --dry-run
+go run ./cmd/kbcheck eval-run-live-corpus --runtime codex,ghcp --dry-run
 ```
 
 Run one explicit live cross-runtime fixture:
 
 ```powershell
-go run .\cmd\kbcheck eval-run-live-corpus --runtime codex,ghcp
+go run ./cmd/kbcheck eval-run-live-corpus --runtime codex,ghcp
 ```
 
 The corpus runner writes `summary.json` and `summary.md` under
@@ -248,13 +248,13 @@ runtime-unavailable. Live corpus runs are never part of the default `core` gate.
 Summarize local run artifacts:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval-regression --run-root .atv/eval-runs
+go run ./cmd/kbcheck skill-eval-regression --run-root .atv/eval-runs
 ```
 
 Compare against a selected baseline:
 
 ```powershell
-go run .\cmd\kbcheck skill-eval-regression --run-root .atv/eval-runs --baseline path\to\baseline.json
+go run ./cmd/kbcheck skill-eval-regression --run-root .atv/eval-runs --baseline path\to\baseline.json
 ```
 
 The report uses local cost proxies: runtime, fixture, mode, status, duration

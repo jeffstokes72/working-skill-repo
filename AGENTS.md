@@ -17,19 +17,19 @@ This repo is the portable skill bundle. Do not bootstrap consuming-project memor
 When changing skills in this repo, treat `<working-skill-repo>` as the working bundle source, but check for newer drift before overwriting anything.
 
 1. Compare the target skill across:
-   - `<working-skill-repo>\.github\skills\<skill>\`
-   - `<atv-repo>\.github\skills\<skill>\`
-   - `<atv-repo>\pkg\scaffold\templates\skills\<skill>\`
-   - `<atv-repo>\plugins\atv-everything\skills\<skill>\`
-   - `~/.copilot/skills\<skill>\`
-   - `~/.agents/skills\<skill>\`
-   - `~/.codex/skills\<skill>\`
+   - `<working-skill-repo>/.github/skills/<skill>/`
+   - `<atv-repo>/.github/skills/<skill>/`
+   - `<atv-repo>/pkg/scaffold/templates/skills/<skill>/`
+   - `<atv-repo>/plugins/atv-everything/skills/<skill>/`
+   - `~/.copilot/skills/<skill>/`
+   - `~/.agents/skills/<skill>/`
+   - `~/.codex/skills/<skill>/`
 2. If a global or ATV copy differs, review the diff before copying over it. Newer useful work found only in a global install must be merged back into this repo first, not discarded.
 3. After editing this repo, sync the final approved copy to:
-   - Codex global: `~/.codex/skills\<skill>\`
-   - Copilot global: `~/.copilot/skills\<skill>\`
-   - shared agents global: `~/.agents/skills\<skill>\`
-   - ATV fork: `<atv-repo>\.github\skills\<skill>\`
+   - Codex global: `~/.codex/skills/<skill>/`
+   - Copilot global: `~/.copilot/skills/<skill>/`
+   - shared agents global: `~/.agents/skills/<skill>/`
+   - ATV fork: `<atv-repo>/.github/skills/<skill>/`
    - ATV scaffold/plugin copies only when that skill is intentionally shipped there.
 4. Update `README.md` in this repo when the visible workflow, installed-skill list, install commands, or repo hygiene contract changes.
 5. Update `<atv-repo>\README.md` when the ATV-facing workflow, bundled skills, or scaffold/plugin behavior changes.
@@ -38,11 +38,11 @@ When changing skills in this repo, treat `<working-skill-repo>` as the working b
 
 Before syncing or propagating skills, run the canonical skill-repo quality gate:
 
-```powershell
-go run .\cmd\kbcheck core
+```shell
+go run ./cmd/kbcheck core
 ```
 
-This gate is cross-runtime: native Go validates the shared skill contract for Codex and GitHub Copilot/GHCP using `config/skill-quality.json`, deterministic skill lint, route-complexity fixtures, eval selftests, marketplace firebreak checks, and read-only sync/ATV drift reports. Required targets are Codex global, Copilot global, shared agents global, and `<atv-repo>\.github\skills`. ATV scaffold/plugin targets are optional thin bundles; warnings there are acceptable unless the current change explicitly ships that skill surface.
+This gate is cross-runtime: native Go validates the shared skill contract for Codex and GitHub Copilot/GHCP using `config/skill-quality.json`, deterministic skill lint, route-complexity fixtures, eval selftests, marketplace firebreak checks, and read-only sync/ATV drift reports. Required targets are Codex global, Copilot global, shared agents global, and `<atv-repo>/.github/skills`. ATV scaffold/plugin targets are optional thin bundles; warnings there are acceptable unless the current change explicitly ships that skill surface.
 
 Do not remove `kb-review`, `ce-review`, `ce-compound`, or `ce-compound-refresh` from this bundle unless the skills that invoke them are rewritten first. KB completion uses `kb-review`; `ce-review` remains the generalized CE review skill.
 

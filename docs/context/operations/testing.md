@@ -7,9 +7,9 @@ Checked: 2026-06-01
 ```powershell
 git status --short
 git diff --check
-go run .\cmd\kbcheck core --list
-go run .\cmd\kbcheck core
-go run .\cmd\kbcheck local-release
+go run ./cmd/kbcheck core --list
+go run ./cmd/kbcheck core
+go run ./cmd/kbcheck local-release
 go test ./...
 ```
 
@@ -26,7 +26,7 @@ It defines:
 The private marketplace contract lives in `config/skill-marketplace.json`. It
 records `<agent-marketplace>` as the approved catalog root and defines the
 project-local-first promotion policy for learned skills and reusable pipelines.
-`go run .\cmd\kbcheck marketplace-firebreak` enforces the quarantine boundary:
+`go run ./cmd/kbcheck marketplace-firebreak` enforces the quarantine boundary:
 active skill roots, approved catalog paths, and loadable skill links must never
 resolve into `<agent-marketplace>/quarantine`. This is a blocking `core` gate,
 not a naming convention.
@@ -51,8 +51,8 @@ Current policy expects ATV scaffold/plugin copies to match the working skill
 root for all tracked skills.
 
 ```powershell
-go run .\cmd\kbcheck skill-sync-report
-go run .\cmd\kbcheck skill-sync-report --verbose-optional
+go run ./cmd/kbcheck skill-sync-report
+go run ./cmd/kbcheck skill-sync-report --verbose-optional
 ```
 
 Default output prints required issues in detail and summarizes any optional ATV
@@ -62,7 +62,7 @@ Use `--verbose-optional` when reviewing a deliberate packaging exception.
 
 ## Current Result
 
-`go run .\cmd\kbcheck core --list` now reports skill-repo checks when run here:
+`go run ./cmd/kbcheck core --list` now reports skill-repo checks when run here:
 
 - `skill-lint`
 - `go-test`
@@ -86,7 +86,7 @@ Use `--verbose-optional` when reviewing a deliberate packaging exception.
 - `atv-upstream-delta`
 - `skill-sync-report`
 
-`go run .\cmd\kbcheck core` runs every discovered check and exits nonzero when a
+`go run ./cmd/kbcheck core` runs every discovered check and exits nonzero when a
 required check fails.
 Expected current warnings:
 
@@ -98,8 +98,8 @@ The release gate is intentionally separate from `core` because it composes the
 core check with sync drift, line-ending, and optional report surfaces:
 
 ```powershell
-go run .\cmd\kbcheck local-release
-go run .\cmd\kbcheck live-release
+go run ./cmd/kbcheck local-release
+go run ./cmd/kbcheck live-release
 ```
 
 `local-release` is the pre-sync proof command. `live-release` is explicit and
@@ -110,7 +110,7 @@ Landmine lifecycle changes are verified with the same structural gate:
 
 ```powershell
 git diff --check
-go run .\cmd\kbcheck core
+go run ./cmd/kbcheck core
 ```
 
 `docs/context/landmines.md` must contain owner, evidence, fix condition, and

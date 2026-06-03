@@ -47,7 +47,7 @@ the format simple enough to inspect by hand.
 ## Test Scenarios
 
 - `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\kb-work-scope-lease-selftest.ps1`
-- `go run .\cmd\kbcheck core`
+- `go run ./cmd/kbcheck core`
 
 ## Scope Boundary
 
