@@ -381,10 +381,11 @@ func computeSurfaceReport(root, skillRoot, routeFilter, baselinePath string) (su
 		"base":        {"kb-start", "kb-map", "kb-first-principles", "kb-check"},
 		"kb-plan":     {"kb-start", "kb-map", "kb-plan", "kb-check"},
 		"kb-work":     {"kb-start", "kb-map", "kb-work", "kb-check"},
+		"kb-goal":     {"kb-start", "kb-map", "kb-goal", "kb-check"},
 		"kb-epic":     {"kb-start", "kb-map", "kb-brainstorm", "kb-plan", "kb-epic", "kb-check"},
 		"kb-complete": {"kb-start", "kb-map", "kb-complete", "kb-review", "kb-check", "learn", "evolve"},
 	}
-	order := []string{"base", "kb-plan", "kb-work", "kb-epic", "kb-complete"}
+	order := []string{"base", "kb-plan", "kb-work", "kb-goal", "kb-epic", "kb-complete"}
 	if routeFilter != "" {
 		if _, ok := routes[routeFilter]; !ok {
 			return surfaceReport{}, fmt.Errorf("unknown route '%s'. Known routes: %s", routeFilter, strings.Join(order, ", "))

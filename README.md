@@ -46,6 +46,14 @@ The core loop is six skills:
 Everything else is optional depth for bigger work, maintenance, or release
 proof.
 
+For long-lived objectives that may run across days or sessions, use `kb-goal`.
+It keeps the durable objective and terminal proof ledger, then routes each work
+unit through the normal KB lanes. `klfg` is one strict idea-to-done pipeline;
+`kb-goal` can run many pipelines or smaller lanes until the larger goal is
+complete or honestly blocked. Under a goal, brainstorming is low-interruption:
+the agent picks the best path from evidence and asks only for true planning
+blockers.
+
 The default installer profile is intentionally small. `core` installs the six
 skills above. `full` installs the complete runtime surface: all skills plus the
 reviewer/specialist agents. The Go gate and marketplace are maintainer tools;
@@ -95,6 +103,13 @@ token savings.
   broken behavior goes to `kb-troubleshoot`. Material research goes to
   `kb-research`. Fuzzy ideas go to `kb-brainstorm`, then `kb-plan`. Clear
   bounded work can go straight to `kb-plan`.
+- **Do not force every lane into a planned slice.** Planned slices are for
+  manifest work. `kb-fix` and `kb-troubleshoot` use compact pre-edit plans and
+  lane-local proof unless the bug grows into multi-slice work.
+- **Make phase handoffs explicit.** If a host does not auto-chain skills, the
+  active skill prints the exact next command. After a gate-clean brainstorm it
+  asks whether to continue with `kb-plan <requirements-doc>`; after planning it
+  asks whether to continue with `kb-work <manifest-path>`.
 - **Keep large work from becoming one giant context.** `kb-epic` coordinates
   multi-stream initiatives. It can run multiple workstream brainstorms, resolve
   planning blockers, and produce multiple manifests before execution.
@@ -113,7 +128,7 @@ development harness. The repository is intentionally larger than the installed
 runtime surface.
 
 The installed runtime surface is intentionally smaller than the repository:
-about 37 skills plus 52 reviewer/specialist agents.
+about 38 skills plus 52 reviewer/specialist agents.
 
 Installed/runtime surface:
 
@@ -162,8 +177,8 @@ The pipeline is built around task shape, not a fixed ceremony:
 
 - **Small:** `kb-fix` for known bugs, typos, and narrow edits; or
   `kb-troubleshoot` when broken behavior needs diagnosis. Identify or write a
-  failing signal, make the smallest fix, verify deterministically, and stop if
-  the loop stalls.
+  failing signal, write a compact pre-edit plan, make the smallest fix, rerun
+  the relevant tests/probes, and stop if the loop stalls.
 - **Medium:** `kb-brainstorm -> kb-plan -> kb-work` when framing or
   requirements need clarification before slicing. `kb-plan` writes vertical
   slices with expected files, verification, dependencies, and HITL flags.
@@ -188,6 +203,7 @@ through gate-ledger records rather than chat confidence. The maintainer proof is
 | Command | Use When |
 | --- | --- |
 | `kb-start` | Fresh session, ambiguous ask, or "figure out the right workflow" |
+| `kb-goal` | Long-lived objective that must keep moving across sessions until proven complete or blocked |
 | `kb-task` | First-principles task runner that continues until verified or blocked |
 | `kb-map` | Setup, lookup, or refresh project memory |
 | `kb-eval-map` | Map repo-native eval surfaces and proof commands |
@@ -212,6 +228,7 @@ through gate-ledger records rather than chat confidence. The maintainer proof is
 Routing and memory:
 
 - `kb-start` - default router / lane picker
+- `kb-goal` - durable objective lane across sessions and KB routes
 - `kb-map` - project-memory lookup, refresh, and project-root anchoring
 - `kb-map-bootstrap` - expensive deep index plus standard memory layout
 - `kb-compact` - compress memory/docs/output without losing technical truth
@@ -221,7 +238,7 @@ Execution lanes:
 
 - `kb-fix`, `kb-troubleshoot`, `kb-brainstorm`, `kb-research`
 - `kb-architecture-deepening`, `kb-plan`, `kb-work`, `kb-complete`
-- `kb-ship`, `kb-epic`, `kb-task`, `kb-first-principles`, `klfg`
+- `kb-ship`, `kb-epic`, `kb-task`, `kb-goal`, `kb-first-principles`, `klfg`
 
 Verification and gates:
 

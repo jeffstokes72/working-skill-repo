@@ -78,6 +78,17 @@ func runWorkflowGovernorSelftest(root string, stdout, stderr io.Writer) int {
 				"Complete cannot emit DONE without a passed or quarantined `complete-to-ship`",
 			},
 		},
+		{
+			Path: ".github/skills/kb-goal/SKILL.md",
+			Needles: []string{
+				"Own the durable objective, not the implementation lane.",
+				"`klfg` is one strict pipeline run. `kb-goal` may run many pipeline runs.",
+				"Inside a goal, brainstorming should minimize human stops.",
+				"Ask the user only for `ask-now` blockers",
+				"Complete only when all are true:",
+				"If `kb-complete` creates follow-up work, keep the goal open",
+			},
+		},
 	}
 
 	missing := []string{}

@@ -122,7 +122,7 @@ Propagation policy
   delegation tool requires explicit user authorization for subagents; review was
   performed locally.
 
-## Dark Factory Queue
+## Execution Queue
 
 Complete. Future work belongs in Parked / Blocked or a new epic.
 

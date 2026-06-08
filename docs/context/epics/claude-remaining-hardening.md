@@ -65,7 +65,7 @@ Release proof should come before aggressive trimming or deletion. Portability
 and upstream automation can be planned independently if the user chooses to do
 them now.
 
-## Dark Factory Queue
+## Execution Queue
 
 Runnable after planning:
 

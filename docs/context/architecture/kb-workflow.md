@@ -29,6 +29,7 @@ Typical routing:
 
 | Shape | Lane |
 | --- | --- |
+| durable objective across sessions | `kb-goal` |
 | small known bug, typo, narrow cleanup | `kb-fix` |
 | broken behavior with unclear cause | `kb-troubleshoot` |
 | unclear product or technical framing | `kb-brainstorm` |
@@ -41,6 +42,19 @@ Typical routing:
 
 The goal is proportional ceremony. A typo fix should not become a brainstorm; a
 framework migration should not become a quick fix.
+
+Not every route produces a planned slice. Planned slices are for manifest work
+owned by `kb-plan` and executed by `kb-work`. `kb-fix` and `kb-troubleshoot`
+still plan before editing, but their plan is a compact reproduction/diagnostic
+plan with lane-local proof, not a manifest, unless the bug expands into
+multi-slice work.
+
+Every phase handoff must be explicit for hosts that do not auto-chain skills.
+After a gate-clean brainstorm, ask whether to continue with
+`kb-plan <requirements-doc>` unless execution intent or an orchestrator already
+authorized continuing. After planning, ask whether to continue with
+`kb-work <manifest-path>` unless execution intent is already present. If the
+host cannot invoke the next skill, print the exact `Next command:` and stop.
 
 ## Workflow Governor
 
@@ -134,8 +148,25 @@ The pipeline is designed around task sizes:
 - **Small known bug:** use `kb-fix`.
 - **Broken behavior with unclear cause:** use `kb-troubleshoot`.
 - **Bounded autonomous task:** use `kb-task`.
+- **Long-running objective:** use `kb-goal` to keep the durable goal ledger,
+  then route each unit through the smallest valid KB lane.
 - **Medium feature:** use `kb-brainstorm` -> `kb-plan` -> `kb-work`.
 - **Large initiative:** use `kb-epic`.
+
+`kb-fix` and `kb-troubleshoot` both require agent-run verification. The proof is
+not just "the edit looks right"; rerun the reproduction plus the relevant tests,
+browser checks, CLI/API probes, or logs that prove the broken behavior changed.
+They also require a compact pre-edit plan that freezes the reproduced signal,
+likely target, protected oracle/test files, and verification command. That plan
+is deliberately smaller than a `kb-plan` manifest; route to `kb-plan` only when
+the fix becomes multi-slice or needs dependency ordering.
+
+`klfg` is one strict pipeline run from brainstorm through completion. `kb-goal`
+is the durable-objective lane: it may run `klfg`, `kb-epic`, `kb-task`, or
+several manifests over days, but it completes only when the goal ledger's
+terminal proof matches the original objective. Under a goal, brainstorm stops are minimized:
+the agent resolves the best path from repo evidence, research, and safe
+assumptions, and asks only for true `ask-now` blockers.
 
 `kb-plan` produces vertical slices with expected files, verification,
 dependencies, test level, functional risk, and HITL flags.

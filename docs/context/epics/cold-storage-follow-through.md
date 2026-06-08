@@ -66,7 +66,7 @@ Copilot path instructions
   -> instruction files only if high-risk file classes are identified
 ```
 
-## Dark Factory Queue
+## Execution Queue
 
 Completed:
 

@@ -87,7 +87,7 @@ Shared overlap, ATV-native refresh, and superseded workflow cleanup can be revie
 independently after the clean delta inventory exists. Final propagation waits
 for all accepted changes.
 
-## Dark Factory Queue
+## Execution Queue
 
 Runnable after planning:
 

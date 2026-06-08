@@ -25,6 +25,7 @@ Reference docs:
 
 | Lane | Entry Skill | Notes |
 |---|---|---|
+| Durable objective | `kb-goal` | Keeps long-running goal state, terminal proof, blockers, and next actions while delegating work to KB lanes. |
 | Startup/routing | `kb-start` | Calls `kb-map`, then routes by task shape. |
 | First-principles autonomous task | `kb-task` | Uses map, frames assumptions, delegates to the smallest correct lane. |
 | Project memory | `kb-map`, `kb-map-bootstrap`, `kb-memory-review` | Creates and maintains repo-local memory in consuming projects. |
