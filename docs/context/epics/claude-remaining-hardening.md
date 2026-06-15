@@ -46,11 +46,11 @@ safer to release globally, cheaper to load, and more honest about proof limits.
 
 | Workstream | Brainstorm | Manifest | Status | Notes |
 |---|---|---|---|---|
-| Release confidence gate | `docs/brainstorms/2026-06-01-release-confidence-gate-requirements.md` | `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Local/live profiles exist; live remains explicit. |
-| Skill surface minimality proof | `docs/brainstorms/2026-06-01-skill-surface-minimality-requirements.md` | `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Conservative classification exists; protected repo-policy skills are not deletion candidates. |
-| Cross-platform tooling path | `docs/brainstorms/2026-06-01-cross-platform-tooling-requirements.md` | `docs/plans/2026-06-01-083-tool-go-core-gate-wrapper-plan.md` | completed | Thin Go wrapper exists; it delegates to PowerShell and is not a full harness port. |
-| Upstream selective sync automation | `docs/brainstorms/2026-06-01-upstream-selective-sync-requirements.md` | `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Read-only upstream delta report exists; no apply mode. |
-| Trim/deletion execution | skipped-clear | `docs/plans/2026-06-01-085-cold-trim-deletion-queue-plan.md` | completed | No deletion was justified; remaining candidates need runtime proof or focused trimming. |
+| Release confidence gate | `docs/brainstorms/2026-06-01-release-confidence-gate-requirements.md` | `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Local/live profiles exist; live remains explicit. |
+| Skill surface minimality proof | `docs/brainstorms/2026-06-01-skill-surface-minimality-requirements.md` | `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Conservative classification exists; protected repo-policy skills are not deletion candidates. |
+| Cross-platform tooling path | `docs/brainstorms/2026-06-01-cross-platform-tooling-requirements.md` | `docs/plans/archive/2026-06/2026-06-01-083-tool-go-core-gate-wrapper-plan.md` | completed | Thin Go wrapper exists; it delegates to PowerShell and is not a full harness port. |
+| Upstream selective sync automation | `docs/brainstorms/2026-06-01-upstream-selective-sync-requirements.md` | `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` | completed | Read-only upstream delta report exists; no apply mode. |
+| Trim/deletion execution | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-085-cold-trim-deletion-queue-plan.md` | completed | No deletion was justified; remaining candidates need runtime proof or focused trimming. |
 
 ## Dependency Map
 

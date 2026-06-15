@@ -19,6 +19,9 @@ Usage:
   kbcheck live-release [--root <path>] [--json] [--dry-run]
   kbcheck ready-set --manifest <path> [--json]
   kbcheck ready-set-selftest
+  kbcheck manifest-contract --manifest <path> [--json]
+  kbcheck manifest-contract-selftest
+  kbcheck gate-ledger --manifest <path> --gate <gate-id> [--allowed-next <text>] [--allow-quarantine]
   kbcheck scope-lease --ledger <path> [--json]
   kbcheck scope-lease-selftest
   kbcheck skill-lint [--root <path>] [--config <path>] [--json]
@@ -56,6 +59,8 @@ Commands:
   local-release  Run the local release gate with required and optional checks.
   live-release   Run local release checks plus explicit live-model surfaces.
   ready-set      Compute the safe KB manifest ready set.
+  manifest-contract  Validate KB manifest phase/gate proof contracts.
+  gate-ledger    Validate one KB manifest gate before phase advancement.
   scope-lease    Validate observed active slice/file write leases.
 `
 
@@ -107,6 +112,9 @@ type options struct {
 	sourceType        string
 	upstreamRepo      string
 	installTargets    string
+	gate              string
+	allowedNext       string
+	allowQuarantine   bool
 	codexSkillsRoot   string
 	copilotSkillsRoot string
 	agentsSkillsRoot  string
@@ -150,6 +158,12 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runReadySetCommand(root, opts, stdout, stderr)
 	case "ready-set-selftest":
 		return runReadySetSelftest(stdout, stderr)
+	case "manifest-contract":
+		return runManifestContractCommand(root, opts, stdout, stderr)
+	case "manifest-contract-selftest":
+		return runManifestContractSelftest(stdout, stderr)
+	case "gate-ledger":
+		return runGateLedgerCommand(root, opts, stdout, stderr)
 	case "scope-lease":
 		return runScopeLeaseCommand(root, opts, stdout, stderr)
 	case "scope-lease-selftest":
@@ -227,7 +241,7 @@ func parse(args []string) (options, error) {
 	}
 	knownCommands := map[string]bool{
 		"core": true, "local-release": true, "live-release": true,
-		"ready-set": true, "ready-set-selftest": true,
+		"ready-set": true, "ready-set-selftest": true, "manifest-contract": true, "manifest-contract-selftest": true, "gate-ledger": true,
 		"scope-lease": true, "scope-lease-selftest": true,
 		"skill-lint": true, "skill-sync-report": true,
 		"marketplace-firebreak": true, "marketplace-firebreak-selftest": true,
@@ -291,6 +305,9 @@ func parse(args []string) (options, error) {
 	fs.StringVar(&opts.sourceType, "source-type", "local-reviewed", "marketplace source type")
 	fs.StringVar(&opts.upstreamRepo, "upstream-repo", "", "upstream repository or source URL")
 	fs.StringVar(&opts.installTargets, "install-targets", "", "comma-separated install targets: codex,copilot,agents,none")
+	fs.StringVar(&opts.gate, "gate", "", "gate_id to validate")
+	fs.StringVar(&opts.allowedNext, "allowed-next", "", "expected allowed_next_action")
+	fs.BoolVar(&opts.allowQuarantine, "allow-quarantine", false, "accept status=quarantined as advanceable")
 	home, _ := os.UserHomeDir()
 	fs.StringVar(&opts.codexSkillsRoot, "codex-skills-root", filepath.Join(home, ".codex", "skills"), "Codex skills root")
 	fs.StringVar(&opts.copilotSkillsRoot, "copilot-skills-root", filepath.Join(home, ".copilot", "skills"), "Copilot skills root")
@@ -315,8 +332,9 @@ func parse(args []string) (options, error) {
 	if !dryRunAllowed[opts.command] && opts.dryRun {
 		return options{}, fmt.Errorf("--dry-run is only supported for gate commands")
 	}
-	if opts.command != "ready-set" && opts.manifest != "" {
-		return options{}, fmt.Errorf("--manifest is only supported for ready-set")
+	manifestCommands := map[string]bool{"ready-set": true, "manifest-contract": true, "gate-ledger": true}
+	if !manifestCommands[opts.command] && opts.manifest != "" {
+		return options{}, fmt.Errorf("--manifest is only supported for manifest commands")
 	}
 	if opts.command != "scope-lease" && opts.ledger != "" {
 		return options{}, fmt.Errorf("--ledger is only supported for scope-lease")
@@ -329,6 +347,18 @@ func parse(args []string) (options, error) {
 	}
 	if opts.command == "ready-set" && opts.manifest == "" {
 		return options{}, fmt.Errorf("ready-set requires --manifest")
+	}
+	if opts.command == "manifest-contract" && opts.manifest == "" {
+		return options{}, fmt.Errorf("manifest-contract requires --manifest")
+	}
+	if opts.command == "gate-ledger" && opts.manifest == "" {
+		return options{}, fmt.Errorf("gate-ledger requires --manifest")
+	}
+	if opts.command != "gate-ledger" && (opts.gate != "" || opts.allowedNext != "" || opts.allowQuarantine) {
+		return options{}, fmt.Errorf("--gate, --allowed-next, and --allow-quarantine are only supported for gate-ledger")
+	}
+	if opts.command == "gate-ledger" && opts.gate == "" {
+		return options{}, fmt.Errorf("gate-ledger requires --gate")
 	}
 	if opts.command == "scope-lease" && opts.ledger == "" {
 		return options{}, fmt.Errorf("scope-lease requires --ledger")

@@ -7,10 +7,10 @@ status: completed
 workflow_shape: "skill-bundle-change"
 scope-verified-files:
   - docs/brainstorms/2026-05-31-marketplace-promotion-cli-requirements.md
-  - docs/plans/2026-05-31-060-kb-marketplace-promotion-cli-manifest.md
-  - docs/plans/2026-05-31-061-tool-marketplace-promotion-cli-plan.md
-  - docs/plans/2026-05-31-062-tool-marketplace-promotion-selftest-plan.md
-  - docs/plans/2026-05-31-063-doc-marketplace-promotion-cli-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-060-kb-marketplace-promotion-cli-manifest.md
+  - docs/plans/archive/2026-05/2026-05-31-061-tool-marketplace-promotion-cli-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-062-tool-marketplace-promotion-selftest-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-063-doc-marketplace-promotion-cli-plan.md
   - scripts/promote-marketplace-skill.ps1
   - scripts/promote-marketplace-skill-selftest.ps1
   - .github/skills/kb-check/scripts/kb-check.ps1
@@ -24,7 +24,7 @@ scope-verified-files:
 slices:
   - id: slice-061
     title: "Build single-command marketplace promotion"
-    path: docs/plans/2026-05-31-061-tool-marketplace-promotion-cli-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-061-tool-marketplace-promotion-cli-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -41,7 +41,7 @@ slices:
     protected_oracles: []
   - id: slice-062
     title: "Add promotion selftest to kb-check"
-    path: docs/plans/2026-05-31-062-tool-marketplace-promotion-selftest-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-062-tool-marketplace-promotion-selftest-plan.md
     blockers: [slice-061]
     verification: integration
     test_level: functional-cli
@@ -58,7 +58,7 @@ slices:
     protected_oracles: []
   - id: slice-063
     title: "Document the safe fast path"
-    path: docs/plans/2026-05-31-063-doc-marketplace-promotion-cli-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-063-doc-marketplace-promotion-cli-plan.md
     blockers: [slice-062]
     verification: verification-only
     test_level: functional-cli

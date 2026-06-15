@@ -43,6 +43,7 @@ func TestDiscoverSkillRepoChecksIncludesNativeValidators(t *testing.T) {
 		"kb-release-gate-selftest",
 		"kb-work-ready-set-selftest",
 		"kb-work-scope-lease-selftest",
+		"manifest-contract-selftest",
 		"marketplace-promotion-selftest",
 		"review-reference-guard",
 		"route-complexity-eval",

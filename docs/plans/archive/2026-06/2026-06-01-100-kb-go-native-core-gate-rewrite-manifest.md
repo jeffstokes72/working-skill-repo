@@ -8,7 +8,7 @@ workflow_shape: "pipeline-change"
 slices:
   - id: slice-101
     title: "Define native Go gate parity contract"
-    path: docs/plans/2026-06-01-101-tool-go-gate-parity-contract-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-101-tool-go-gate-parity-contract-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -29,7 +29,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-102
     title: "Implement native Go kb-check core runner"
-    path: docs/plans/2026-06-01-102-tool-go-native-kb-check-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-102-tool-go-native-kb-check-plan.md
     blockers: [slice-101]
     verification: integration
     test_level: functional-cli
@@ -46,7 +46,7 @@ slices:
     protected_oracles: []
   - id: slice-103
     title: "Implement native Go release gate"
-    path: docs/plans/2026-06-01-103-tool-go-native-release-gate-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-103-tool-go-native-release-gate-plan.md
     blockers: [slice-102]
     verification: integration
     test_level: functional-cli
@@ -63,7 +63,7 @@ slices:
     protected_oracles: []
   - id: slice-104
     title: "Prove PS1 and Go parity on Windows"
-    path: docs/plans/2026-06-01-104-tool-go-ps1-parity-proof-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-104-tool-go-ps1-parity-proof-plan.md
     blockers: [slice-103]
     verification: integration
     test_level: functional-cli
@@ -80,7 +80,7 @@ slices:
     protected_oracles: []
   - id: slice-105
     title: "Remove PS1 gate dependency after proof"
-    path: docs/plans/2026-06-01-105-tool-remove-ps1-gate-dependency-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-105-tool-remove-ps1-gate-dependency-plan.md
     blockers: [slice-104]
     verification: integration
     test_level: functional-cli

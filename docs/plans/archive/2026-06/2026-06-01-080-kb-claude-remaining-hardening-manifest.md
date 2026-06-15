@@ -11,16 +11,16 @@ scope-verified-files:
   - docs/brainstorms/2026-06-01-skill-surface-minimality-requirements.md
   - docs/brainstorms/2026-06-01-cross-platform-tooling-requirements.md
   - docs/brainstorms/2026-06-01-upstream-selective-sync-requirements.md
-  - docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md
-  - docs/plans/2026-06-01-081-tool-release-confidence-gate-plan.md
-  - docs/plans/2026-06-01-082-tool-skill-surface-minimality-report-plan.md
-  - docs/plans/2026-06-01-083-tool-go-core-gate-wrapper-plan.md
-  - docs/plans/2026-06-01-084-tool-upstream-delta-report-plan.md
-  - docs/plans/2026-06-01-085-cold-trim-deletion-queue-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md
+  - docs/plans/archive/2026-06/2026-06-01-081-tool-release-confidence-gate-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-082-tool-skill-surface-minimality-report-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-083-tool-go-core-gate-wrapper-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-084-tool-upstream-delta-report-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-085-cold-trim-deletion-queue-plan.md
 slices:
   - id: slice-081
     title: "Add release confidence gate profiles"
-    path: docs/plans/2026-06-01-081-tool-release-confidence-gate-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-081-tool-release-confidence-gate-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -41,7 +41,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-082
     title: "Classify skill and reviewer-agent minimality"
-    path: docs/plans/2026-06-01-082-tool-skill-surface-minimality-report-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-082-tool-skill-surface-minimality-report-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -62,7 +62,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-083
     title: "Add Go core-gate wrapper"
-    path: docs/plans/2026-06-01-083-tool-go-core-gate-wrapper-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-083-tool-go-core-gate-wrapper-plan.md
     blockers: [slice-081]
     verification: integration
     test_level: functional-cli
@@ -83,7 +83,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-084
     title: "Add read-only ATV upstream delta report"
-    path: docs/plans/2026-06-01-084-tool-upstream-delta-report-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-084-tool-upstream-delta-report-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -104,7 +104,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-085
     title: "Park trim and deletion execution queue"
-    path: docs/plans/2026-06-01-085-cold-trim-deletion-queue-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-085-cold-trim-deletion-queue-plan.md
     blockers: [slice-082]
     verification: verification-only
     test_level: none

@@ -71,18 +71,18 @@ The principle is separation of concerns:
 
 | Workstream | Brainstorm | Manifest | Status | Notes |
 |---|---|---|---|---|
-| Harness proof hardening | `skipped-clear` | `docs/plans/2026-05-31-000-kb-proof-pipeline-spike-manifest.md` | reviewed | Persisted baselines, protected SHA manifests, and coded pipeline spike. |
-| Base-layer contract | `docs/brainstorms/2026-05-31-base-layer-contract-requirements.md` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Base kept narrow; first-principles trimmed; surface reporting added. |
-| Repo-local learning model | `docs/brainstorms/2026-05-31-repo-local-learning-landmines-requirements.md` | `docs/plans/2026-05-31-010-kb-learning-landmines-manifest.md` | reviewed | Landmine schema, learn fields, evolve approval, and KB loading added. |
-| Loaded-surface measurement | `skipped-clear` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Route -> skills -> lines/token estimate -> SHA report implemented. |
-| Reference graph cleanup | `skipped-clear` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Legacy refs fixed; scanner catches unknown local skill references. |
-| Architecture deepening lane | `docs/brainstorms/2026-05-31-architecture-deepening-lane-requirements.md` | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Added compact lazy lane distinct from cleanup and diff review. |
-| Workflow-shape routing | `docs/brainstorms/2026-05-31-workflow-shape-routing-requirements.md` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | `kb-start` classifies direct edit, skill bundle, pipeline, and epic shapes. |
-| Base skill trim | `docs/brainstorms/2026-05-31-base-skill-trim-requirements.md` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Trimmed `kb-first-principles`; left other base skills intact behind measurements. |
-| Core workflow trim | `docs/brainstorms/2026-05-31-core-workflow-trim-requirements.md` | `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Preserved gates; deferred larger extraction until measured separately. |
-| Narrow lane trim | `docs/brainstorms/2026-05-31-narrow-lane-trim-requirements.md` | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Kept narrow lanes lazy where distinct proof value remains. |
-| Questionable global skill trim | `docs/brainstorms/2026-05-31-questionable-global-skill-trim-requirements.md` | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | TDD and todo lanes trimmed into compatibility/lazy roles. |
-| Propagation policy | blank | `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots are expected to stay hash-synced for tracked skills. |
+| Harness proof hardening | `skipped-clear` | `docs/plans/archive/2026-05/2026-05-31-000-kb-proof-pipeline-spike-manifest.md` | reviewed | Persisted baselines, protected SHA manifests, and coded pipeline spike. |
+| Base-layer contract | `docs/brainstorms/2026-05-31-base-layer-contract-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Base kept narrow; first-principles trimmed; surface reporting added. |
+| Repo-local learning model | `docs/brainstorms/2026-05-31-repo-local-learning-landmines-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-010-kb-learning-landmines-manifest.md` | reviewed | Landmine schema, learn fields, evolve approval, and KB loading added. |
+| Loaded-surface measurement | `skipped-clear` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Route -> skills -> lines/token estimate -> SHA report implemented. |
+| Reference graph cleanup | `skipped-clear` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Legacy refs fixed; scanner catches unknown local skill references. |
+| Architecture deepening lane | `docs/brainstorms/2026-05-31-architecture-deepening-lane-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Added compact lazy lane distinct from cleanup and diff review. |
+| Workflow-shape routing | `docs/brainstorms/2026-05-31-workflow-shape-routing-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | `kb-start` classifies direct edit, skill bundle, pipeline, and epic shapes. |
+| Base skill trim | `docs/brainstorms/2026-05-31-base-skill-trim-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Trimmed `kb-first-principles`; left other base skills intact behind measurements. |
+| Core workflow trim | `docs/brainstorms/2026-05-31-core-workflow-trim-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md` | reviewed | Preserved gates; deferred larger extraction until measured separately. |
+| Narrow lane trim | `docs/brainstorms/2026-05-31-narrow-lane-trim-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Kept narrow lanes lazy where distinct proof value remains. |
+| Questionable global skill trim | `docs/brainstorms/2026-05-31-questionable-global-skill-trim-requirements.md` | `docs/plans/archive/2026-05/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | TDD and todo lanes trimmed into compatibility/lazy roles. |
+| Propagation policy | blank | `docs/plans/archive/2026-05/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md` | reviewed | Working, global, ATV `.github`, ATV scaffold, and ATV plugin skill roots are expected to stay hash-synced for tracked skills. |
 
 ## Dependency Map
 

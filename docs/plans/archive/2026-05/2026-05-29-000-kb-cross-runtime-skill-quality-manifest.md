@@ -30,7 +30,7 @@ scope-verified-files:
 slices:
   - id: slice-001
     title: "Define cross-runtime quality contract"
-    path: docs/plans/2026-05-29-001-config-cross-runtime-quality-contract-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-001-config-cross-runtime-quality-contract-plan.md
     blockers: []
     verification: verification-only
     test_level: none
@@ -46,7 +46,7 @@ slices:
     notes: "scope-check: forecast=2 changed=2 discovered=0 unexplained=0; proof: ConvertFrom-Json config/skill-quality.json + git diff --check; memory-impact: durable; areas=testing,quality-contract; docs=docs/context/operations/testing.md"
   - id: slice-002
     title: "Add deterministic skill lint"
-    path: docs/plans/2026-05-29-002-tool-skill-lint-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-002-tool-skill-lint-plan.md
     blockers: [slice-001]
     verification: functional-cli
     test_level: functional-cli
@@ -62,7 +62,7 @@ slices:
     notes: "scope-check: forecast=2 changed=2 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1 exit=0 warnings=19; memory-impact: operational"
   - id: slice-003
     title: "Add route and complexity eval fixtures"
-    path: docs/plans/2026-05-29-003-eval-route-complexity-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-003-eval-route-complexity-plan.md
     blockers: [slice-001]
     verification: functional-cli
     test_level: functional-cli
@@ -78,7 +78,7 @@ slices:
     notes: "scope-check: forecast=4 changed=11 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/route-complexity-eval.ps1 exit=0 fixtures=8; memory-impact: operational"
   - id: slice-004
     title: "Wire skill quality into kb-check"
-    path: docs/plans/2026-05-29-004-tool-kb-check-skill-quality-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-004-tool-kb-check-skill-quality-plan.md
     blockers: [slice-002, slice-003]
     verification: functional-cli
     test_level: functional-cli
@@ -94,7 +94,7 @@ slices:
     notes: "scope-check: forecast=2 changed=2 discovered=0 unexplained=0; proof: .github/skills/kb-check/scripts/kb-check.ps1 -List and -All exit=0; memory-impact: durable; areas=testing; docs=docs/context/operations/testing.md"
   - id: slice-005
     title: "Add read-only sync drift report"
-    path: docs/plans/2026-05-29-005-tool-sync-drift-report-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-005-tool-sync-drift-report-plan.md
     blockers: [slice-001]
     verification: functional-cli
     test_level: functional-cli
@@ -110,7 +110,7 @@ slices:
     notes: "scope-check: forecast=3 changed=3 discovered=0 unexplained=0; proof: scripts/skill-sync-report.ps1 exit=0 required_issues=0 and kb-check -All exit=0; memory-impact: durable; areas=testing,sync; docs=docs/context/operations/testing.md"
   - id: slice-006
     title: "Document canonical quality workflow"
-    path: docs/plans/2026-05-29-006-docs-quality-workflow-plan.md
+    path: docs/plans/archive/2026-05/2026-05-29-006-docs-quality-workflow-plan.md
     blockers: [slice-004, slice-005]
     verification: verification-only
     test_level: none

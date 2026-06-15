@@ -7,7 +7,7 @@ status: reviewed
 slices:
   - id: slice-001
     title: "Persist skill-eval regression baselines"
-    path: docs/plans/2026-05-31-001-tool-skill-eval-regression-baseline-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-001-tool-skill-eval-regression-baseline-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -23,7 +23,7 @@ slices:
     notes: "scope-check: forecast=5 changed=4 discovered=1 unexplained=0; scope-discovery: scripts/skill-eval-baseline-selftest.ps1 - required deterministic baseline regression selftest; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-baseline-selftest.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval.ps1 -Json; proof: git diff --check; review-fix: baseline comparison now fails negative fixtures that incorrectly start passing; memory-impact: operational; docs=docs/context/operations/testing.md"
   - id: slice-002
     title: "Build tiny coded pipeline spike"
-    path: docs/plans/2026-05-31-002-tool-kb-pipeline-spike-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-002-tool-kb-pipeline-spike-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -39,7 +39,7 @@ slices:
     notes: "scope-check: forecast=4 changed=6 discovered=2 unexplained=0; scope-discovery: .gitignore - required to keep generated pipeline runs out of git; scope-discovery: scripts/kb-pipeline-selftest.ps1 - required deterministic pipeline spike selftest; proof: powershell -ExecutionPolicy Bypass -File scripts/kb-pipeline-selftest.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/kb-pipeline.ps1 -Status; proof: git diff --check; memory-impact: operational; docs=docs/context/operations/testing.md"
   - id: slice-003
     title: "Add protected oracle pipeline contract"
-    path: docs/plans/2026-05-31-003-workflow-protected-oracle-contract-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-003-workflow-protected-oracle-contract-plan.md
     blockers: [slice-002]
     verification: integration
     test_level: cli

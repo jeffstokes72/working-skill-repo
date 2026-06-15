@@ -65,12 +65,12 @@ The resync is a merge, not an overwrite:
 
 | Workstream | Brainstorm | Manifest | Status | Notes |
 |---|---|---|---|---|
-| Clean upstream integration audit | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Create clean compare surface and machine-readable skill delta inventory. |
-| Shared overlap skill merge | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Three-way review `ce-compound`, `ce-compound-refresh`, `ce-review`, `document-review`, `evolve`, and `learn`. |
-| KB preservation and propagation | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Reject upstream KB deletions and reassert working repo as source for tracked KB skills. |
-| ATV-native refresh | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Review ATV-owned skills such as `atv-security`, git/release helpers, and docs skills; keep only used or clearly useful changes. |
-| Superseded workflow cleanup | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Remove transient `lfg`, `slfg`, and `workflows-*` imports; keep already-ported review mechanics in KB/CE skills. |
-| Proof, docs, and release sync | skipped-clear | `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Run gates, update memory/docs, and sync approved roots only. |
+| Clean upstream integration audit | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Create clean compare surface and machine-readable skill delta inventory. |
+| Shared overlap skill merge | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Three-way review `ce-compound`, `ce-compound-refresh`, `ce-review`, `document-review`, `evolve`, and `learn`. |
+| KB preservation and propagation | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Reject upstream KB deletions and reassert working repo as source for tracked KB skills. |
+| ATV-native refresh | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Review ATV-owned skills such as `atv-security`, git/release helpers, and docs skills; keep only used or clearly useful changes. |
+| Superseded workflow cleanup | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Remove transient `lfg`, `slfg`, and `workflows-*` imports; keep already-ported review mechanics in KB/CE skills. |
+| Proof, docs, and release sync | skipped-clear | `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md` | planned | Run gates, update memory/docs, and sync approved roots only. |
 
 ## Dependency Map
 
@@ -91,7 +91,7 @@ for all accepted changes.
 
 Runnable after planning:
 
-1. `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md`
+1. `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md`
 
 ## Human Checkpoints
 

@@ -7,7 +7,7 @@ status: reviewed
 slices:
   - id: slice-001
     title: "Define local landmine schema and lifecycle"
-    path: docs/plans/2026-05-31-011-doc-landmine-schema-lifecycle-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-011-doc-landmine-schema-lifecycle-plan.md
     blockers: []
     verification: docs-check
     test_level: static
@@ -23,7 +23,7 @@ slices:
     notes: "scope-check: forecast=3 changed=3 discovered=0 unexplained=0; proof: git diff --check; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: rg -n Active Landmines/owner_surface docs/context/landmines.md docs/context/PROJECT.md docs/context/operations/testing.md; memory-impact: durable; areas=landmine local memory schema; docs=docs/context/landmines.md,docs/context/PROJECT.md"
   - id: slice-002
     title: "Add landmine evidence fields to learn flow"
-    path: docs/plans/2026-05-31-012-skill-learn-landmine-fields-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-012-skill-learn-landmine-fields-plan.md
     blockers: [slice-001]
     verification: integration
     test_level: cli
@@ -39,7 +39,7 @@ slices:
     notes: "scope-check: forecast=3 changed=1 discovered=0 unexplained=0; scope-forecast-unused: config/skill-quality.json - no lint config change needed; scope-forecast-unused: scripts/skill-lint.ps1 - no deterministic generic-landmine scanner added yet; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: rg -n Capture Landmine/owner_surface .github/skills/learn/SKILL.md; proof: git diff --check; memory-impact: durable; areas=learn landmine candidate contract"
   - id: slice-003
     title: "Gate evolve promotion and sync"
-    path: docs/plans/2026-05-31-013-skill-evolve-approval-gate-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-013-skill-evolve-approval-gate-plan.md
     blockers: [slice-001]
     verification: integration
     test_level: cli
@@ -55,7 +55,7 @@ slices:
     notes: "scope-check: forecast=3 changed=2 discovered=0 unexplained=0; scope-forecast-unused: scripts/skill-sync-report.ps1 - existing required/optional sync drift check already blocks required target drift; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: rg -n Human Approval Gate/Promote these generated .github/skills/evolve/SKILL.md docs/context/operations/testing.md; proof: git diff --check; memory-impact: durable; areas=evolve generated skill approval gate"
   - id: slice-004
     title: "Load and resolve active landmines through KB workflows"
-    path: docs/plans/2026-05-31-014-skill-kb-map-landmine-loading-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-014-skill-kb-map-landmine-loading-plan.md
     blockers: [slice-001]
     verification: integration
     test_level: cli

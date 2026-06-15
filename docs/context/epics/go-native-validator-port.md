@@ -34,12 +34,12 @@ parity proof, then the `.ps1` is deleted or demoted out of the default gate.
 
 | Workstream | Brainstorm | Manifest | Status | Notes |
 |---|---|---|---|---|
-| Swarm proof utilities | skipped-clear | `docs/plans/2026-06-01-120-kb-go-validator-port-wave-1-manifest.md` | done | Ported ready-set and scope-lease checks to native Go; removed four `.ps1` files. |
-| Full PowerShell replacement matrix | skipped-clear | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | planned | One pending slice per remaining `.ps1`, each with a Go target and required test/proof. |
-| Deterministic static reports | skipped-clear | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `skill-lint`, `skill-sync-report`, marketplace firebreak, surface/minimality reports. |
-| Eval scorers and regression | skipped-clear | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `route-complexity-eval`, `skill-eval`, `skill-eval-quality`, baseline/regression/claims. |
-| Pipeline and promotion tools | skipped-clear | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `kb-pipeline`, marketplace promotion, upstream delta. |
-| Live model adapters | skipped-clear | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued-last | Codex/GHCP runners, live corpus, observed trace wrapper. |
+| Swarm proof utilities | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-120-kb-go-validator-port-wave-1-manifest.md` | done | Ported ready-set and scope-lease checks to native Go; removed four `.ps1` files. |
+| Full PowerShell replacement matrix | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | planned | One pending slice per remaining `.ps1`, each with a Go target and required test/proof. |
+| Deterministic static reports | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `skill-lint`, `skill-sync-report`, marketplace firebreak, surface/minimality reports. |
+| Eval scorers and regression | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `route-complexity-eval`, `skill-eval`, `skill-eval-quality`, baseline/regression/claims. |
+| Pipeline and promotion tools | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued | `kb-pipeline`, marketplace promotion, upstream delta. |
+| Live model adapters | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` | queued-last | Codex/GHCP runners, live corpus, observed trace wrapper. |
 
 ## Dependency Map
 

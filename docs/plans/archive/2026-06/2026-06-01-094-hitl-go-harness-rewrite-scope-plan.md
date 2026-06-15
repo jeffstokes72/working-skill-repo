@@ -44,4 +44,4 @@ Answered 2026-06-01: build the full non-PowerShell rewrite if it works for
 Windows+; remove PS1 only after proof.
 
 Follow-up manifest:
-`docs/plans/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md`.
+`docs/plans/archive/2026-06/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md`.

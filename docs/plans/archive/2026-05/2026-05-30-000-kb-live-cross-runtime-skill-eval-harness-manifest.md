@@ -18,7 +18,7 @@ scope-verified-files:
 slices:
   - id: slice-001
     title: "Add GHCP live skill eval adapter"
-    path: docs/plans/2026-05-30-001-tool-ghcp-live-skill-eval-adapter-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-001-tool-ghcp-live-skill-eval-adapter-plan.md
     blockers: []
     verification: functional
     test_level: functional-cli
@@ -34,7 +34,7 @@ slices:
     notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must stop listing GHCP adapter as missing; scope-discovery: docs/context/operations/testing.md - testing operations must list implemented GHCP adapter; scope-check: forecast=3 changed=5 discovered=2 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix -DryRun exit=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-ghcp.ps1 -FixtureId tiny-typo-fix exit=0 result=.atv/eval-runs/20260530-014242-tiny-typo-fix-ghcp/result.json score=0 issues; memory-impact: durable; areas=testing,eval-map"
   - id: slice-002
     title: "Wire adapter dry-runs into canonical checks"
-    path: docs/plans/2026-05-30-002-tool-adapter-dry-run-kb-check-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-002-tool-adapter-dry-run-kb-check-plan.md
     blockers: [slice-001]
     verification: functional
     test_level: functional-cli
@@ -50,7 +50,7 @@ slices:
     notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; scope-discovery: <atv-repo>/.github/skills/kb-check/scripts/kb-check.ps1 - required ATV skill sync target; proof: kb-check -List showed skill-eval-ghcp-dry-run; proof: kb-check -All exit=0 including Codex and GHCP dry-runs; proof: skill-sync-report required issues=0; memory-impact: durable; areas=testing,quality-contract,sync"
   - id: slice-003
     title: "Add live cross-runtime corpus runner"
-    path: docs/plans/2026-05-30-003-tool-live-cross-runtime-corpus-runner-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-003-tool-live-cross-runtime-corpus-runner-plan.md
     blockers: [slice-001]
     verification: functional
     test_level: functional-cli
@@ -66,7 +66,7 @@ slices:
     notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must mention explicit corpus runner; scope-discovery: docs/context/operations/testing.md - testing operations must document corpus dry-run/live boundary; scope-check: forecast=3 changed=5 discovered=2 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-live-corpus.ps1 -FixtureId tiny-typo-fix -Runtime codex,ghcp -DryRun exit=0 results=2; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-run-live-corpus.ps1 -All -Runtime codex,ghcp -DryRun exit=0 results=16; memory-impact: durable; areas=testing,eval-map"
   - id: slice-004
     title: "Expand deterministic trace rule scoring"
-    path: docs/plans/2026-05-30-004-tool-trace-rule-scoring-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-004-tool-trace-rule-scoring-plan.md
     blockers: []
     verification: tdd
     test_level: functional-cli
@@ -82,7 +82,7 @@ slices:
     notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-forecast-unused: evals/skill-eval/result.schema.json - trace_rules are scorer-only and not emitted by live adapters yet; scope-check: forecast=4 changed=5 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval.ps1 exit=0 selftests=7 issues=0; proof: kb-check -All exit=0; memory-impact: operational"
   - id: slice-005
     title: "Add transcript-derived claim verifier"
-    path: docs/plans/2026-05-30-005-tool-transcript-claim-verifier-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-005-tool-transcript-claim-verifier-plan.md
     blockers: [slice-004]
     verification: tdd
     test_level: functional-cli
@@ -98,7 +98,7 @@ slices:
     notes: "scope-forecast: loaded 4 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must mention claim verifier; scope-discovery: docs/context/operations/testing.md - testing operations must list claim verifier selftest; scope-discovery: docs/context/eval-map.md - eval map must remove transcript-claim gap; scope-check: forecast=4 changed=9 discovered=3 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-claims.ps1 exit=0 cases=3 issues=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval.ps1 exit=0 selftests=9 issues=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-006
     title: "Add output quality rubric scorer"
-    path: docs/plans/2026-05-30-006-tool-output-quality-rubric-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-006-tool-output-quality-rubric-plan.md
     blockers: []
     verification: tdd
     test_level: functional-cli
@@ -114,7 +114,7 @@ slices:
     notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: .github/skills/kb-check/scripts/kb-check.ps1 - cheap deterministic quality selftest belongs in canonical gate; scope-discovery: README.md - visible quality workflow must remove output-quality as missing; scope-discovery: docs/context/operations/testing.md - testing docs must list quality selftest; scope-discovery: docs/context/eval-map.md - eval map must remove output-quality gap; scope-check: forecast=3 changed=8 discovered=4 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-quality.ps1 exit=0 cases=5 issues=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-007
     title: "Add cost and regression reporting"
-    path: docs/plans/2026-05-30-007-tool-cost-regression-report-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-007-tool-cost-regression-report-plan.md
     blockers: [slice-003]
     verification: functional
     test_level: functional-cli
@@ -130,7 +130,7 @@ slices:
     notes: "scope-forecast: loaded 3 expected files + 0 convention-matched tests; regression-snapshot: skipped - no .atv/snapshots directory; scope-discovery: README.md - visible quality workflow must remove cost/regression as missing; scope-discovery: docs/context/operations/testing.md - testing docs must document regression report command; scope-discovery: docs/context/eval-map.md - eval map must remove cost/regression gap; scope-check: forecast=3 changed=7 discovered=3 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-regression-report.ps1 -RunRoot .atv/eval-runs exit=0 rows=18 pass=18; proof: baseline self-compare exit=0; memory-impact: durable; areas=testing,eval-map"
   - id: slice-008
     title: "Add eval-map scaffold negative validation"
-    path: docs/plans/2026-05-30-008-skill-eval-map-negative-validation-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-008-skill-eval-map-negative-validation-plan.md
     blockers: []
     verification: verification-only
     test_level: none

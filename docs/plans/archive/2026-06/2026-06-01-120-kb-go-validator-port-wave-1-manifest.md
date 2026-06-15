@@ -15,7 +15,7 @@ scope-verified-files:
   - docs/context/PROJECT.md
   - docs/context/epics/go-native-validator-port.md
   - docs/context/operations/testing.md
-  - docs/plans/2026-06-01-120-kb-go-validator-port-wave-1-manifest.md
+  - docs/plans/archive/2026-06/2026-06-01-120-kb-go-validator-port-wave-1-manifest.md
   - scripts/kb-work-ready-set.ps1
   - scripts/kb-work-ready-set-selftest.ps1
   - scripts/kb-work-scope-lease.ps1
@@ -24,7 +24,7 @@ scope-verified-files:
 slices:
   - id: slice-121
     title: "Port swarm proof utilities to native Go"
-    path: docs/plans/2026-06-01-121-tool-go-swarm-proof-port-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-121-tool-go-swarm-proof-port-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli

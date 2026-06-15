@@ -7,7 +7,7 @@ status: reviewed
 slices:
   - id: slice-001
     title: "Add workflow-shape route fixtures"
-    path: docs/plans/2026-05-31-021-eval-workflow-shape-route-fixtures-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-021-eval-workflow-shape-route-fixtures-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -23,7 +23,7 @@ slices:
     notes: "scope-check: forecast=3 changed=5 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/route-complexity-eval.ps1; proof: git diff --check; memory-impact: durable; areas=route workflow-shape fixture coverage; docs=docs/context/eval-map.md"
   - id: slice-002
     title: "Add compact shape classifier to kb-start and manifests"
-    path: docs/plans/2026-05-31-022-skill-kb-start-shape-classifier-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-022-skill-kb-start-shape-classifier-plan.md
     blockers: [slice-001]
     verification: integration
     test_level: cli
@@ -39,7 +39,7 @@ slices:
     notes: "scope-check: forecast=3 changed=3 discovered=0 unexplained=0; proof: powershell -ExecutionPolicy Bypass -File scripts/route-complexity-eval.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: rg -n Workflow Shape Check/workflow_shape .github/skills/kb-start/SKILL.md .github/skills/kb-plan/SKILL.md .github/skills/kb-epic/SKILL.md; memory-impact: durable; areas=kb-start shape routing and manifest workflow_shape"
   - id: slice-003
     title: "Implement loaded-surface reporting"
-    path: docs/plans/2026-05-31-023-tool-loaded-surface-report-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-023-tool-loaded-surface-report-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -55,7 +55,7 @@ slices:
     notes: "scope-check: forecast=4 changed=3 discovered=0 unexplained=0; scope-forecast-unused: config/skill-quality.json - route map hardcoded in MVP script until real use proves config needed; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-surface-report.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-surface-report.ps1 -Route base -Json; proof: git diff --check; memory-impact: operational; docs=docs/context/operations/testing.md"
   - id: slice-004
     title: "Trim base and core workflow skills behind measurements"
-    path: docs/plans/2026-05-31-024-skill-base-core-trim-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-024-skill-base-core-trim-plan.md
     blockers: [slice-001, slice-003]
     verification: integration
     test_level: cli
@@ -71,7 +71,7 @@ slices:
     notes: "scope-check: forecast=7 changed=1 discovered=0 unexplained=0; scope-forecast-unused: kb-start,kb-map,kb-brainstorm,kb-plan,kb-work,kb-complete - left untrimmed after measurement to avoid removing gates in same pass; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-surface-report.ps1 -Route base showed base 657 lines / token_estimate 4449 after earlier baseline 680 lines / token_estimate 6126; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: git diff --check; memory-impact: durable; areas=kb-first-principles trim"
   - id: slice-005
     title: "Clean reference graph and deletion blockers"
-    path: docs/plans/2026-05-31-025-tool-reference-graph-cleanup-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-025-tool-reference-graph-cleanup-plan.md
     blockers: []
     verification: integration
     test_level: cli

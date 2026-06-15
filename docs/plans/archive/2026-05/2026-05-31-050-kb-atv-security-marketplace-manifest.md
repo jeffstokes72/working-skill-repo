@@ -6,11 +6,11 @@ created: 2026-05-31
 status: reviewed
 workflow_shape: "skill-bundle-change"
 scope-verified-files:
-  - docs/plans/2026-05-31-050-kb-atv-security-marketplace-manifest.md
-  - docs/plans/2026-05-31-051-marketplace-security-promotion-plan.md
-  - docs/plans/2026-05-31-052-atv-security-osv-propagation-plan.md
-  - docs/plans/2026-05-31-053-global-atv-security-install-plan.md
-  - docs/plans/2026-05-31-054-promotion-proof-completion-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-050-kb-atv-security-marketplace-manifest.md
+  - docs/plans/archive/2026-05/2026-05-31-051-marketplace-security-promotion-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-052-atv-security-osv-propagation-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-053-global-atv-security-install-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-054-promotion-proof-completion-plan.md
   - todo.md
   - todo-done.md
   - .atv/kb-completions.txt
@@ -35,7 +35,7 @@ scope-verified-files:
 slices:
   - id: slice-051
     title: "Promote ATV security into the approved marketplace catalog"
-    path: docs/plans/2026-05-31-051-marketplace-security-promotion-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-051-marketplace-security-promotion-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -52,7 +52,7 @@ slices:
     protected_oracles: []
   - id: slice-052
     title: "Add OSV dependency-vulnerability proof to ATV security"
-    path: docs/plans/2026-05-31-052-atv-security-osv-propagation-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-052-atv-security-osv-propagation-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -69,7 +69,7 @@ slices:
     protected_oracles: []
   - id: slice-053
     title: "Install the approved ATV security skill into global targets"
-    path: docs/plans/2026-05-31-053-global-atv-security-install-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-053-global-atv-security-install-plan.md
     blockers: [slice-051, slice-052]
     verification: integration
     test_level: functional-cli
@@ -86,7 +86,7 @@ slices:
     protected_oracles: []
   - id: slice-054
     title: "Run completion proof and record memory state"
-    path: docs/plans/2026-05-31-054-promotion-proof-completion-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-054-promotion-proof-completion-plan.md
     blockers: [slice-053]
     verification: verification-only
     test_level: full

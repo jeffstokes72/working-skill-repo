@@ -8,7 +8,7 @@ test_level: full
 functional_risk: narrow
 hitl: false
 expected_files:
-  - path: "docs/plans/2026-05-31-050-kb-atv-security-marketplace-manifest.md"
+  - path: "docs/plans/archive/2026-05/2026-05-31-050-kb-atv-security-marketplace-manifest.md"
     op: edit
     scope: "Record slice statuses, scope checks, proof commands, and completion notes."
   - path: "todo.md"

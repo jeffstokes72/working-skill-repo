@@ -45,10 +45,10 @@ skill bundle.
 
 | Workstream | Brainstorm | Manifest | Status | Notes |
 |---|---|---|---|---|
-| Minimality runtime proof | skipped-clear | `docs/plans/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 091 adds evidence classes before deletion decisions. |
-| Go native core gate rewrite | skipped-clear | `docs/plans/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md` | done | Windows parity passed; top-level PS wrappers removed after proof. |
-| Cross-model benchmark prompts | skipped-clear | `docs/plans/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 092 creates prompt fixtures and deterministic validator. |
-| Copilot path instructions | skipped-clear | `docs/plans/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 093 adds path-scoped repo-local instructions. |
+| Minimality runtime proof | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 091 adds evidence classes before deletion decisions. |
+| Go native core gate rewrite | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md` | done | Windows parity passed; top-level PS wrappers removed after proof. |
+| Cross-model benchmark prompts | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 092 creates prompt fixtures and deterministic validator. |
+| Copilot path instructions | skipped-clear | `docs/plans/archive/2026-06/2026-06-01-090-kb-cold-storage-follow-through-manifest.md` | done | Slice 093 adds path-scoped repo-local instructions. |
 
 ## Dependency Map
 
@@ -70,9 +70,9 @@ Copilot path instructions
 
 Completed:
 
-- `docs/plans/2026-06-01-090-kb-cold-storage-follow-through-manifest.md`
+- `docs/plans/archive/2026-06/2026-06-01-090-kb-cold-storage-follow-through-manifest.md`
   slices 091, 092, and 093
-- `docs/plans/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md`
+- `docs/plans/archive/2026-06/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md`
   slices 101 through 105
 
 ## Human Checkpoints

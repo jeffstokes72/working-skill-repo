@@ -7,17 +7,17 @@ status: completed
 workflow_shape: "multi-stream-epic"
 scope-verified-files:
   - docs/context/epics/atv-upstream-resync.md
-  - docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md
-  - docs/plans/2026-05-31-071-tool-atv-clean-integration-audit-plan.md
-  - docs/plans/2026-05-31-072-skill-shared-overlap-merge-plan.md
-  - docs/plans/2026-05-31-073-skill-kb-preservation-propagation-plan.md
-  - docs/plans/2026-05-31-074-skill-atv-native-refresh-plan.md
-  - docs/plans/2026-05-31-075-superseded-workflow-cleanup-plan.md
-  - docs/plans/2026-05-31-076-doc-proof-release-sync-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md
+  - docs/plans/archive/2026-05/2026-05-31-071-tool-atv-clean-integration-audit-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-072-skill-shared-overlap-merge-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-073-skill-kb-preservation-propagation-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-074-skill-atv-native-refresh-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-075-superseded-workflow-cleanup-plan.md
+  - docs/plans/archive/2026-05/2026-05-31-076-doc-proof-release-sync-plan.md
 slices:
   - id: slice-071
     title: "Build clean ATV integration inventory"
-    path: docs/plans/2026-05-31-071-tool-atv-clean-integration-audit-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-071-tool-atv-clean-integration-audit-plan.md
     blockers: []
     verification: audit-artifact
     test_level: functional-cli
@@ -34,7 +34,7 @@ slices:
     protected_oracles: []
   - id: slice-072
     title: "Merge shared overlap skills"
-    path: docs/plans/2026-05-31-072-skill-shared-overlap-merge-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-072-skill-shared-overlap-merge-plan.md
     blockers: [slice-071]
     verification: review-plus-lint
     test_level: structural
@@ -51,7 +51,7 @@ slices:
     protected_oracles: []
   - id: slice-073
     title: "Preserve and resync KB-owned skills"
-    path: docs/plans/2026-05-31-073-skill-kb-preservation-propagation-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-073-skill-kb-preservation-propagation-plan.md
     blockers: [slice-071]
     verification: sync-report
     test_level: structural
@@ -68,7 +68,7 @@ slices:
     protected_oracles: []
   - id: slice-074
     title: "Review ATV-native skills selectively"
-    path: docs/plans/2026-05-31-074-skill-atv-native-refresh-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-074-skill-atv-native-refresh-plan.md
     blockers: [slice-071]
     verification: review-plus-lint
     test_level: structural
@@ -85,7 +85,7 @@ slices:
     protected_oracles: []
   - id: slice-075
     title: "Clean up superseded ATV workflow candidates"
-    path: docs/plans/2026-05-31-075-superseded-workflow-cleanup-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-075-superseded-workflow-cleanup-plan.md
     blockers: [slice-071]
     verification: audit-artifact
     test_level: functional-cli
@@ -102,7 +102,7 @@ slices:
     protected_oracles: []
   - id: slice-076
     title: "Run proof and update release memory"
-    path: docs/plans/2026-05-31-076-doc-proof-release-sync-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-076-doc-proof-release-sync-plan.md
     blockers: [slice-072, slice-073, slice-074, slice-075]
     verification: full-gate
     test_level: integration

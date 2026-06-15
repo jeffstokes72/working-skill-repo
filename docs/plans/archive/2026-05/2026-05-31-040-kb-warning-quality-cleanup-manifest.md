@@ -8,7 +8,7 @@ workflow_shape: "skill-bundle-change"
 slices:
   - id: slice-001
     title: "Add missing argument hints"
-    path: docs/plans/2026-05-31-041-skill-argument-hints-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-041-skill-argument-hints-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -25,7 +25,7 @@ slices:
     protected_oracles: []
   - id: slice-002
     title: "Codify local review fallback"
-    path: docs/plans/2026-05-31-042-review-local-fallback-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-042-review-local-fallback-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -42,7 +42,7 @@ slices:
     protected_oracles: []
   - id: slice-003
     title: "Compact optional sync warnings"
-    path: docs/plans/2026-05-31-043-sync-report-optional-summary-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-043-sync-report-optional-summary-plan.md
     blockers: []
     verification: integration
     test_level: cli

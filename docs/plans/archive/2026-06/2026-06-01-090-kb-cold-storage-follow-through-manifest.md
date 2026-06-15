@@ -8,7 +8,7 @@ workflow_shape: "multi-stream-epic"
 slices:
   - id: slice-091
     title: "Prove minimality candidates before deletion"
-    path: docs/plans/2026-06-01-091-tool-minimality-runtime-proof-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-091-tool-minimality-runtime-proof-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -29,7 +29,7 @@ slices:
         update_policy: "requires explicit plan update"
   - id: slice-092
     title: "Add cross-model benchmark prompt pack"
-    path: docs/plans/2026-06-01-092-eval-cross-model-benchmark-prompts-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-092-eval-cross-model-benchmark-prompts-plan.md
     blockers: []
     verification: integration
     test_level: functional-cli
@@ -46,7 +46,7 @@ slices:
     protected_oracles: []
   - id: slice-093
     title: "Add high-value Copilot path instructions"
-    path: docs/plans/2026-06-01-093-doc-copilot-path-instructions-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-093-doc-copilot-path-instructions-plan.md
     blockers: []
     verification: integration
     test_level: none
@@ -63,7 +63,7 @@ slices:
     protected_oracles: []
   - id: slice-094
     title: "Decide Go harness rewrite scope"
-    path: docs/plans/2026-06-01-094-hitl-go-harness-rewrite-scope-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-094-hitl-go-harness-rewrite-scope-plan.md
     blockers: []
     verification: hitl
     test_level: none
@@ -76,7 +76,7 @@ slices:
     next_agent_action: "Follow the dedicated Go rewrite manifest."
     human_action: ""
     can_continue_other_slices: true
-    notes: "Answered 2026-06-01: full non-PowerShell rewrite if it works for Windows+; remove PS1 only after parity proof. Follow-up manifest: docs/plans/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md."
+    notes: "Answered 2026-06-01: full non-PowerShell rewrite if it works for Windows+; remove PS1 only after parity proof. Follow-up manifest: docs/plans/archive/2026-06/2026-06-01-100-kb-go-native-core-gate-rewrite-manifest.md."
     protected_oracles: []
 ---
 

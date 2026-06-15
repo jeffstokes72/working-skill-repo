@@ -7,7 +7,7 @@ status: reviewed
 slices:
   - id: slice-001
     title: "Create architecture deepening lazy lane"
-    path: docs/plans/2026-05-31-031-skill-architecture-deepening-lane-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-031-skill-architecture-deepening-lane-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -23,7 +23,7 @@ slices:
     notes: "scope-check: forecast=3 changed=4 discovered=1 unexplained=0; scope-discovery: config/skill-quality.json - allowed route list required for new route fixture; proof: powershell -ExecutionPolicy Bypass -File scripts/route-complexity-eval.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; memory-impact: durable; areas=kb-architecture-deepening lazy lane and route fixtures"
   - id: slice-002
     title: "Absorb TDD anti-cheat behavior into pipeline"
-    path: docs/plans/2026-05-31-032-skill-tdd-absorb-delete-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-032-skill-tdd-absorb-delete-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -39,7 +39,7 @@ slices:
     notes: "scope-check: forecast=4 changed=3 discovered=0 unexplained=0; scope-forecast-unused: scripts/skill-lint.ps1 - stale tdd reference detection already covered by reference scan; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-eval-manifest-selftest.ps1; memory-impact: durable; areas=tdd compatibility lane and protected-oracle pipeline wording"
   - id: slice-003
     title: "Merge todo skills around root todo.md"
-    path: docs/plans/2026-05-31-033-skill-todo-lane-merge-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-033-skill-todo-lane-merge-plan.md
     blockers: []
     verification: integration
     test_level: cli
@@ -55,7 +55,7 @@ slices:
     notes: "scope-check: forecast=4 changed=4 discovered=1 unexplained=0; scope-discovery: kb-review/SKILL.md - review todo output still referenced file-per-todo storage; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; proof: rg -n backlog .github/skills README.md found no KB backlog adoption; memory-impact: durable; areas=root todo.md canonical workflow"
   - id: slice-004
     title: "Audit narrow lanes for deletion safety"
-    path: docs/plans/2026-05-31-034-skill-narrow-lane-deletion-safety-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-034-skill-narrow-lane-deletion-safety-plan.md
     blockers: [slice-003]
     verification: integration
     test_level: cli
@@ -71,7 +71,7 @@ slices:
     notes: "scope-check: forecast=5 changed=3 discovered=0 unexplained=0; scope-forecast-unused: kb-fix,kb-troubleshoot - retained unchanged after audit because route fixtures already distinguish them; proof: powershell -ExecutionPolicy Bypass -File scripts/route-complexity-eval.ps1; proof: powershell -ExecutionPolicy Bypass -File scripts/skill-lint.ps1; memory-impact: durable; docs=docs/context/research/2026-05-31-narrow-lane-deletion-safety.md"
   - id: slice-005
     title: "Codify propagation policy"
-    path: docs/plans/2026-05-31-035-doc-propagation-policy-plan.md
+    path: docs/plans/archive/2026-05/2026-05-31-035-doc-propagation-policy-plan.md
     blockers: []
     verification: docs-check
     test_level: static

@@ -28,25 +28,25 @@ Make this the highest-reliability portable skill bundle for the user's workflow:
 
 ## Current Focus
 
-No active work claimed. The canonical contributor and release gates are
+Skill bundle hardening plus the markdown/runtime contract extraction is locally complete; GitHub workflow changes are intentionally omitted from this push. The canonical contributor and release gates are
 `go run ./cmd/kbcheck core` and `go run ./cmd/kbcheck local-release`.
 
 Audit note: `docs/context/research/2026-05-29-skill-repo-gap-audit.md`
 Requirements: `docs/brainstorms/2026-05-29-cross-runtime-skill-quality-requirements.md`
-Manifest: `docs/plans/2026-05-29-000-kb-cross-runtime-skill-quality-manifest.md`
+Manifest: `docs/plans/archive/2026-05/2026-05-29-000-kb-cross-runtime-skill-quality-manifest.md`
 Live eval requirements: `docs/brainstorms/2026-05-30-live-cross-runtime-skill-eval-harness-requirements.md`
-Live eval manifest: `docs/plans/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md`
+Live eval manifest: `docs/plans/archive/2026-05/2026-05-30-000-kb-live-cross-runtime-skill-eval-harness-manifest.md`
 Skill minimalism epic: `docs/context/epics/skill-minimalism-and-proof-harness.md`
-Proof/pipeline manifest: `docs/plans/2026-05-31-000-kb-proof-pipeline-spike-manifest.md`
-Learning/landmines manifest: `docs/plans/2026-05-31-010-kb-learning-landmines-manifest.md`
-Routing/trim manifest: `docs/plans/2026-05-31-020-kb-routing-trim-manifest.md`
-Lazy-lane manifest: `docs/plans/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md`
+Proof/pipeline manifest: `docs/plans/archive/2026-05/2026-05-31-000-kb-proof-pipeline-spike-manifest.md`
+Learning/landmines manifest: `docs/plans/archive/2026-05/2026-05-31-010-kb-learning-landmines-manifest.md`
+Routing/trim manifest: `docs/plans/archive/2026-05/2026-05-31-020-kb-routing-trim-manifest.md`
+Lazy-lane manifest: `docs/plans/archive/2026-05/2026-05-31-030-kb-lazy-lane-consolidation-manifest.md`
 ATV resync epic: `docs/context/epics/atv-upstream-resync.md`
-ATV resync manifest: `docs/plans/2026-05-31-070-kb-atv-upstream-resync-manifest.md`
+ATV resync manifest: `docs/plans/archive/2026-05/2026-05-31-070-kb-atv-upstream-resync-manifest.md`
 Claude remaining hardening epic: `docs/context/epics/claude-remaining-hardening.md`
-Claude remaining hardening manifest: `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md`
+Claude remaining hardening manifest: `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md`
 Go validator replacement epic: `docs/context/epics/go-native-validator-port.md`
-Go validator full replacement manifest: `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md`
+Go validator full replacement manifest: `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md`
 
 ## Current Truth
 
@@ -72,8 +72,9 @@ Go validator full replacement manifest: `docs/plans/2026-06-01-130-kb-go-validat
 
 | Workstream | Status | Priority | Link |
 |---|---|---|---|
-| Claude remaining hardening | ✅ done | P1 | `docs/plans/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` |
-| Go validator full replacement | ✅ done | P1 | `docs/plans/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` |
+| Skill bundle hardening | 🔧 in_progress | P1 | `docs/plans/2026-06-10-011-kb-skill-bundle-hardening-manifest.md` |
+| Claude remaining hardening | ✅ done | P1 | `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` |
+| Go validator full replacement | ✅ done | P1 | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` |
 
 ## Queued Improvements
 
@@ -82,6 +83,9 @@ Go validator full replacement manifest: `docs/plans/2026-06-01-130-kb-go-validat
   block stop/phase advancement when the artifact says blocked, and prove the
   hooks with deterministic selftests instead of claiming hook enforcement from
   skill text alone.
+- ⬜ Continue markdown-to-runtime extraction — move remaining deterministic
+  hot-path skill rules into `kbcheck` checks; keep `SKILL.md` for judgment,
+  scope, escalation, and tradeoffs.
 - ⬜ Complete graphify/TokenMasterX brainstorm and plan — finish the large-repo
   map/bootstrap graph-routing work already started in `kb-map` and
   `kb-map-bootstrap`; decide thresholds, proof, install prerequisites,
@@ -98,6 +102,7 @@ None.
 
 ## Parked / Cold Storage
 
+- H2 controlled KB workflow experiment draft: `docs/brainstorms/2026-06-10-h2-controlled-kb-experiment.md` stays parked for human review; no harness changes authorized.
 - Deletion/trim decisions for remaining cold-storage candidates stay parked
   until a dedicated trim/deletion pass reviews the new evidence classes.
 - Live cross-model benchmark execution is parked; fixtures and deterministic
@@ -110,6 +115,6 @@ None.
 ## Work Log
 
 - 2026-06-03: Completed cross-platform adoption on-ramp. Added `npx` installer with core/full profiles, non-destructive backups, repo-local install, and Windows/macOS/Linux CI proof. Proof: installer smoke checks, `go test ./...`, `go run ./cmd/kbcheck core`, working/ATV `git diff --check`, and required sync report passed.
-- 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run ./cmd/kbcheck core`, `go run ./cmd/kbcheck local-release --json`, `go run ./cmd/kbcheck ready-set --manifest docs\plans\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
+- 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run ./cmd/kbcheck core`, `go run ./cmd/kbcheck local-release --json`, `go run ./cmd/kbcheck ready-set --manifest docs\plans\archive\2026-06\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
 
 Older completed work is archived in `todo-done.md`.

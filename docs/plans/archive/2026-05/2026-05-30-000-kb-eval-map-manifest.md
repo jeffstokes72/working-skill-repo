@@ -7,7 +7,7 @@ status: completed
 slices:
   - id: slice-001
     title: "Add kb-eval-map skill"
-    path: docs/plans/2026-05-30-001-skill-kb-eval-map-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-001-skill-kb-eval-map-plan.md
     blockers: []
     verification: verification-only
     test_level: functional-cli
@@ -23,7 +23,7 @@ slices:
     notes: "scope-check: forecast=1 changed=1 discovered=1 unexplained=0; scope-discovery: todo.md - board sync required by kb-work; proof: scripts/skill-lint.ps1 exit=0 warnings=19"
   - id: slice-002
     title: "Wire eval mapping into bootstrap and docs"
-    path: docs/plans/2026-05-30-002-bootstrap-eval-map-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-002-bootstrap-eval-map-plan.md
     blockers: [slice-001]
     verification: verification-only
     test_level: functional-cli
@@ -39,7 +39,7 @@ slices:
     notes: "scope-check: forecast=4 changed=8 discovered=4 unexplained=0; scope-discovery: docs/context/eval-map.md - eval map for this skill repo; scope-discovery: docs/context/PROJECT.md - map refresh; scope-discovery: AGENTS.md and .github/copilot-instructions.md - memory file list refresh; proof pending final kb-check -All and git diff --check"
   - id: slice-003
     title: "Propagate and verify eval-map skill bundle"
-    path: docs/plans/2026-05-30-003-sync-eval-map-plan.md
+    path: docs/plans/archive/2026-05/2026-05-30-003-sync-eval-map-plan.md
     blockers: [slice-001, slice-002]
     verification: verification-only
     test_level: functional-cli

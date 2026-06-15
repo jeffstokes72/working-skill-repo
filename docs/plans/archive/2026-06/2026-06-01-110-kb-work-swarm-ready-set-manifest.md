@@ -12,11 +12,11 @@ scope-verified-files:
   - docs/context/PROJECT.md
   - docs/context/architecture/kb-workflow.md
   - docs/context/operations/testing.md
-  - docs/plans/2026-06-01-110-kb-work-swarm-ready-set-manifest.md
-  - docs/plans/2026-06-01-111-skill-kb-work-swarm-contract-plan.md
-  - docs/plans/2026-06-01-112-tool-ready-set-proof-plan.md
-  - docs/plans/2026-06-01-113-tool-scope-lease-proof-plan.md
-  - docs/plans/2026-06-01-114-doc-sync-swarm-contract-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-110-kb-work-swarm-ready-set-manifest.md
+  - docs/plans/archive/2026-06/2026-06-01-111-skill-kb-work-swarm-contract-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-112-tool-ready-set-proof-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-113-tool-scope-lease-proof-plan.md
+  - docs/plans/archive/2026-06/2026-06-01-114-doc-sync-swarm-contract-plan.md
   - scripts/kb-work-ready-set.ps1
   - scripts/kb-work-ready-set-selftest.ps1
   - scripts/kb-work-scope-lease.ps1
@@ -26,7 +26,7 @@ scope-verified-files:
 slices:
   - id: slice-111
     title: "Invert kb-work to swarm the safe ready set"
-    path: docs/plans/2026-06-01-111-skill-kb-work-swarm-contract-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-111-skill-kb-work-swarm-contract-plan.md
     blockers: []
     verification: verification-only
     test_level: functional-cli
@@ -43,7 +43,7 @@ slices:
     protected_oracles: []
   - id: slice-112
     title: "Add deterministic ready-set proof"
-    path: docs/plans/2026-06-01-112-tool-ready-set-proof-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-112-tool-ready-set-proof-plan.md
     blockers: [slice-111]
     verification: integration
     test_level: functional-cli
@@ -60,7 +60,7 @@ slices:
     protected_oracles: []
   - id: slice-113
     title: "Add observed overlap and lease proof"
-    path: docs/plans/2026-06-01-113-tool-scope-lease-proof-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-113-tool-scope-lease-proof-plan.md
     blockers: [slice-111]
     verification: integration
     test_level: functional-cli
@@ -77,7 +77,7 @@ slices:
     protected_oracles: []
   - id: slice-114
     title: "Propagate swarm contract and prove release"
-    path: docs/plans/2026-06-01-114-doc-sync-swarm-contract-plan.md
+    path: docs/plans/archive/2026-06/2026-06-01-114-doc-sync-swarm-contract-plan.md
     blockers: [slice-112, slice-113]
     verification: integration
     test_level: functional-cli
