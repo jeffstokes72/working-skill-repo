@@ -1,8 +1,16 @@
 # KB-Native, Component-Scoped Learning (de-atv)
 
-Status: active
+Status: complete
 Created: 2026-07-01
 Last updated: 2026-07-01
+
+## COMPLETION (2026-07-01)
+All 6 slices done, committed + pushed: working-skill-repo main `d783a68`.
+Proof: `go test ./cmd/kbcheck/... ok`; `kbcheck core ok checks=26`; 0 functional
+`.atv/` paths remain. Mechanism (de-atv + scope hierarchy) is live in the bundle.
+Follow-on (separate repo): apply the model to the audiobooks local skills — migrate
+its instincts kb-native, re-scope the 5 global-dumped instincts (image/audio/writer),
+fold in the 2026-07-01 face-ID wrong-reference lessons into the image scope.
 
 ## Objective
 
