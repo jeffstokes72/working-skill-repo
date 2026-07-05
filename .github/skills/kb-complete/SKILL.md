@@ -148,6 +148,7 @@ Acceptable proof formats:
 - Playwright/Cypress/CDP trace path or browser assertion artifact;
 - API response log path with status/schema assertion result;
 - CLI output log path with command and exit code;
+- `go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl` result for repaired failures with a RED-before-GREEN trace;
 - regression snapshot result from `.kb/snapshots/<slice-id>.json` with all previous snapshots passing.
 
 Not acceptable:
@@ -155,6 +156,7 @@ Not acceptable:
 - "I checked and it works";
 - "Page loaded successfully";
 - "Tests pass" without the actual command or test file, exit code, and timestamp;
+- latest passing check with no recorded prior RED when the work claims to fix a known failure;
 - screenshots or prose-only notes without an executable assertion/result;
 - any model-only visual inspection.
 

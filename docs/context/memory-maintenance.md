@@ -35,6 +35,7 @@ Canonical reference: `docs/context/architecture/kb-learning-model.md`.
 | 2026-06-10 | archive-policy | plans directory | Root `docs/plans/` had 100 files, making current work harder to find. | Archived 89 historical plan files under `docs/plans/archive/YYYY-MM/`; keep root focused on current-day active/recent plans. | closed |
 | 2026-07-01 | workflow-contract | live steering | KB lacked an in-flight steering layer between one-off PR feedback and post-work `learn`/`evolve`. | Added optional `kb-goal` live steering, feedback classification, docs, and solution note. | closed |
 | 2026-07-01 | state-migration | learning roots | Instincts and kb-completions counter lived under `.atv/instincts/` (legacy ATV root), coupling durable learning to the ATV install. | Migrated to `docs/context/kb/instincts/project.yaml` and `docs/context/kb/kb-completions.txt`; added scoped instinct directory `docs/context/kb/instincts/scoped/`; deleted legacy `.atv/` copies (slice-016). | closed |
+| 2026-07-05 | workflow-contract | proof spine | KB adopted Phoenix-style failure-first proof, measured learning adoption, and model-tier decomposition contracts. | After real usage, review `cmd/kbcheck` proof-spine checks and skill instructions for over/under-strict acceptance rules. | open |
 
 ## Closed Signals
 

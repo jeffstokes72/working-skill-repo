@@ -2,6 +2,10 @@
 
 > Archive of completed items from `todo.md`. Most recent at top.
 
+## 2026-07-05
+
+- Phoenix Proof Spine Merge - mined ATV-Phoenix for self-healing primitives without replacing KB. Added `kbcheck sense`, `trace-verify`, `accept`, and `learning-adoption`; wired failure-first proof into repair/troubleshoot/goal/work/complete/gate; added model-tier decomposition contracts; preserved scoped-local learning with a measured adoption gate for promotion. Review found and fixed one proof digest issue: behavior-changing check fields such as `timeout_ms` must be part of the digest. Proof: `go test ./cmd/kbcheck`, proof-spine RED->GREEN smoke, learning-adoption ADOPT_ELIGIBLE smoke, `go run ./cmd/kbcheck manifest-contract`, `go run ./cmd/kbcheck local-release`, working/ATV `git diff --check`, `work-to-complete`, and `complete-to-ship` gates passed.
+
 ## 2026-07-01
 
 - Live Steering Learning Loop - mined HumanLayer `design-control-loop` for portable mechanics and added KB live steering without importing its runner assumptions. Updated `kb-goal`, `kb-plan`, `kb-complete`, and `learn`; refreshed README, AGENTS, workflow architecture, goal/manifest docs, and added a solution note. Review found and fixed duplicate observation logging risk. Proof: `go run ./cmd/kbcheck core`, `git diff --check`, `work-to-complete` gate, and `complete-to-ship` gate passed.

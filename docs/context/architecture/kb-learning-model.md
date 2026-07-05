@@ -136,7 +136,21 @@ busy global tier cannot crowd out scoped learning and vice versa.
 Ordinary lessons default to `scoped-instinct` at the narrowest scope.
 `instinct-evidence` (a higher tier) is reached only via promotion-on-recurrence.
 
-## 5. How a skill declares its active scope
+## 5. Measured adoption gate
+
+When a learning change claims it improves agent behavior, scoring, routing,
+decomposition, or promotion decisions, confidence alone is not enough. Run:
+
+```powershell
+go run ./cmd/kbcheck learning-adoption --result-path <results.json>
+```
+
+The gate requires at least 20 samples, no right-to-wrong regressions, no holdout
+string leakage, and either a two-case net gain or a 10 percentage point gain.
+Candidates that fail may stay local/scoped or experimental, but they must not be
+promoted into shared/project/global behavior.
+
+## 6. How a skill declares its active scope
 
 A skill/agent working a task determines its scope from, in priority order:
 1. an explicit `scope:` argument passed to `/learn`;

@@ -10,6 +10,10 @@ git diff --check
 go run ./cmd/kbcheck core --list
 go run ./cmd/kbcheck core
 go run ./cmd/kbcheck local-release
+go run ./cmd/kbcheck sense --check <check.json> --trace .kb/trace.jsonl
+go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl
+go run ./cmd/kbcheck trace-verify --trace .kb/trace.jsonl
+go run ./cmd/kbcheck learning-adoption --result-path <results.json>
 go test ./...
 ```
 
@@ -178,6 +182,12 @@ All current harness commands are native `cmd/kbcheck` commands:
 - `skill-sync-report` validates required skill-copy hashes across the working
   repo, Codex global, Copilot global, shared agents global, and ATV `.github`
   skills; it is release-blocking through `local-release`.
+- `sense`, `accept`, and `trace-verify` implement the failure-first proof spine:
+  a runnable check must be observed RED, then GREEN, with an intact trace before
+  a repair claim is accepted.
+- `learning-adoption` scores measured learning changes and blocks promotion
+  unless the candidate has enough samples, no right-to-wrong regressions, no
+  holdout leakage, and a meaningful net gain.
 
 For unattended runners, `skill-sync-report` is a release blocker, not a cleanup
 task. Required drift means source and deployed runner behavior disagree. If a

@@ -31,6 +31,13 @@ Parse the failure report. For each failed check, identify:
 - The file(s) most likely responsible
 - The minimal change that would fix it
 
+If the failed check can be represented as a `kbcheck` proof-spine check JSON,
+record the RED state before editing:
+
+```bash
+go run ./cmd/kbcheck sense --check <check.json> --trace .kb/trace.jsonl
+```
+
 ### 2. Make a Surgical Fix
 
 **Constraints — every one is mandatory:**
@@ -79,6 +86,14 @@ After each fix, re-run ALL checks — not just the one that failed:
 A fix for one failure might introduce another. Catch it immediately. Run the same `kb-qa` Steps 0–7 flow on the affected checks.
 
 Re-verification must use the same deterministic assertion, command, or snapshot check that failed when possible. Do not replace a failed executable check with model judgment or a screenshot-only conclusion.
+
+When the proof spine was used for the failure, re-run the same check and require
+acceptance after the surgical fix:
+
+```bash
+go run ./cmd/kbcheck sense --check <check.json> --trace .kb/trace.jsonl
+go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl
+```
 
 ### 4. Assess Progress
 

@@ -16,6 +16,8 @@ Codex/GHCP the same workflow contract.
 | Route complexity stays calibrated | `evals/route-complexity/*.json` | `go run ./cmd/kbcheck route-eval` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
 | Required skill copies stay synced | global installs and ATV `.github` skills | `go run ./cmd/kbcheck local-release`; `go run ./cmd/kbcheck skill-sync-report` | ATV scaffold/plugin shipping policy unresolved | P1 |
 | Skill edits do not regress behavior | prompt/trace/claim evals | `go run ./cmd/kbcheck skill-eval`; `go run ./cmd/kbcheck eval-run-codex`; `go run ./cmd/kbcheck eval-run-ghcp` | Need broader live corpus and richer trace/claim scoring | P0 |
+| Repair claims prove RED-before-GREEN | `.kb/trace.jsonl` and check JSON specs | `go run ./cmd/kbcheck sense`; `go run ./cmd/kbcheck accept`; `go run ./cmd/kbcheck trace-verify` | Per-slice check specs are created as needed, not globally cataloged yet | P0 |
+| Learning promotions are measured | adoption result JSON | `go run ./cmd/kbcheck learning-adoption --result-path <results.json>` | Needs broader real run corpus over time | P1 |
 
 ## Existing Harnesses
 
@@ -31,6 +33,10 @@ Codex/GHCP the same workflow contract.
 - `go run ./cmd/kbcheck skill-eval-quality`
 - `go run ./cmd/kbcheck skill-eval-regression`
 - `go run ./cmd/kbcheck skill-sync-report`
+- `go run ./cmd/kbcheck sense --check <check.json> --trace .kb/trace.jsonl`
+- `go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl`
+- `go run ./cmd/kbcheck trace-verify --trace .kb/trace.jsonl`
+- `go run ./cmd/kbcheck learning-adoption --result-path <results.json>`
 - `git diff --check`
 
 ## Canonical Commands
@@ -38,6 +44,7 @@ Codex/GHCP the same workflow contract.
 ```powershell
 go run ./cmd/kbcheck core
 go run ./cmd/kbcheck local-release
+go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl
 git diff --check
 ```
 
@@ -75,6 +82,8 @@ against selected baselines.
 | skill lint | deterministic |
 | route-complexity fixture scoring | deterministic |
 | captured skill result scoring | deterministic |
+| proof-spine trace acceptance | deterministic |
+| measured learning adoption | deterministic |
 | sync drift hashes | deterministic |
 | git whitespace/conflict checks | deterministic |
 | output quality scoring | deterministic rubric selftest |

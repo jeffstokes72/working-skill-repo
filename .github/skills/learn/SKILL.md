@@ -109,6 +109,18 @@ preferences need repeated evidence before becoming instincts. Steering memory is
 the middle layer: it changes future loop behavior without pretending the pattern
 is ready to become a reusable skill.
 
+Measured learning changes that claim a better agent behavior must pass the
+adoption gate before they can be promoted beyond local/scoped use:
+
+```bash
+go run ./cmd/kbcheck learning-adoption --result-path <results.json>
+```
+
+The results must include at least 20 samples, no right-to-wrong regressions, no
+holdout string leakage, and either a two-case net gain or a 10 percentage point
+gain. Rejected candidates may still be recorded as scoped/experimental evidence,
+but they must not become shared/project/global rules.
+
 #### Scope declaration
 
 A skill determines its active scope in this priority order:

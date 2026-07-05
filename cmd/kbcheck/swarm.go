@@ -15,6 +15,7 @@ type manifestSlice struct {
 	ID                     string
 	Blockers               []string
 	Status                 string
+	ModelTier              string
 	CanContinueOtherSlices bool
 	HITL                   bool
 }
@@ -342,6 +343,8 @@ func parseManifestSlices(path string) ([]manifestSlice, error) {
 			current.Blockers = parseInlineList(strings.TrimSpace(strings.TrimPrefix(trimmed, "blockers:")))
 		case strings.HasPrefix(trimmed, "status:"):
 			current.Status = cleanYAMLScalar(strings.TrimSpace(strings.TrimPrefix(trimmed, "status:")))
+		case strings.HasPrefix(trimmed, "model_tier:"):
+			current.ModelTier = cleanYAMLScalar(strings.TrimSpace(strings.TrimPrefix(trimmed, "model_tier:")))
 		case strings.HasPrefix(trimmed, "can_continue_other_slices:"):
 			current.CanContinueOtherSlices = parseBool(strings.TrimSpace(strings.TrimPrefix(trimmed, "can_continue_other_slices:")))
 		case strings.HasPrefix(trimmed, "hitl:"):

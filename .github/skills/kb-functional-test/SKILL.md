@@ -113,6 +113,11 @@ Good mini-model tasks:
 
 Do not use a mini model as the final proof of behavior. The proof is the command, test, browser probe, screenshot, or failing/passing output. Escalate to a stronger model when classification depends on architecture, auth/security, flaky async behavior, complex UI state, or repeated failures.
 
+When a slice declares `model_tier`, this skill may recommend a lower tier only
+for bounded classification or test-audit work. It must not downgrade
+implementation ownership for slices whose public behavior needs `medium` or
+`large` judgment.
+
 ## Test Quality Audit
 
 An existing test is meaningful only if it:

@@ -161,6 +161,12 @@ likely target, protected oracle/test files, and verification command. That plan
 is deliberately smaller than a `kb-plan` manifest; route to `kb-plan` only when
 the fix becomes multi-slice or needs dependency ordering.
 
+When the broken behavior has a repeatable sensor, use the proof spine:
+`kbcheck sense` records the RED and GREEN observations, `kbcheck trace-verify`
+checks the hash chain, and `kbcheck accept` is the preferred repair proof. A
+latest-green check without a recorded prior RED is not enough for a repair
+claim.
+
 `klfg` is one strict pipeline run from brainstorm through completion. `kb-goal`
 is the durable-objective lane: it may run `klfg`, `kb-epic`, `kb-task`, or
 several manifests over days, but it completes only when the goal ledger's
@@ -185,7 +191,9 @@ the ledger. Raw transcripts, single-run logs, and current-PR-only instructions
 do not belong there.
 
 `kb-plan` produces vertical slices with expected files, verification,
-dependencies, test level, functional risk, and HITL flags.
+dependencies, test level, functional risk, model tier, and HITL flags. Model
+tier describes safe delegation (`tiny`, `small`, `medium`, `large`); it never
+lowers the executable proof requirement.
 
 `kb-work` executes the safe ready set from the slice dependency DAG. Once
 execution starts, it does not ask before each slice. The default WIP is every
@@ -240,12 +248,14 @@ through the app UI. Screenshots support evidence; executable assertions are the
 pass/fail oracle.
 
 `kb-regression-snapshot` records deterministic state after each passed slice in
-`.atv/snapshots/<slice-id>.json`, then verifies prior snapshots before the next
+`.kb/snapshots/<slice-id>.json`, then verifies prior snapshots before the next
 slice starts.
 
 `kb-complete` fails the proof gate when a slice only has prose proof. Each slice
 needs command/test path, exit code, timestamp, trace/log/API artifact, or
-snapshot verification evidence recorded in the manifest.
+snapshot verification evidence recorded in the manifest. For repaired failures,
+`kbcheck accept --check <check.json> --trace .kb/trace.jsonl` is the canonical
+RED-before-GREEN proof when the check is expressible as JSON.
 
 ## Review Agents
 

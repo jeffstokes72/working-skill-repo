@@ -207,6 +207,13 @@ planning, safe assumptions must be recorded with proof, and later phases advance
 through gate-ledger records rather than chat confidence. The maintainer proof is
 `go run ./cmd/kbcheck workflow-governor-selftest`, included in `core`.
 
+Phoenix-style self-healing proof is folded into KB as a local proof spine:
+`kbcheck sense` records runnable RED/GREEN observations, `kbcheck trace-verify`
+checks trace integrity, and `kbcheck accept` only accepts repairs with the same
+check observed RED before GREEN. Learning improvements stay local/scoped unless
+`kbcheck learning-adoption` proves enough measured gain without regressions or
+holdout leakage.
+
 ## Common Commands
 
 | Command | Use When |
@@ -412,6 +419,8 @@ Useful subcommands:
 - `local-release`, `live-release` - release-readiness gates
 - `skill-lint` - deterministic `SKILL.md` structure lint
 - `skill-sync-report` - read-only drift report across install targets
+- `sense`, `accept`, `trace-verify` - failure-first repair proof spine
+- `learning-adoption` - measured gate for promoting learning changes
 - `route-eval` - validate `evals/route-complexity/*` fixtures
 - `skill-eval`, `skill-eval-claims`, `skill-eval-quality`,
   `skill-eval-regression` - prompt/trace/claim/quality eval surfaces
@@ -603,6 +612,9 @@ Compound Engineering workflow.
 
 It also borrows useful ideas from:
 
+- [ATV-Phoenix](https://github.com/All-The-Vibes/ATV-Phoenix), especially the
+  self-healing proof spine around objective sensing, trace verification, and
+  failure-first acceptance
 - [Matt Pocock's skills](https://github.com/mattpocock/skills), especially small
   composable workflow skills and vertical slicing
 - [G-Stack](https://github.com/garrytan/gstack), especially persistent workflow

@@ -71,6 +71,20 @@ If the answer is not an explicit yes:
 If approved, continue. Generated skills are still drafts and must be reviewed
 before commit.
 
+### Step 3.5: Measured Adoption Gate
+
+If the candidate changes agent behavior, scoring, routing, decomposition, or
+promotion rules, require a measured adoption result before generating or syncing
+shared/project/global behavior:
+
+```bash
+go run ./cmd/kbcheck learning-adoption --result-path <results.json>
+```
+
+Only `ADOPT_ELIGIBLE` candidates may auto-promote into shared/project/global
+surfaces. A rejected candidate may stay local/scoped or experimental, but it
+must not be sold as a learned improvement.
+
 ### Step 4: Generate SKILL.md
 
 For each cluster, generate a `SKILL.md` file:

@@ -75,6 +75,7 @@ Go validator full replacement manifest: `docs/plans/archive/2026-06/2026-06-01-1
 | Live steering learning loop | ✅ done | P1 | `docs/context/goals/live-steering-learning-loop.md` |
 | RTK-inspired token efficiency | ✅ done | P1 | `docs/context/goals/rtk-inspired-token-efficiency.md` |
 | Skill bundle hardening | 🔧 in_progress | P1 | `docs/plans/2026-06-10-011-kb-skill-bundle-hardening-manifest.md` |
+| Phoenix proof spine merge | ✅ done | P1 | `docs/plans/2026-07-05-000-kb-phoenix-proof-spine-merge-manifest.md` |
 | Claude remaining hardening | ✅ done | P1 | `docs/plans/archive/2026-06/2026-06-01-080-kb-claude-remaining-hardening-manifest.md` |
 | Go validator full replacement | ✅ done | P1 | `docs/plans/archive/2026-06/2026-06-01-130-kb-go-validator-full-replacement-manifest.md` |
 
@@ -118,6 +119,14 @@ None.
 
 ## Work Log
 
+- 2026-07-05: Completed Phoenix proof spine merge. Added `kbcheck sense`,
+  `trace-verify`, `accept`, and `learning-adoption`; wired repair,
+  troubleshoot, goal/work/complete/gate, learn/evolve, docs, eval map, and
+  model-tier decomposition contracts. Proof: `go test ./cmd/kbcheck`,
+  proof-spine RED->GREEN smoke, learning-adoption ADOPT_ELIGIBLE smoke,
+  `go run ./cmd/kbcheck core`, `go run ./cmd/kbcheck local-release`,
+  `git diff --check`, and `git -C E:\all-the-vibes diff --check` passed.
+  Required skill roots were synced with zero required sync issues.
 - 2026-06-03: Completed cross-platform adoption on-ramp. Added `npx` installer with core/full profiles, non-destructive backups, repo-local install, and Windows/macOS/Linux CI proof. Proof: installer smoke checks, `go test ./...`, `go run ./cmd/kbcheck core`, working/ATV `git diff --check`, and required sync report passed.
 - 2026-06-01: Completed Go validator full replacement. Ported all remaining skill-repo validators, eval adapters, marketplace promotion/firebreak checks, ATV delta reporting, pipeline proof, ready-set/scope-lease utilities, release selftests, surface/minimality reports, and sync drift reports into `cmd/kbcheck`; deleted all `.ps1` files. Proof: `go test ./...`, `go run ./cmd/kbcheck core`, `go run ./cmd/kbcheck local-release --json`, `go run ./cmd/kbcheck ready-set --manifest docs\plans\archive\2026-06\2026-06-01-130-kb-go-validator-full-replacement-manifest.md --json`, `rg --files -g "*.ps1"`, and `git diff --check`.
 

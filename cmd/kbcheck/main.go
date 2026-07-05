@@ -22,6 +22,10 @@ Usage:
   kbcheck manifest-contract --manifest <path> [--json]
   kbcheck manifest-contract-selftest
   kbcheck gate-ledger --manifest <path> --gate <gate-id> [--allowed-next <text>] [--allow-quarantine]
+  kbcheck sense --check <path> [--trace <path>] [--root <path>]
+  kbcheck trace-verify [--trace <path>] [--root <path>]
+  kbcheck accept --check <path> [--trace <path>] [--root <path>]
+  kbcheck learning-adoption --result-path <path> [--root <path>]
   kbcheck scope-lease --ledger <path> [--json]
   kbcheck scope-lease-selftest
   kbcheck skill-lint [--root <path>] [--config <path>] [--json]
@@ -61,6 +65,10 @@ Commands:
   ready-set      Compute the safe KB manifest ready set.
   manifest-contract  Validate KB manifest phase/gate proof contracts.
   gate-ledger    Validate one KB manifest gate before phase advancement.
+  sense          Run an objective check and append a hash-chained trace event.
+  trace-verify   Verify the KB proof trace hash chain.
+  accept         Prove a check went red->green and is green now.
+  learning-adoption  Score held-out learning promotion eligibility.
   scope-lease    Validate observed active slice/file write leases.
 `
 
@@ -115,6 +123,8 @@ type options struct {
 	installTargets    string
 	gate              string
 	allowedNext       string
+	checkPath         string
+	tracePath         string
 	allowQuarantine   bool
 	codexSkillsRoot   string
 	copilotSkillsRoot string
@@ -165,6 +175,14 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runManifestContractSelftest(stdout, stderr)
 	case "gate-ledger":
 		return runGateLedgerCommand(root, opts, stdout, stderr)
+	case "sense":
+		return runProofSenseCommand(root, opts, stdout, stderr)
+	case "trace-verify":
+		return runProofTraceVerifyCommand(root, opts, stdout, stderr)
+	case "accept":
+		return runProofAcceptCommand(root, opts, stdout, stderr)
+	case "learning-adoption":
+		return runLearningAdoptionCommand(root, opts, stdout, stderr)
 	case "scope-lease":
 		return runScopeLeaseCommand(root, opts, stdout, stderr)
 	case "scope-lease-selftest":
@@ -243,6 +261,7 @@ func parse(args []string) (options, error) {
 	knownCommands := map[string]bool{
 		"core": true, "local-release": true, "live-release": true,
 		"ready-set": true, "ready-set-selftest": true, "manifest-contract": true, "manifest-contract-selftest": true, "gate-ledger": true,
+		"sense": true, "trace-verify": true, "accept": true, "learning-adoption": true,
 		"scope-lease": true, "scope-lease-selftest": true,
 		"skill-lint": true, "skill-sync-report": true,
 		"marketplace-firebreak": true, "marketplace-firebreak-selftest": true,
@@ -309,6 +328,8 @@ func parse(args []string) (options, error) {
 	fs.StringVar(&opts.installTargets, "install-targets", "", "comma-separated install targets: codex,copilot,agents,none")
 	fs.StringVar(&opts.gate, "gate", "", "gate_id to validate")
 	fs.StringVar(&opts.allowedNext, "allowed-next", "", "expected allowed_next_action")
+	fs.StringVar(&opts.checkPath, "check", "", "objective proof check JSON path")
+	fs.StringVar(&opts.tracePath, "trace", defaultProofTrace, "objective proof trace JSONL path")
 	fs.BoolVar(&opts.allowQuarantine, "allow-quarantine", false, "accept status=quarantined as advanceable")
 	home, _ := os.UserHomeDir()
 	fs.StringVar(&opts.codexSkillsRoot, "codex-skills-root", filepath.Join(home, ".codex", "skills"), "Codex skills root")
@@ -364,6 +385,13 @@ func parse(args []string) (options, error) {
 	}
 	if opts.command == "gate-ledger" && opts.gate == "" {
 		return options{}, fmt.Errorf("gate-ledger requires --gate")
+	}
+	proofCommands := map[string]bool{"sense": true, "trace-verify": true, "accept": true}
+	if !proofCommands[opts.command] && (opts.checkPath != "" || opts.tracePath != defaultProofTrace) {
+		return options{}, fmt.Errorf("--check and --trace are only supported for proof-spine commands")
+	}
+	if (opts.command == "sense" || opts.command == "accept") && opts.checkPath == "" {
+		return options{}, fmt.Errorf("%s requires --check", opts.command)
 	}
 	if opts.command == "scope-lease" && opts.ledger == "" {
 		return options{}, fmt.Errorf("scope-lease requires --ledger")

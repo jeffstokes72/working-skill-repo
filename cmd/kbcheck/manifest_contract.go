@@ -186,7 +186,11 @@ func validateManifestContract(path string) (manifestContractResult, error) {
 	}
 
 	issues := []manifestContractIssue{}
+	modelTierContract := manifestHasModelTierContract(path)
 	for _, slice := range slices {
+		if modelTierContract && !validModelTier(slice.ModelTier) {
+			issues = append(issues, manifestContractIssue{Code: "invalid-model-tier", SliceID: slice.ID, Message: "slice must set model_tier to tiny, small, medium, or large"})
+		}
 		switch slice.Status {
 		case "done":
 			gateID := "slice-" + slice.ID + "-to-done"
@@ -218,6 +222,23 @@ func validateManifestContract(path string) (manifestContractResult, error) {
 		}
 	}
 	return manifestContractResult{OK: len(issues) == 0, Issues: issues}, nil
+}
+
+func manifestHasModelTierContract(path string) bool {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	return strings.Contains(string(content), "model_tier_contract:")
+}
+
+func validModelTier(value string) bool {
+	switch value {
+	case "tiny", "small", "medium", "large":
+		return true
+	default:
+		return false
+	}
 }
 
 func findManifestGate(path, gateID string) (manifestGate, error) {

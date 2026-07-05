@@ -113,3 +113,28 @@ gate_ledger:
 		t.Fatalf("missing pass output: %s", out.String())
 	}
 }
+
+func TestManifestContractValidatesOptInModelTiers(t *testing.T) {
+	path := writeManifest(t, `
+---
+model_tier_contract:
+  tiny: deterministic
+  small: bounded
+slices:
+  - id: slice-001
+    status: pending
+    model_tier: small
+  - id: slice-002
+    status: pending
+    model_tier: giant
+gate_ledger: []
+---
+`)
+	result, err := validateManifestContract(path)
+	if err != nil {
+		t.Fatalf("validateManifestContract returned error: %v", err)
+	}
+	if result.OK || !hasManifestIssue(result.Issues, "invalid-model-tier") {
+		t.Fatalf("expected invalid model tier issue, got %#v", result)
+	}
+}
