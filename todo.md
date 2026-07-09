@@ -72,6 +72,8 @@ Go validator full replacement manifest: `docs/plans/archive/2026-06/2026-06-01-1
 
 | Workstream | Status | Priority | Link |
 |---|---|---|---|
+| GitHub Copilot UBB/TBB tooling suite | ⬜ pending (awaiting human approval) | P1 | `docs/plans/2026-07-09-000-kb-ubb-tbb-tooling-manifest.md` |
+|---|---|---|---|
 | Live steering learning loop | ✅ done | P1 | `docs/context/goals/live-steering-learning-loop.md` |
 | RTK-inspired token efficiency | ✅ done | P1 | `docs/context/goals/rtk-inspired-token-efficiency.md` |
 | Skill bundle hardening | 🔧 in_progress | P1 | `docs/plans/2026-06-10-011-kb-skill-bundle-hardening-manifest.md` |

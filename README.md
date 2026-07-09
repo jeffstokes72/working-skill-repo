@@ -157,6 +157,18 @@ Development scaffolding that is usually not copied into consuming projects:
 Consuming projects get their own `todo.md`, `docs/context/`,
 `docs/handoffs/`, eval map, and project-local memories.
 
+## Optional Context Providers
+
+This bundle does not require CCE, MCP search, a vector index, or any background
+app. The default path stays file-native: repo files, `rg`, `kb-map`,
+`docs/context/`, and deterministic `kbcheck` gates.
+
+Optional context tools can still fit as adapters. A good adapter may accelerate
+lookup, chunk expansion, or decision recall, but it must have a repo-native
+fallback and must not be required by install, sync, tests, or skill execution.
+Do not commit provider-specific hook/config files such as `.mcp.json` or
+`.claude/settings.json`.
+
 ## Quick Start
 
 Use the `Start Here` install path above, then run `kb-start` from the target
@@ -213,6 +225,17 @@ checks trace integrity, and `kbcheck accept` only accepts repairs with the same
 check observed RED before GREEN. Learning improvements stay local/scoped unless
 `kbcheck learning-adoption` proves enough measured gain without regressions or
 holdout leakage.
+
+> **Routing conflict warning:** Do not run the ATV-Phoenix skill suite alongside
+> this bundle. The 18 phoenix-* skills duplicate KB lifecycle lanes
+> (phoenix-plan → kb-plan, phoenix-build → kb-work, phoenix-debug → kb-fix, etc.)
+> and add routing noise for every request. The proof spine value was merged July
+> 5, 2026. If you have phoenix skills installed globally, remove them with:
+> ```shell
+> npx github:Irtechie/working-skill-repo --target all --profile core --yes
+> ```
+> or manually delete `~/.copilot/skills/phoenix*`,
+> `~/.agents/skills/phoenix*`, `~/.codex/skills/phoenix*`.
 
 ## Common Commands
 
@@ -615,8 +638,13 @@ It also borrows useful ideas from:
 - [ATV-Phoenix](https://github.com/All-The-Vibes/ATV-Phoenix), especially the
   self-healing proof spine around objective sensing, trace verification, and
   failure-first acceptance
-- [Matt Pocock's skills](https://github.com/mattpocock/skills), especially small
-  composable workflow skills and vertical slicing
+- [Matt Pocock's skills](https://github.com/mattpocock/skills), especially: the
+  `grilling` / `grill-me` pattern (relentless one-question-at-a-time interview
+  with agent-surfaced recommendations, gated so questions earn their place) now
+  merged into `kb-brainstorm` Phase 6; `wayfinder` (fog-of-war map for work too
+  large and too vague for a single session, resolving one investigation ticket at
+  a time until the route is clear) which maps to `kb-epic`; and the general
+  philosophy of small, composable, hackable skills over process-owning frameworks
 - [G-Stack](https://github.com/garrytan/gstack), especially persistent workflow
   memory, QA ownership, and operating-system-style orchestration
 - [Shyam Sridhar's kevin-copilot](https://github.com/shyamsridhar123/kevin-copilot),
@@ -626,8 +654,8 @@ It also borrows useful ideas from:
   graphify/TokenMasterX map-bootstrap path
 - [elara-labs/code-context-engine](https://github.com/elara-labs/code-context-engine),
   for token-efficient codebase indexing and cross-session memory ideas. CCE is
-  credited here as future setup/reference only; this repo does not require CCE
-  to be installed or running.
+  credited here as an optional future adapter/reference only; this repo does
+  not require CCE to be installed or running.
 
 The goal is not to copy any one system. The goal is to keep the pieces that make
 agents easier to route, easier to resume, and harder to let off the hook.
