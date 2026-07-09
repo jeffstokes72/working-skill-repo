@@ -7,4 +7,4 @@
 | `2026-07-05-atv-phoenix-self-heal-comparison.md` | 2026-07-05 | Deciding what to adopt from ATV-Phoenix for KB self-healing, acceptance proof, and measured learning |
 | `2026-07-05-dexhorthy-humanlayer-agent-harness-research.md` | 2026-07-05 | Mining Dex Horthy/HumanLayer prior art for KB control loops, harness engineering, context discipline, model-tier decomposition, and recurring self-heal automation |
 | `2026-07-05-humanlayer-pinned-repos-planner-economy.md` | 2026-07-05 | Deep read of HumanLayer's pinned repos for KB planner economy, absorption-spike decision, task state, context packets, model-tier delegation, and slice telemetry |
-| `2026-07-09-github-copilot-ubb-tbb-deep-dive.md` | 2026-07-09 | GitHub Copilot UBB/TBB mechanics: AI Credits, token pricing, pooling model, budget hierarchy, HyDRA routing, token efficiency wins, competitive framing, discount programs |
+
