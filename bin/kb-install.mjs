@@ -22,10 +22,8 @@ const CORE_AGENTS = [
 ];
 
 // Skills excluded from the core profile — only installed with --profile full.
-// Add domain-specific or optional skills here.
-const FULL_ONLY_SKILLS = new Set([
-  "gh-copilot-cost-ops",
-]);
+// Add domain-specific or optional skills here when needed.
+const FULL_ONLY_SKILLS = new Set([]);
 
 const VALID_TARGETS = new Set(["codex", "copilot", "agents", "repo", "all"]);
 const VALID_PROFILES = new Set(["core", "full"]);
