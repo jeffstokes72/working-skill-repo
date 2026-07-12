@@ -92,7 +92,70 @@ This repo is two things:
 2. A development harness that tests whether the bundle, routes, sync targets,
    eval fixtures, marketplace rules, and release gates still match the claims.
 
-![KB routing workflow](docs/assets/kb-routing-workflow.png)
+## How Planning, Routing, And AMR Fit Together
+
+KB separates three decisions that agents often blur together:
+
+1. **Planning sets authority.** `kb-plan` classifies each slice as small,
+   medium, or large from difficulty, risk, required tools/context, and the proof
+   needed to accept it. The plan does not freeze a model, provider, endpoint,
+   transport, or source preference.
+2. **Work-time routing chooses an available worker.** Immediately before a
+   slice runs, `kb-work` considers what the active host can actually invoke and
+   any optional user-local routes. The current master selects a bounded,
+   dispatch-qualified worker at the planned tier, a qualified same-tier route,
+   or a higher tier. It never assumes another host's catalog and never infers a
+   downward route.
+3. **Proof accepts the result.** A routing receipt records what ran; it does not
+   make the work correct. Tests, lint, browser assertions, API probes, or another
+   objective check remain authoritative.
+
+### Difficulty-Driven Routing (DDR)
+
+DDR is shorthand for that decision pattern, not a separate command or artifact
+created by `kb-plan`. Planning records difficulty and proof; execution discovers
+the live catalog and chooses from evidence.
+
+![KB difficulty-driven model selection](docs/assets/kb-model-selection.png)
+
+The model labels in the diagram are illustrative snapshots. They are not a
+durable shared catalog. A new user can use KB with zero model setup because the
+active host already knows its own models. Advanced users can add local or
+external OpenAI-compatible/LiteLLM routes through user-local `kb-models` state,
+then save a project preference such as `automatic`, `self-hosted-first`, or
+`native-first`. Credentials and private endpoints never enter plans or shared
+skills.
+
+Run-only controls remain explicit:
+
+- `use <model>` prefers an eligible route for this run;
+- `require <model>` hard-pins it or fails;
+- `ignore model routing` stays on the current driver;
+- fallback goes same tier, then higher tier, then the current model in degraded
+  mode—never automatically downward.
+
+### Adaptive Model Routing (AMR)
+
+AMR is a narrower, optional optimization inside this system. If a task was
+planned at medium but is settled, bounded, and objectively provable, an enabled
+pilot may try exactly one dispatch-qualified next-lower-tier worker. It is not a
+general instruction to use cheaper models for all code.
+
+![Adaptive Model Routing workflow](docs/assets/kb-routing-workflow.png)
+
+Good candidates include a narrow code fix or implementation of an approved HTML
+design with browser assertions. Philosophy, speculative product/design work,
+unresolved architecture, subjective intent, sensitive boundaries, and weak
+proof are bad candidates and begin at the planned tier.
+
+If focused proof passes, KB keeps the result and continues ordinary QA,
+regression, and review. If it fails, lower-tier retries stop. The driver receives
+the exact failed criterion, location/hunk, invariants, accepted diff, ledger, and
+proof output so the planned-tier authority can correct the smallest necessary
+surface. Automatic live-checkout correction is currently disabled; failure uses
+separate ordinary planned-tier execution. AMR is disabled by default and makes
+no savings claim until worker + proof + repair repeatedly beats direct execution
+without reducing correctness.
 
 ## What Makes This Different
 
@@ -169,8 +232,6 @@ Current evidence is deliberately conservative:
 
 The current no-paid release artifact has zero supported cohorts and makes no
 live cost, latency, token, or savings claim.
-
-![KB model selection workflow](docs/assets/kb-model-selection.png)
 
 - **Fresh sessions by default.** Handoffs, `todo.md`,
   `docs/context/PROJECT.md`, plans, and architecture notes let a new session
