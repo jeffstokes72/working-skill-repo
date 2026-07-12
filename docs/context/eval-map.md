@@ -1,6 +1,6 @@
 # Eval Map
 
-Checked: 2026-07-09
+Checked: 2026-07-11
 
 ## App Pattern
 
@@ -14,13 +14,17 @@ Codex/GHCP the same workflow contract.
 |---|---|---|---|---|
 | Skill structure remains valid | `.github/skills/**/SKILL.md` | `go run ./cmd/kbcheck skill-lint` | Warnings remain for inherited older skills | P1 |
 | Route complexity stays calibrated | `evals/route-complexity/*.json` | `go run ./cmd/kbcheck route-eval` | Fixtures are deterministic metadata, not live prompt runs; workflow-shape fixtures cover skill edit, skill-bundle, proof pipeline, and multi-stream epic prompts | P0 |
-| Required skill copies stay synced | global installs and ATV `.github` skills | `go run ./cmd/kbcheck local-release`; `go run ./cmd/kbcheck skill-sync-report`; `go run ./cmd/kbcheck doctor` | ATV scaffold/plugin shipping policy unresolved | P1 |
+| Required skill copies stay synced | Codex, Copilot, and shared-agent global installs | `go run ./cmd/kbcheck local-release`; `go run ./cmd/kbcheck skill-sync-report`; `go run ./cmd/kbcheck doctor` | None beyond user-local install availability | P1 |
 | Skill edits do not regress behavior | prompt/trace/claim evals | `go run ./cmd/kbcheck skill-eval`; `go run ./cmd/kbcheck eval-run-codex`; `go run ./cmd/kbcheck eval-run-ghcp` | Need broader live corpus and richer trace/claim scoring | P0 |
 | Repair claims prove RED-before-GREEN | `.kb/trace.jsonl` and check JSON specs | `go run ./cmd/kbcheck sense`; `go run ./cmd/kbcheck accept`; `go run ./cmd/kbcheck trace-verify` | Per-slice check specs are created as needed, not globally cataloged yet | P0 |
 | KB manifests cannot self-report done | `docs/plans/*-kb-*-manifest.md` | `go run ./cmd/kbcheck manifest-contract --manifest <manifest>` | Current check validates schema/gates; it does not run each recorded proof_check command itself yet | P0 |
 | False completion is rejected | `evals/dishonest-completion/fixtures.json` | `go run ./cmd/kbcheck dishonest-completion-selftest` | Small deterministic corpus only; not a live-model benchmark | P0 |
 | Route loops stop instead of oscillating | `.kb/runs/<goal>/route-history.jsonl` | `go run ./cmd/kbcheck run-state --history <history>`; `go run ./cmd/kbcheck run-state-selftest` | Needs more real run histories over time | P1 |
 | Learning promotions are measured | adoption result JSON | `go run ./cmd/kbcheck learning-adoption --result-path <results.json>` | Needs broader real run corpus over time | P1 |
+| Token efficiency is measured without rewarding weaker work | execution telemetry JSON | `go run ./cmd/kbcheck execution-telemetry --telemetry <telemetry.json>` validates normalized raw fields | Codex/GHCP adapters do not yet expose a stable measured-usage artifact; never substitute model-authored usage | P1 |
+| Worker context remains bounded and vendor-neutral | context packet JSON | `go run ./cmd/kbcheck context-packet --packet <packet.json>`; `context-packet-selftest` in core | Real host adapters expose usage inconsistently | P1 |
+| Optional providers do not become hidden runtime dependencies | repo and standard user provider configs | `go run ./cmd/kbcheck provider-hygiene`; provider-hygiene selftest in core | Host-specific plugin registries may need adapters later | P1 |
+| Model-routing release claims stay inside their evidence | `evals/model-routing/*.json` and release evidence JSON | `go run ./cmd/kbcheck model-routing-release --cohort initial-pilot --evidence docs/results/2026-07-10-session-model-routing-initial-pilot.json` | Current evidence is deterministic, no-paid, and not promoted; live support and efficiency remain unqualified | P0 |
 
 ## Existing Harnesses
 
@@ -45,6 +49,10 @@ Codex/GHCP the same workflow contract.
 - `go run ./cmd/kbcheck trace-verify --trace .kb/trace.jsonl`
 - `go run ./cmd/kbcheck manifest-contract --manifest <manifest>`
 - `go run ./cmd/kbcheck learning-adoption --result-path <results.json>`
+- `go run ./cmd/kbcheck context-packet --packet cmd/kbcheck/testdata/context-packet-valid.json`
+- `go run ./cmd/kbcheck execution-telemetry --telemetry cmd/kbcheck/testdata/execution-telemetry-valid.json`
+- `go run ./cmd/kbcheck provider-hygiene --include-user`
+- `go run ./cmd/kbcheck model-routing-release --cohort initial-pilot --evidence docs/results/2026-07-10-session-model-routing-initial-pilot.json`
 - `git diff --check`
 
 ## Canonical Commands
@@ -56,13 +64,13 @@ go run ./cmd/kbcheck dishonest-completion-selftest
 go run ./cmd/kbcheck manifest-contract --manifest <manifest>
 go run ./cmd/kbcheck run-state --history <history>
 go run ./cmd/kbcheck accept --check <check.json> --trace .kb/trace.jsonl
+go run ./cmd/kbcheck model-routing-release --cohort initial-pilot --evidence docs/results/2026-07-10-session-model-routing-initial-pilot.json
 git diff --check
 ```
 
 For touched ATV repo copies:
 
 ```powershell
-git -C <atv-repo> diff --check
 ```
 
 ## Scaffolding Decisions
@@ -98,6 +106,7 @@ against selected baselines.
 | dishonest completion rejection fixtures | deterministic negative selftest |
 | route-history loop guard | deterministic JSONL check |
 | doctor install-drift repair/refusal | deterministic fixture selftest |
+| model-routing release claim boundary | deterministic strict evidence validation; fixture definitions are neither live support nor efficiency proof |
 | measured learning adoption | deterministic |
 | sync drift hashes | deterministic |
 | git whitespace/conflict checks | deterministic |
@@ -123,6 +132,8 @@ are stable.
 ## Open Eval Gaps
 
 - Grow the live Codex/GHCP corpus beyond the current route fixture set.
+- Capture normalized real token/cache/turn usage from live Codex/GHCP adapters;
+  current regression reports use duration and artifact-size proxies only.
 - Make `manifest-contract` optionally execute recorded `proof_check` commands
   after the schema and gate contract is stable.
 - Optional exporters can be added for Langfuse, Braintrust, LangSmith,

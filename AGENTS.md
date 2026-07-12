@@ -18,23 +18,21 @@ When changing skills in this repo, treat `<working-skill-repo>` as the working b
 
 1. Compare the target skill across:
    - `<working-skill-repo>/.github/skills/<skill>/`
-   - `<atv-repo>/.github/skills/<skill>/`
-   - `<atv-repo>/pkg/scaffold/templates/skills/<skill>/`
-   - `<atv-repo>/plugins/atv-everything/skills/<skill>/`
    - `~/.copilot/skills/<skill>/`
    - `~/.agents/skills/<skill>/`
    - `~/.codex/skills/<skill>/`
-2. If a global or ATV copy differs, review the diff before copying over it. Newer useful work found only in a global install must be merged back into this repo first, not discarded.
+2. If a global copy differs, review the diff before copying over it. Newer useful work found only in a global install must be merged back into this repo first, not discarded.
 3. After editing this repo, sync the final approved copy to:
    - Codex global: `~/.codex/skills/<skill>/`
    - Copilot global: `~/.copilot/skills/<skill>/`
    - shared agents global: `~/.agents/skills/<skill>/`
-   - ATV fork: `<atv-repo>/.github/skills/<skill>/`
-   - ATV scaffold/plugin copies only when that skill is intentionally shipped there.
 4. Update `README.md` in this repo when the visible workflow, installed-skill list, install commands, or repo hygiene contract changes.
-5. Update `<atv-repo>\README.md` when the ATV-facing workflow, bundled skills, or scaffold/plugin behavior changes.
-6. Verify with hashes for copied `SKILL.md` files and `git diff --check` in every touched repo.
-7. Commit and push both repos when requested or when the user asks for the full propagation flow.
+5. Verify copied `SKILL.md` files with hashes and run `git diff --check` here.
+6. Commit and push this repo when requested.
+
+ATV repositories are not sync, release, or delivery targets. Do not inspect,
+modify, commit, push, or gate on a neighboring ATV checkout unless the user
+explicitly starts a separate ATV task.
 
 For repo-local contributor quality, run:
 
@@ -48,7 +46,7 @@ Before syncing or propagating skills, run the release/sync gate:
 go run ./cmd/kbcheck local-release
 ```
 
-`core` is contributor-safe on a fresh clone and validates repo-local deterministic checks. `local-release` composes `core`, `git diff --check`, static reports, and blocking read-only sync drift reports using `config/skill-quality.json`. Required targets are Codex global, Copilot global, shared agents global, and `<atv-repo>/.github/skills`. ATV scaffold/plugin targets are optional thin bundles; warnings there are acceptable unless the current change explicitly ships that skill surface.
+`core` is contributor-safe on a fresh clone and validates repo-local deterministic checks. `local-release` composes `core`, `git diff --check`, static reports, and blocking read-only sync drift reports using `config/skill-quality.json`. Required targets are Codex global, Copilot global, and shared agents global.
 
 Do not remove `kb-review`, `ce-review`, `ce-compound`, or `ce-compound-refresh` from this bundle unless the skills that invoke them are rewritten first. KB completion uses `kb-review`; `ce-review` remains the generalized CE review skill.
 
@@ -59,6 +57,13 @@ Every token must pay rent. Be concise by default:
 - Lead with the answer, route, command, or code.
 - Keep exact paths, commands, errors, decisions, risks, and safety warnings.
 - Use longer explanations only when they change the decision or reduce rework.
+- Keep stable policy in ambient instructions and volatile task state in
+  `todo.md`, plans, or handoffs so prompt prefixes stay reusable.
+- Move deterministic data gathering outside the reasoning loop when practical:
+  prefetch with repo-native CLI/search commands, then pass only needed paths,
+  fields, or compact output to the agent.
+- Do not register broad MCP/tool catalogs in repo config. Prefer built-in
+  file/search/CLI tools and enable optional tools only when a task needs them.
 
 Use these project memory files:
 
@@ -104,7 +109,11 @@ If blocked, state exactly what was attempted, what command/tool failed, and what
 
 ## Optional Context Providers
 
-CCE, MCP search, vector indexes, and similar tools are optional adapters only.
-Do not commit provider-specific hooks/configs or require a daemon/app for
-skills, install, sync, or checks; the file-native `rg`/`kb-map`/`kbcheck` path
-must keep working.
+CCE is an owned, supported optional context adapter. MCP search, vector indexes,
+and similar tools are optional adapters too. Do not commit or auto-start their
+hooks/configs, and do not require a daemon/app for skills, install, sync, or
+checks. The file-native `rg`/`kb-map`/`kbcheck` path must keep working.
+
+Phoenix is credited prior art whose useful proof/routing mechanics have been
+absorbed into KB. Keep research and attribution, but do not add a Phoenix
+runtime, MCP server, daemon, or required install.

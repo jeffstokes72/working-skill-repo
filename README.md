@@ -5,13 +5,11 @@ Portable KB workflow skills for GitHub Copilot and Codex.
 Status: actively used, pre-1.0. Expect churn while the marketplace, eval, and
 pipeline maintenance pieces settle.
 
-Most of this repo is an augmentation layer on top of the original
-All-The-Vibes ATV StarterKit and CE review/learning workflow. KB adds the
-voice-friendly routing, project-memory map, fresh-session handoff loop,
-proportional planning, and execution gates; it still depends on selected ATV
-skills and reviewer agents. Original ATV `upstream/main` is a source to mine
-for useful ATV-native changes, while this repo remains the source of truth for
-the KB overlay and any KB replacements.
+This standalone bundle grew from ideas in the original All-The-Vibes ATV
+StarterKit and CE review/learning workflow. KB now owns the copied and adapted
+skills here: voice-friendly routing, project memory, fresh-session handoff,
+proportional planning, reviewer agents, and execution gates. No ATV checkout is
+an install, sync, release, or delivery dependency.
 
 Most users only need the runtime skills. You do not need Go, the eval harness,
 or the marketplace machinery to use the workflow in your own repo.
@@ -41,10 +39,28 @@ The core loop is six skills:
 | `kb-fix` | Handle narrow bugs and small contained edits |
 | `kb-plan` | Turn clear work into vertical slices with verification |
 | `kb-work` | Execute ready slices and prove each one |
-| `kb-complete` | Review, fix follow-ups, refresh memory, and mark done |
+| `kb-complete` | Take a feature, plan, or manifest to its configured local, PR, or direct endpoint |
 
-Everything else is optional depth for bigger work, maintenance, or release
-proof.
+Everything else is an internal phase, compatibility alias, or optional depth.
+
+Optional `kb-configure` writes portable per-project execution policy. Most users
+never need it. Planned-tier execution is the default; substantive next-lower
+Adaptive Model Routing (AMR) attempts are disabled until explicit pilot/opt-in
+or promotion. When enabled, AMR makes at most one attempt before proof. Failure
+produces a bounded handoff followed by separate ordinary planned-tier execution,
+not automatic correction. Optional user-local `kb-models` state saves
+`automatic`, `self-hosted-first`, or `native-first` source preference without
+configuring model-by-model plan mappings.
+
+For one state-aware plan-to-endpoint run, use:
+
+```text
+kb-complete <feature-or-plan-or-manifest>
+```
+
+It recovers the current phase, runs planning, work, and finalization as needed,
+then applies project delivery policy: local-only, PR, or explicitly authorized
+direct integration and post-integration sync.
 
 For long-lived objectives that may run across days or sessions, use `kb-goal`.
 It keeps the durable objective and terminal proof ledger, then routes each work
@@ -57,7 +73,7 @@ blockers.
 For recurring or trend-improvement goals, `kb-goal` can also record a live
 steering loop: set point, sensor, controller, actuator, scope gate, batch size,
 WIP bound, dampener, and steering memory. This is optional. It helps repeated
-runs learn from durable feedback without replacing `kb-complete`, `learn`, or
+runs learn from durable feedback without replacing `kb-finalize`, `learn`, or
 `evolve`.
 
 The default installer profile is the runtime dependency closure. `core`
@@ -76,7 +92,85 @@ This repo is two things:
 2. A development harness that tests whether the bundle, routes, sync targets,
    eval fixtures, marketplace rules, and release gates still match the claims.
 
-![KB routing workflow](docs/assets/kb-routing-workflow.png)
+## How Planning, Routing, And AMR Fit Together
+
+KB separates three decisions that agents often blur together:
+
+1. **Planning sets authority.** `kb-plan` classifies each slice as small,
+   medium, or large from difficulty, risk, required tools/context, and the proof
+   needed to accept it. The plan does not freeze a model, provider, endpoint,
+   transport, or source preference.
+2. **Work-time routing chooses an available worker.** Immediately before a
+   slice runs, `kb-work` considers what the active host can actually invoke and
+   any optional user-local routes. The current master selects a bounded,
+   dispatch-qualified worker at the planned tier, a qualified same-tier route,
+   or a higher tier. It never assumes another host's catalog and never infers a
+   downward route.
+3. **Proof accepts the result.** A routing receipt records what ran; it does not
+   make the work correct. Tests, lint, browser assertions, API probes, or another
+   objective check remain authoritative.
+
+### Difficulty-Driven Routing (DDR)
+
+DDR is shorthand for that decision pattern, not a separate command or artifact
+created by `kb-plan`. Planning records difficulty and proof; execution discovers
+the live catalog and chooses from evidence.
+
+![KB difficulty-driven model selection](docs/assets/kb-model-selection.png)
+
+The model labels in the diagram are illustrative snapshots. They are not a
+durable shared catalog. A new user can use KB with zero model setup because the
+active host already knows its own models. Advanced users can add local or
+external OpenAI-compatible/LiteLLM routes through user-local `kb-models` state,
+then save a project preference such as `automatic`, `self-hosted-first`, or
+`native-first`. Credentials and private endpoints never enter plans or shared
+skills.
+
+Local route setup is intentionally small. Add one user-local route, approve it
+for the current project if it is private, then let work-time routing decide
+whether it is eligible:
+
+```powershell
+kbrouter models add --scope user --alias local.coder --model <model-id> --endpoint http://127.0.0.1:4000/v1 --hosting self-hosted --retention none --training-use no --trust-provenance "user-local LiteLLM"
+kbrouter models approve --alias local.coder --project-root <project-root>
+kbrouter models doctor --project-root <project-root>
+kbrouter models priority --project-root <project-root> --mode self-hosted-first
+```
+
+For authenticated endpoints, store the token in an environment variable and add
+only the variable name with `--auth-env LOCAL_LITELLM_API_KEY`. Use `--probe` on
+`doctor` only for an explicit live endpoint/model check.
+
+Run-only controls remain explicit:
+
+- `use <model>` prefers an eligible route for this run;
+- `require <model>` hard-pins it or fails;
+- `ignore model routing` stays on the current driver;
+- fallback goes same tier, then higher tier, then the current model in degraded
+  mode—never automatically downward.
+
+### Adaptive Model Routing (AMR)
+
+AMR is a narrower, optional optimization inside this system. If a task was
+planned at medium but is settled, bounded, and objectively provable, an enabled
+pilot may try exactly one dispatch-qualified next-lower-tier worker. It is not a
+general instruction to use cheaper models for all code.
+
+![Adaptive Model Routing workflow](docs/assets/kb-routing-workflow.png)
+
+Good candidates include a narrow code fix or implementation of an approved HTML
+design with browser assertions. Philosophy, speculative product/design work,
+unresolved architecture, subjective intent, sensitive boundaries, and weak
+proof are bad candidates and begin at the planned tier.
+
+If focused proof passes, KB keeps the result and continues ordinary QA,
+regression, and review. If it fails, lower-tier retries stop. The driver receives
+the exact failed criterion, location/hunk, invariants, accepted diff, ledger, and
+proof output so the planned-tier authority can correct the smallest necessary
+surface. Automatic live-checkout correction is currently disabled; failure uses
+separate ordinary planned-tier execution. AMR is disabled by default and makes
+no savings claim until worker + proof + repair repeatedly beats direct execution
+without reducing correctness.
 
 ## What Makes This Different
 
@@ -87,12 +181,40 @@ This repo is two things:
 - `kb-plan` decomposes clear work into vertical slices with verification
   contracts.
 - `kb-work` executes manifest slices using ready-set and scope-lease rules.
-- `kb-complete` runs review, proof, follow-up cleanup, learning, and memory
-  refresh.
+- At execution time, the current master may choose a dispatch-qualified worker
+  from the bounded live catalog; otherwise it uses the planned-tier current-model
+  path. Durable plans contain tier/proof, never model or transport advice. The
+  current master chooses host-native routes
+  automatically. `kb-models` configures optional user-local
+  OpenAI-compatible/LiteLLM extras; no generic MCP model dispatch is claimed.
+  Ordinary work silently uses `automatic` when the project has no saved choice.
+  Explicit setup may save `automatic`, `self-hosted-first`, or `native-first`.
+  Connection details stay user-local, the receipt records
+  what actually ran; only a route-bound receipt linked to proof establishes
+  `dispatch-proven`, and only `require <model>` hard-pins.
+- A plan tier is correction authority, not the validator. For settled, bounded,
+  objectively provable work, an enabled AMR pilot may try the next lower tier.
+  Deterministic proof accepts the result or produces a bounded correction
+  handoff. Automatic correction dispatch is currently disabled: without an
+  isolated workspace and compare-and-swap apply runner, it would risk changing
+  the live checkout before validation. Failed attempts therefore record
+  separate ordinary planned-tier execution and no preserved-work savings.
+  Subjective intent, weak proof, sensitive
+  boundaries, and unresolved architecture start at the planned tier.
+- `kb-finalize` runs internal review, proof, follow-up cleanup, learning, and
+  memory refresh.
+- `kb-complete` is the single user-facing state-aware orchestrator through
+  configured delivery.
 - `kb-goal` can keep a human on long-running loops through concise steering
   memory that affects future runs.
 - `cmd/kbcheck` is a maintainer gate for route fixtures, skill lint, eval
   scoring, marketplace firebreaks, sync drift, and release profiles.
+- Material slices may carry vendor-neutral context packets so bounded workers
+  receive exact files, prefetch, constraints, proof targets, search policy, and
+  escalation triggers instead of rediscovering the repo.
+- `kbcheck provider-hygiene` rejects Phoenix activation while allowing CCE as
+  an optional adapter. `surface-report` separates base startup from conditional
+  skill cost.
 
 ## Routing And Rework Control
 
@@ -101,6 +223,30 @@ The harness is designed to avoid rework by choosing the smallest lane that can
 still prove the result. That is the claim this repo can defend today: the
 routes, gates, and checks exist in code and skills. It does not claim measured
 token savings.
+
+Model selection follows the same split. `kb-plan` records the slice difficulty,
+risk, tools, context, and proof without freezing a model name. `kb-work`
+starts from the active host's own live catalog, then merges optional user-local
+OpenAI-compatible/LiteLLM extras. Extra origin, hosting class, and trust are
+independent: an extra may be self-hosted, provider-hosted, or unknown. Selection
+falls sideways and then upward; it never infers a downward fallback. Routing
+receipts are attribution evidence, while deterministic work proof remains the
+acceptance authority. Endpoints, auth references, approvals, and personal
+source priority stay user-local.
+
+Current evidence is deliberately conservative:
+
+| Surface | Status |
+| --- | --- |
+| Planned-tier/current-model execution and ordinary proof | Supported skill fallback |
+| Selector, handoff validation, correction refusal, and fallback mechanics | Deterministic conformance only |
+| Codex CLI plus a trusted OpenAI-compatible/LiteLLM route | Candidate; live support not qualified |
+| Next-lower AMR attempts | Disabled by default; not promoted |
+| Automatic surgical correction | Unsupported; fails closed before worker launch or mutation |
+| GHCP, exact Codex App attribution, TinyBoss, generic MCP, direct chat-completions worker | Parked |
+
+The current no-paid release artifact has zero supported cohorts and makes no
+live cost, latency, token, or savings claim.
 
 - **Fresh sessions by default.** Handoffs, `todo.md`,
   `docs/context/PROJECT.md`, plans, and architecture notes let a new session
@@ -125,6 +271,9 @@ token savings.
 - **Spend ceremony only where it prevents rework.** Slicing, checks, and review
   cost time up front. They earn their place only when they prevent the agent
   from guessing, drifting, or calling unverified work done.
+- **Complete to the configured endpoint.** `kb-complete` resumes from source,
+  plan, active work, or reviewed manifest. `kb-work` auto-invokes only internal
+  `kb-finalize`, so ordinary work never publishes by accident.
 
 KB means **Kanban-Based**. The workflow still uses boards, manifests, vertical
 slices, and done archives, but user-facing commands use the shorter `kb-`
@@ -159,15 +308,27 @@ Consuming projects get their own `todo.md`, `docs/context/`,
 
 ## Optional Context Providers
 
-This bundle does not require CCE, MCP search, a vector index, or any background
-app. The default path stays file-native: repo files, `rg`, `kb-map`,
-`docs/context/`, and deterministic `kbcheck` gates.
+CCE is an owned, supported optional context adapter. This bundle does not
+require CCE, MCP search, a vector index, or any background app. The default path
+stays file-native: repo files, `rg`, `kb-map`, `docs/context/`, and
+deterministic `kbcheck` gates.
 
 Optional context tools can still fit as adapters. A good adapter may accelerate
 lookup, chunk expansion, or decision recall, but it must have a repo-native
 fallback and must not be required by install, sync, tests, or skill execution.
-Do not commit provider-specific hook/config files such as `.mcp.json` or
-`.claude/settings.json`.
+Do not commit or auto-start provider-specific hook/config files such as
+`.mcp.json` or `.claude/settings.json`. Keep the enabled tool set narrow and
+prefer deterministic CLI prefetch for data the agent will always need.
+
+Phoenix is credited prior art for specific proof and recovery mechanics. KB's
+routing and vertical slicing were developed independently. The current bundle
+does not require a Phoenix runtime, while focused MCP interoperability remains a
+valid future option when it improves installation or cross-host use.
+
+Maintainers can audit repo-local provider config with `go run ./cmd/kbcheck
+provider-hygiene`, or include standard user config with `go run ./cmd/kbcheck
+provider-hygiene --include-user`. CCE entries are reported as optional; active
+Phoenix provider entries fail.
 
 ## Quick Start
 
@@ -183,14 +344,14 @@ kb-start -> kb-map -> chosen lane
 For a fully hands-off feature flow:
 
 ```text
-klfg: kb-brainstorm -> kb-plan -> kb-work -> kb-complete
+kb-complete: brainstorm when needed -> plan -> work -> finalize -> delivery
 ```
 
 `kb-work` now owns the loop until the work is terminal. It pulls the safe ready
 set from the manifest DAG, can swarm independent slices in isolated contexts,
-serializes shared-checkout or observed-overlap work, then runs `kb-complete` for
+serializes shared-checkout or observed-overlap work, then runs `kb-finalize` for
 review, follow-up resolution, proof, learning, memory refresh, and cleanup. "All
-slices passed" is progress; `kb-complete` is the done gate.
+slices passed" is progress; finalization and configured delivery determine done.
 
 ## Execution Model
 
@@ -226,7 +387,7 @@ check observed RED before GREEN. Learning improvements stay local/scoped unless
 `kbcheck learning-adoption` proves enough measured gain without regressions or
 holdout leakage.
 
-Phoenix routing/slicing absorption status as of July 9, 2026:
+KB proof-spine integration status as of July 9, 2026:
 
 - **Done:** proof spine commands, measured learning-adoption gate, model-tier /
   model-route planning guidance, manifest `done_check` / per-slice
@@ -241,11 +402,10 @@ Phoenix routing/slicing absorption status as of July 9, 2026:
   exist. KB publishes its own deterministic fixture result and does not borrow
   Phoenix metrics.
 
-> **Routing conflict warning:** Do not run the ATV-Phoenix skill suite alongside
-> this bundle. The 18 phoenix-* skills duplicate KB lifecycle lanes
-> (phoenix-plan → kb-plan, phoenix-build → kb-work, phoenix-debug → kb-fix, etc.)
-> and add routing noise for every request. The proof spine value was merged July
-> 5, 2026. If you have phoenix skills installed globally, remove them with:
+> **Interoperability note:** ATV-Phoenix and KB both provide lifecycle entry
+> points such as planning, building, and debugging. Choose one suite to own
+> lifecycle routing in a given agent installation; Phoenix proof/MCP components
+> can still be evaluated as focused integrations. To select the KB core profile:
 > ```shell
 > npx github:Irtechie/working-skill-repo --target all --profile core --yes
 > ```
@@ -269,12 +429,15 @@ Phoenix routing/slicing absorption status as of July 9, 2026:
 | `kb-plan` | Requirements exist and need vertical slices |
 | `kb-work` | A manifest exists and should be executed |
 | `kb-review` | KB-specific code review with structural quality review |
-| `kb-complete` | Work needs review, proof, learning, memory, cleanup |
+| `kb-complete` | Feature/plan/manifest should reach its configured endpoint |
+| `kb-finalize` | Internal post-work review, proof, learning, memory, cleanup |
 | `kb-memory-review` | High-cost pass for stale, bloated, or contradictory memory |
-| `kb-ship` | Release, PR, deploy, or final readiness check |
+| `kb-ship` | Internal commit, push, and PR delivery phase |
+| `kb-land` | Internal merge/direct integration and post-integration sync phase |
+| `kb-finish` | Deprecated alias to `kb-complete` |
 | `kb-epic` | Large migration, rewrite, or multi-brainstorm initiative |
 | `kb-compact` | Memory, docs, or output have gone too verbose |
-| `klfg` | Fully hands-off route from brainstorm through completion |
+| `klfg` | Deprecated alias to `kb-complete` |
 | `repo-critic` | Claims-vs-code evidence review before a claim ships |
 
 ## Installed Skills
@@ -291,8 +454,9 @@ Routing and memory:
 Execution lanes:
 
 - `kb-fix`, `kb-troubleshoot`, `kb-brainstorm`, `kb-research`
-- `kb-architecture-deepening`, `kb-plan`, `kb-work`, `kb-complete`
-- `kb-ship`, `kb-epic`, `kb-task`, `kb-goal`, `kb-first-principles`, `klfg`
+- `kb-architecture-deepening`, `kb-plan`, `kb-work`, `kb-finalize`, `kb-complete`
+- `kb-ship`, `kb-land`, `kb-finish`, `kb-epic`, `kb-task`, `kb-goal`,
+  `kb-first-principles`, `klfg`
 
 Verification and gates:
 
@@ -310,7 +474,7 @@ Direct dependencies include `ce-review`, `ce-compound`,
 `ce-compound-refresh`, `document-review`, `tdd`, `learn`, `evolve`,
 `todo-create`, and `todo-triage`. Do not remove `kb-review`, `ce-review`,
 `ce-compound`, or `ce-compound-refresh` unless the skills that invoke them are
-rewritten first. `kb-complete` uses `kb-review`; `ce-review` remains the
+rewritten first. `kb-finalize` uses `kb-review`; `ce-review` remains the
 generalized CE review skill.
 
 ## Project Memory
@@ -472,7 +636,6 @@ Useful subcommands:
 - `minimality`, `surface-report` - loaded-surface and trim measurement
 - `ready-set`, `scope-lease` - swarm execution proof helpers used by `kb-work`
 - `workflow-governor-selftest` - verify question-gate and phase-gate contract text
-- `atv-delta` - upstream ATV drift report
 - `marketplace-firebreak`, `marketplace-promote` - private marketplace checks
   and promotion path
 
@@ -528,6 +691,15 @@ prompts before overwriting, and writes backups under `.kb-install-backups/`
 when a changed copy is replaced. Use `--yes` only when you want automatic
 backup-and-replace behavior.
 
+Router mode defaults to `auto`: the installer looks for a matching published
+binary and installs it only after its release checksum verifies. If no verified
+artifact is available, it completes a skill-only install instead. The managed
+binary lives at `~/.kb/bin/kbrouter`
+or `%USERPROFILE%\.kb\bin\kbrouter.exe`; KB skills resolve that path without
+changing shell profiles. Custom `--router-dir` locations must be added to
+`PATH`. Use `--router required` only when missing router artifacts should fail
+the install.
+
 Repo-local install:
 
 ```shell
@@ -542,9 +714,13 @@ Installer options:
 | Option | Values | Meaning |
 | --- | --- | --- |
 | `--target` | `codex`, `copilot`, `agents`, `repo`, `all` | Where to install the skills |
-| `--profile` | `core`, `full` | Six-skill starter set or complete runtime bundle |
+| `--profile` | `core`, `full` | Runtime dependency closure plus baseline agents, or that closure plus every specialist agent |
 | `--repo` | path | Required for repo-local installs |
 | `--install-root` | path | Override the home/root used for global installs |
+| `--router` | `auto`, `required`, `skip`, `uninstall` | Install the verified optional router, require it, keep skills only, or remove it safely |
+| `--router-version` | semver | Select the matching tagged router artifact version (omit the leading `v`) |
+| `--router-release` | URL | Override the tagged release base URL |
+| `--router-dir` | path | Override `.kb/bin`; custom locations must be placed on `PATH` |
 | `--yes` | flag | Back up and replace changed existing copies without prompting |
 | `--dry-run` | flag | Print planned actions without writing |
 
@@ -593,6 +769,10 @@ Current state:
 - CI runs `go test ./...` and `go run ./cmd/kbcheck core` on Windows, macOS,
   and Linux.
 - The npx installer runs on Windows, macOS, and Linux and does not require Go.
+- Release workflows are configured to build six checksum-covered binaries and
+  GitHub build-provenance attestations. That configuration is not evidence that
+  a tag was published, a download was verified in the wild, a binary was signed,
+  or a live adapter cohort qualified.
 
 ## Marketplace And Security
 
@@ -622,11 +802,12 @@ These are intentionally left out of the portable runtime bundle:
   pipeline
 - upstream `workflows-*` aliases; use KB lanes directly unless a current app
   explicitly needs an ATV alias
-- `land`; shipping remains a deliberate separate decision
+- upstream `land`; internal `kb-ship` and `kb-land` are governed by
+  user-facing `kb-complete`
 - browser tools such as `agent-browser`; skills can call them when installed,
   but this repo does not vendor them
 
-The useful LFG finish pattern is preserved inside `kb-complete`: resolve
+The useful LFG finish pattern is preserved inside `kb-finalize`: resolve
 follow-up review/TODO work, rerun proof on the final diff, capture demo evidence
 when useful, then compound, learn, evolve, refresh memory, compact, clean up, and
 alert.

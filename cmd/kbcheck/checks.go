@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
 
 type Check struct {
@@ -18,6 +19,7 @@ type Check struct {
 	Run        func(root string) CheckResult
 	Available  func(root string) bool
 	SkipReason string
+	Timeout    time.Duration
 }
 
 type CheckResult struct {
@@ -130,6 +132,7 @@ func skillRepoChecks(root string) ([]Check, error) {
 		{"kb-run-state-selftest", "KB run-state route-history guard selftest detected"},
 		{"kb-work-ready-set-selftest", "KB work ready-set dispatch selftest detected"},
 		{"kb-work-scope-lease-selftest", "KB work scope lease overlap selftest detected"},
+		{"kbrouter-catalog-tests", "KB model route catalog CLI conformance tests detected"},
 		{"kb-pipeline-selftest", "KB coded pipeline spike selftest detected"},
 		{"skill-surface-report", "skill loaded-surface report detected"},
 		{"skill-marketplace-firebreak", "private marketplace quarantine firebreak detected"},
@@ -140,9 +143,11 @@ func skillRepoChecks(root string) ([]Check, error) {
 		{"skill-surface-minimality", "static skill/agent minimality report detected"},
 		{"cross-model-benchmark-validate", "cross-model benchmark prompt fixtures detected"},
 		{"dishonest-completion-selftest", "dishonest completion rejection fixtures detected"},
-		{"atv-upstream-delta-selftest", "read-only ATV upstream delta selftest detected"},
-		{"atv-upstream-delta", "read-only ATV upstream delta report detected"},
 		{"workflow-governor-selftest", "KB workflow governor question/phase gate contract detected"},
+		{"context-packet-selftest", "context packet and usage telemetry contract detected"},
+		{"execution-telemetry-selftest", "execution telemetry contract detected"},
+		{"provider-hygiene", "optional provider and Phoenix activation hygiene detected"},
+		{"provider-hygiene-selftest", "provider hygiene negative selftest detected"},
 	}
 
 	checks := make([]Check, 0, len(nativeChecks)+1)
@@ -211,15 +216,24 @@ func skillRepoChecks(root string) ([]Check, error) {
 			"skill-surface-minimality-selftest": {"minimality-selftest"},
 			"kb-pipeline-selftest":              {"pipeline-selftest"},
 			"marketplace-promotion-selftest":    {"marketplace-promote-selftest"},
-			"atv-upstream-delta-selftest":       {"atv-delta-selftest"},
-			"atv-upstream-delta":                {"atv-delta"},
 			"workflow-governor-selftest":        {"workflow-governor-selftest"},
+			"context-packet-selftest":           {"context-packet-selftest"},
+			"execution-telemetry-selftest":      {"execution-telemetry-selftest"},
+			"provider-hygiene":                  {"provider-hygiene"},
+			"provider-hygiene-selftest":         {"provider-hygiene-selftest"},
 		}
 		if command, ok := nativeCommandByCheck[pc.Name]; ok {
 			checks = append(checks, Check{
 				Name: pc.Name, Args: append([]string{"kbcheck"}, command...),
 				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
 				Run: func(root string) CheckResult { return runNativeCommand(root, command) },
+			})
+			continue
+		}
+		if pc.Name == "kbrouter-catalog-tests" {
+			checks = append(checks, Check{
+				Name: pc.Name, Args: []string{"go", "test", "./cmd/kbrouter", "-run", "Catalog|Doctor|Policy"},
+				Reason: pc.Reason, Required: true, Confidence: "deterministic-local",
 			})
 			continue
 		}
