@@ -41,14 +41,39 @@ func TestStrictStorageRejectsUnsafeWindowsDACL(t *testing.T) {
 
 func TestWindowsStorageOwnerMayBeSecuredIsNarrow(t *testing.T) {
 	const currentSID = "S-1-5-21-100-200-300-1001"
-	for _, owner := range []string{"O:" + currentSID, "o:ba", "O:" + builtinAdministratorsSID} {
+	for _, owner := range []string{"O:" + currentSID, "o:ba", "O:" + builtinAdministratorsSID, "O:SY"} {
 		if !windowsStorageOwnerMayBeSecured(owner, currentSID) {
 			t.Fatalf("rejected permitted Windows storage owner %q", owner)
 		}
 	}
-	for _, owner := range []string{"", "O:SY", "O:WD", "O:S-1-5-21-100-200-300-1002"} {
+	for _, owner := range []string{"", "O:WD", "O:S-1-5-21-100-200-300-1002"} {
 		if windowsStorageOwnerMayBeSecured(owner, currentSID) {
 			t.Fatalf("accepted unsafe Windows storage owner %q", owner)
+		}
+	}
+}
+
+func TestWindowsStorageDescriptorMatchAcceptsEquivalentAceOrderOnly(t *testing.T) {
+	const sid = "S-1-5-21-100-200-300-1001"
+	for _, descriptor := range []string{
+		"O:" + sid + "D:P(A;;FA;;;SY)(A;;FA;;;" + sid + ")",
+		"O:" + sid + "D:P(A;;FA;;;" + sid + ")(A;;FA;;;SY)",
+		"O:" + sid + "G:SYD:P(A;;FA;;;SY)(A;;FA;;;" + sid + ")",
+	} {
+		if !windowsStorageDescriptorMatches(descriptor, sid, false) {
+			t.Fatalf("rejected equivalent file descriptor %q", descriptor)
+		}
+	}
+	if !windowsStorageDescriptorMatches("O:"+sid+"D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;"+sid+")", sid, true) {
+		t.Fatal("rejected equivalent directory descriptor")
+	}
+	for _, descriptor := range []string{
+		"O:" + sid + "D:P(A;;FA;;;WD)(A;;FA;;;" + sid + ")",
+		"O:S-1-5-21-100-200-300-1002D:P(A;;FA;;;SY)(A;;FA;;;" + sid + ")",
+		"O:" + sid + "D:P(A;;FA;;;SY)",
+	} {
+		if windowsStorageDescriptorMatches(descriptor, sid, false) {
+			t.Fatalf("accepted unsafe descriptor %q", descriptor)
 		}
 	}
 }

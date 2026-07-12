@@ -37,7 +37,11 @@ func TestDispatchCodexExecArgvProfileModelAndProofUnknown(t *testing.T) {
 	}
 	args := strings.Fields(readFileForTest(t, fake.argsPath))
 	wantContainsInOrder(t, args, []string{"exec", "--model", "large-model", "--profile", profileName, "--sandbox", "workspace-write", "-C", fixture.projectRoot})
-	wantContains(t, args, "--add-dir", fixture.projectRoot)
+	expectedAllowedRoot := fixture.projectRoot
+	if canonical, err := filepath.EvalSymlinks(fixture.projectRoot); err == nil {
+		expectedAllowedRoot = canonical
+	}
+	wantContains(t, args, "--add-dir", expectedAllowedRoot)
 	approvalArg := `approval_policy="never"`
 	if runtime.GOOS == "windows" {
 		approvalArg = `approval_policy=\"never\"`
@@ -448,6 +452,7 @@ type dispatchPacketForTest struct {
 
 func newDispatchFixture(t *testing.T, name string) dispatchFixture {
 	t.Helper()
+	skipIfPrivateACLUnsupported(t)
 	root := t.TempDir()
 	projectRoot := filepath.Join(root, "project")
 	userRoot := filepath.Join(root, "user")

@@ -934,7 +934,11 @@ func TestCanonicalizeProspectivePathResolvesExistingAncestorAlias(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := filepath.Join(root, "missing", "run-1")
+	rootCanonical, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(rootCanonical, "missing", "run-1")
 	gotCanonical, err := filepath.Abs(got)
 	if err != nil {
 		t.Fatal(err)

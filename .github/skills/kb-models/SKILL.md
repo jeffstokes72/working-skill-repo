@@ -42,6 +42,61 @@ When the user explicitly asks to set up or add routes:
 Generic MCP model dispatch is not implemented. Do not offer or claim it until a
 versioned dispatch adapter and conformance fixtures exist.
 
+### Quick Add Local OpenAI-Compatible/LiteLLM
+
+When a user asks to add local models, keep it to one concrete route at a time.
+Ask only for the missing values needed by the command: alias, model ID,
+endpoint, and optional auth environment-variable name. Common defaults:
+
+- LM Studio/Ollama-style OpenAI-compatible endpoint: `http://127.0.0.1:1234/v1`
+- LiteLLM endpoint: `http://127.0.0.1:4000/v1`
+- Private LAN LiteLLM endpoint: `http://<host-or-ip>:4000/v1`
+
+Use this template for a local route with no auth:
+
+```powershell
+kbrouter models add --scope user --alias local.coder --model <model-id> --endpoint http://127.0.0.1:4000/v1 --hosting self-hosted --retention none --training-use no --trust-provenance "user-local LiteLLM"
+```
+
+Use this template when the endpoint requires a token. Store the token in the
+environment first; never put the token value in the command, docs, plans, or
+handoffs:
+
+```powershell
+kbrouter models add --scope user --alias local.coder --model <model-id> --endpoint http://127.0.0.1:4000/v1 --auth-env LOCAL_LITELLM_API_KEY --hosting self-hosted --retention none --training-use no --trust-provenance "user-local LiteLLM"
+```
+
+For a private endpoint, route execution also needs attended project approval.
+Show the command and pause; do not answer the confirmation for the user:
+
+```powershell
+kbrouter models approve --alias local.coder --project-root <project-root>
+```
+
+Then verify without mutation first:
+
+```powershell
+kbrouter models doctor --project-root <project-root>
+```
+
+Use `--probe` only when the user explicitly wants a bounded live endpoint/model
+presence check:
+
+```powershell
+kbrouter models doctor --project-root <project-root> --probe
+```
+
+If the user wants local routes preferred for this project, save only the
+user-local source preference:
+
+```powershell
+kbrouter models priority --project-root <project-root> --mode self-hosted-first
+```
+
+Leave the mode as `automatic` when the user has no strong preference. Do not
+write endpoints, model IDs, auth env names, or trust approvals into tracked
+project files.
+
 ## Commands
 
 - Inspect without mutation: `kbrouter models show` or `kbrouter models doctor`.

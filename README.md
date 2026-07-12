@@ -126,6 +126,21 @@ then save a project preference such as `automatic`, `self-hosted-first`, or
 `native-first`. Credentials and private endpoints never enter plans or shared
 skills.
 
+Local route setup is intentionally small. Add one user-local route, approve it
+for the current project if it is private, then let work-time routing decide
+whether it is eligible:
+
+```powershell
+kbrouter models add --scope user --alias local.coder --model <model-id> --endpoint http://127.0.0.1:4000/v1 --hosting self-hosted --retention none --training-use no --trust-provenance "user-local LiteLLM"
+kbrouter models approve --alias local.coder --project-root <project-root>
+kbrouter models doctor --project-root <project-root>
+kbrouter models priority --project-root <project-root> --mode self-hosted-first
+```
+
+For authenticated endpoints, store the token in an environment variable and add
+only the variable name with `--auth-env LOCAL_LITELLM_API_KEY`. Use `--probe` on
+`doctor` only for an explicit live endpoint/model check.
+
 Run-only controls remain explicit:
 
 - `use <model>` prefers an eligible route for this run;

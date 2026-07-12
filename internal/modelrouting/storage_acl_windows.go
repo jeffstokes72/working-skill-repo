@@ -88,7 +88,8 @@ func windowsStorageOwnerMayBeSecured(owner, currentSID string) bool {
 	owner = strings.TrimSpace(owner)
 	return strings.EqualFold(owner, "O:"+currentSID) ||
 		strings.EqualFold(owner, "O:BA") ||
-		strings.EqualFold(owner, "O:"+builtinAdministratorsSID)
+		strings.EqualFold(owner, "O:"+builtinAdministratorsSID) ||
+		strings.EqualFold(owner, "O:SY")
 }
 
 func validateWindowsStoragePath(path string, directory bool) error {
@@ -107,16 +108,7 @@ func validateWindowsStoragePath(path string, directory bool) error {
 	if err != nil {
 		return err
 	}
-	expectedDescriptor, free, err := windowsDescriptor(expectedWindowsStorageSDDL(sid, directory))
-	if err != nil {
-		return err
-	}
-	defer free()
-	expected, err := windowsDescriptorString(expectedDescriptor, ownerSecurityInformation|daclSecurityInformation)
-	if err != nil {
-		return err
-	}
-	if !strings.EqualFold(actual, expected) {
+	if !windowsStorageDescriptorMatches(actual, sid, directory) {
 		return ErrUnsafePath
 	}
 	return nil
@@ -150,6 +142,53 @@ func expectedWindowsStorageSDDL(sid string, directory bool) string {
 		flags = "OICI"
 	}
 	return "O:" + sid + "D:P(A;" + flags + ";FA;;;SY)(A;" + flags + ";FA;;;" + sid + ")"
+}
+
+func windowsStorageDescriptorMatches(actual, sid string, directory bool) bool {
+	actual = strings.ToUpper(strings.ReplaceAll(actual, " ", ""))
+	sid = strings.ToUpper(sid)
+	ownerPrefix := "O:" + sid
+	if !strings.HasPrefix(actual, ownerPrefix) {
+		return false
+	}
+	remaining := strings.TrimPrefix(actual, ownerPrefix)
+	daclIndex := strings.Index(remaining, "D:P")
+	if daclIndex < 0 {
+		return false
+	}
+	if groupText := remaining[:daclIndex]; groupText != "" && !strings.HasPrefix(groupText, "G:") {
+		return false
+	}
+	aceText := remaining[daclIndex+len("D:P"):]
+	expectedFlags := ""
+	if directory {
+		expectedFlags = "OICI"
+	}
+	expected := map[string]bool{
+		"(A;" + expectedFlags + ";FA;;;SY)":          false,
+		"(A;" + expectedFlags + ";FA;;;" + sid + ")": false,
+	}
+	for aceText != "" {
+		if !strings.HasPrefix(aceText, "(") {
+			return false
+		}
+		end := strings.IndexByte(aceText, ')')
+		if end < 0 {
+			return false
+		}
+		ace := aceText[:end+1]
+		if _, ok := expected[ace]; !ok {
+			return false
+		}
+		expected[ace] = true
+		aceText = aceText[end+1:]
+	}
+	for _, seen := range expected {
+		if !seen {
+			return false
+		}
+	}
+	return true
 }
 
 func windowsStorageOwner(path string) (string, error) {

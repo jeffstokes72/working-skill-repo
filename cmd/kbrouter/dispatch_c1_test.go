@@ -152,6 +152,7 @@ func TestC1SessionEvidenceFindsDatedCodexRollout(t *testing.T) {
 	root := t.TempDir()
 	codexHome := filepath.Join(root, "codex-home")
 	projectRoot := filepath.Join(root, "project")
+	attemptStart := time.Date(2026, 7, 10, 12, 0, 0, 0, time.Local)
 	sessionID := "thread-abc_123"
 	sessionDir := filepath.Join(codexHome, "sessions", "2026", "07", "10")
 	if err := os.MkdirAll(sessionDir, 0o700); err != nil {
@@ -164,7 +165,7 @@ func TestC1SessionEvidenceFindsDatedCodexRollout(t *testing.T) {
 	writeCodexSessionLogForTest(t, sessionPath, sessionID, "codex", projectRoot, "large-model", "never", "workspace-write")
 	req := modelrouting.DispatchRequest{CWD: projectRoot, Model: "large-model", Sandbox: "workspace-write", ApprovalPolicy: "never", RouteAlias: "codex.large"}
 	route := modelrouting.Route{Alias: "codex.large", Destination: "codex"}
-	evidence := loadCodexSessionEvidence(codexHome, sessionID, req, route, time.Now().Add(-time.Minute))
+	evidence := loadCodexSessionEvidence(codexHome, sessionID, req, route, attemptStart)
 	if evidence.Model != "large-model" || evidence.SessionID != sessionID {
 		t.Fatalf("dated rollout session evidence unavailable: %#v", evidence)
 	}
@@ -174,6 +175,7 @@ func TestC1SessionEvidenceAcceptsLargeRolloutLogAfterEvidence(t *testing.T) {
 	root := t.TempDir()
 	codexHome := filepath.Join(root, "codex-home")
 	projectRoot := filepath.Join(root, "project")
+	attemptStart := time.Date(2026, 7, 10, 12, 0, 0, 0, time.Local)
 	sessionID := "thread-large-log"
 	sessionDir := filepath.Join(codexHome, "sessions", "2026", "07", "10")
 	if err := os.MkdirAll(sessionDir, 0o700); err != nil {
@@ -204,7 +206,7 @@ func TestC1SessionEvidenceAcceptsLargeRolloutLogAfterEvidence(t *testing.T) {
 	}
 	req := modelrouting.DispatchRequest{CWD: projectRoot, Model: "large-model", Sandbox: "workspace-write", ApprovalPolicy: "never", RouteAlias: "codex.large"}
 	route := modelrouting.Route{Alias: "codex.large", Destination: "codex"}
-	evidence := loadCodexSessionEvidence(codexHome, sessionID, req, route, time.Now().Add(-time.Minute))
+	evidence := loadCodexSessionEvidence(codexHome, sessionID, req, route, attemptStart)
 	if evidence.Model != "large-model" || evidence.SessionID != sessionID {
 		t.Fatalf("large rollout session evidence unavailable: %#v", evidence)
 	}
@@ -259,17 +261,18 @@ func TestC1SessionEvidenceRejectsStaleAmbiguousAndUnsafeSessions(t *testing.T) {
 	if err := os.MkdirAll(projectRoot, 0o755); err != nil {
 		t.Fatal(err)
 	}
+	attemptStart := time.Date(2026, 7, 10, 12, 0, 0, 0, time.Local)
 	req := modelrouting.DispatchRequest{CWD: projectRoot, Model: "large-model", Sandbox: "workspace-write", ApprovalPolicy: "never", RouteAlias: "codex.large"}
 	route := modelrouting.Route{Alias: "codex.large", Destination: "codex"}
 
 	staleID := "thread-stale"
 	stalePath := filepath.Join(codexHome, "sessions", "2026", "07", "10", "rollout-20260710T120000-"+staleID+".jsonl")
 	writeCodexSessionLogForTest(t, stalePath, staleID, "codex", projectRoot, "large-model", "never", "workspace-write")
-	old := time.Now().Add(-2 * time.Hour)
+	old := attemptStart.Add(-2 * time.Hour)
 	if err := os.Chtimes(stalePath, old, old); err != nil {
 		t.Fatal(err)
 	}
-	if evidence := loadCodexSessionEvidence(codexHome, staleID, req, route, time.Now()); evidence.Model != "" {
+	if evidence := loadCodexSessionEvidence(codexHome, staleID, req, route, attemptStart); evidence.Model != "" {
 		t.Fatalf("stale session evidence credited: %#v", evidence)
 	}
 
@@ -278,22 +281,22 @@ func TestC1SessionEvidenceRejectsStaleAmbiguousAndUnsafeSessions(t *testing.T) {
 		path := filepath.Join(codexHome, "sessions", "2026", "07", day, "rollout-202607"+day+"T120000-"+ambiguousID+".jsonl")
 		writeCodexSessionLogForTest(t, path, ambiguousID, "codex", projectRoot, "large-model", "never", "workspace-write")
 	}
-	if evidence := loadCodexSessionEvidence(codexHome, ambiguousID, req, route, time.Now().Add(-time.Minute)); evidence.Model != "" {
+	if evidence := loadCodexSessionEvidence(codexHome, ambiguousID, req, route, attemptStart); evidence.Model != "" {
 		t.Fatalf("ambiguous session evidence credited: %#v", evidence)
 	}
-	if evidence := loadCodexSessionEvidence(codexHome, `..\escape`, req, route, time.Now().Add(-time.Minute)); evidence.Model != "" {
+	if evidence := loadCodexSessionEvidence(codexHome, `..\escape`, req, route, attemptStart); evidence.Model != "" {
 		t.Fatalf("unsafe session id credited: %#v", evidence)
 	}
 }
 
 func TestC1ReadRunChildSingleOpenRejectsReplacement(t *testing.T) {
 	fixture := newDispatchFixture(t, "c1-single-open")
-	path := filepath.Join(fixture.runRoot, "single-open.json")
-	if err := os.WriteFile(path, []byte(`{"ok":true}`), 0o600); err != nil {
-		t.Fatal(err)
-	}
 	prepared, err := prepareRunRoot(fixture.projectRoot, fixture.runRoot)
 	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(prepared.runPath, "single-open.json")
+	if err := os.WriteFile(path, []byte(`{"ok":true}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	data, err := readRunChild(prepared, path, maxCatalogBytes)
@@ -591,7 +594,7 @@ func skipIfPrivateACLUnsupported(t *testing.T) {
 		_ = lock.Close()
 		return
 	}
-	if strings.Contains(err.Error(), "Access is denied") {
+	if errors.Is(err, modelrouting.ErrUnsafePath) || strings.Contains(err.Error(), "Access is denied") {
 		t.Skipf("workspace sandbox denies private Windows ACL setup: %v", err)
 	}
 	t.Fatalf("private ACL probe failed unexpectedly: %v", err)
